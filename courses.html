@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <title>Explore Courses – SkillWale</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+    }
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+    }
+    .bookmark-btn {
+      cursor: pointer;
+      color: #facc15;
+      transition: transform 0.2s;
+      user-select: none;
+    }
+    .bookmark-btn:hover {
+      transform: scale(1.2);
+    }
+    /* Filter button styling */
+    .filter-btn {
+      cursor: pointer;
+      background-color: rgba(255 255 255 / 0.2);
+      transition: background-color 0.3s ease;
+      padding: 0.5rem 1.2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      color: white;
+      user-select: none;
+      border: none;
+      font-size: 1rem;
+    }
+    .filter-btn:hover {
+      background-color: rgba(255 255 255 / 0.35);
+    }
+    .filter-btn.active {
+      background-color: white;
+      color: #6366f1;
+      box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+    }
+    /* Scroll bar fix */
+    ul {
+      scrollbar-width: thin;
+      scrollbar-color: #a855f7 transparent;
+    }
+    ul::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ul::-webkit-scrollbar-thumb {
+      background-color: #a855f7;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="text-white px-6 py-10 flex flex-col items-center">
+
+  <header class="text-center mb-12 max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold mb-2">🎓 Free Courses Just for You</h1>
+    <p class="text-lg max-w-2xl mx-auto text-white/90">
+      Upskill with hand-picked free courses from trusted platforms like YouTube, Coursera, NPTEL, Udemy, edX & more.
+    </p>
+
+    <!-- Filter Buttons -->
+    <div class="mt-6 flex flex-wrap justify-center gap-3" role="group" aria-label="Course categories">
+      <button type="button" class="filter-btn active" data-category="all" onclick="filterCourses('all', this)">All</button>
+      <button type="button" class="filter-btn" data-category="data" onclick="filterCourses('data', this)">Data Science</button>
+      <button type="button" class="filter-btn" data-category="frontend" onclick="filterCourses('frontend', this)">Frontend</button>
+      <button type="button" class="filter-btn" data-category="backend" onclick="filterCourses('backend', this)">Backend</button>
+      <button type="button" class="filter-btn" data-category="ai" onclick="filterCourses('ai', this)">AI/ML</button>
+      <button type="button" class="filter-btn" data-category="marketing" onclick="filterCourses('marketing', this)">Marketing</button>
+      <button type="button" class="filter-btn" data-category="analytics" onclick="filterCourses('analytics', this)">Analytics</button>
+    </div>
+  </header>
+
+  <main id="courseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full" role="list">
+    <!-- Cards inserted here dynamically -->
+  </main>
+
+  <script>
+    const courses = [
+      {
+        category: 'data',
+        title: '🧠 Data Science',
+        thumbnail: 'https://img.youtube.com/vi/ua-CiDNNj30/0.jpg',
+        links: [
+          { label: 'YouTube Full Course', url: 'https://www.youtube.com/watch?v=ua-CiDNNj30' },
+          { label: 'NPTEL: Python for DS', url: 'https://onlinecourses.nptel.ac.in/noc24_cs28/preview' },
+          { label: 'Coursera: DS Methodology', url: 'https://www.coursera.org/learn/data-science-methodology' },
+          { label: 'Udemy: DS A-Z', url: 'https://www.udemy.com/course/datascience/' },
+          { label: 'edX: DS MicroMasters', url: 'https://www.edx.org/micromasters/data-science' }
+        ]
+      },
+      {
+        category: 'frontend',
+        title: '🎨 Frontend Development',
+        thumbnail: 'https://img.youtube.com/vi/bMknfKXIFA8/0.jpg',
+        links: [
+          { label: 'React JS Full Course', url: 'https://www.youtube.com/watch?v=bMknfKXIFA8' },
+          { label: 'FreeCodeCamp Web Dev', url: 'https://www.freecodecamp.org/learn' },
+          { label: 'Udemy HTML/CSS/JS', url: 'https://www.udemy.com/course/html-css-javascript-for-web-developers/' },
+          { label: 'edX: Frontend Foundations', url: 'https://www.edx.org/learn/front-end-web-development' }
+        ]
+      },
+      {
+        category: 'ai',
+        title: '🤖 Artificial Intelligence & ML',
+        thumbnail: 'https://img.youtube.com/vi/aircAruvnKk/0.jpg',
+        links: [
+          { label: 'AI YouTube Crash Course', url: 'https://www.youtube.com/watch?v=aircAruvnKk' },
+          { label: 'NPTEL: AI Basics', url: 'https://onlinecourses.nptel.ac.in/noc24_cs29/preview' },
+          { label: 'Coursera AI For Everyone', url: 'https://www.coursera.org/learn/ai-for-everyone' },
+          { label: 'edX: AI for Beginners', url: 'https://www.edx.org/course/artificial-intelligence-ai' }
+        ]
+      },
+      {
+        category: 'backend',
+        title: '🖥️ Backend Development',
+        thumbnail: 'https://img.youtube.com/vi/Oe421EPjeBE/0.jpg',
+        links: [
+          { label: 'Node.js Crash Course', url: 'https://www.youtube.com/watch?v=Oe421EPjeBE' },
+          { label: 'Express.js Tutorial', url: 'https://www.youtube.com/watch?v=L72fhGm1tfE' },
+          { label: 'Udemy: Node.js Complete', url: 'https://www.udemy.com/course/the-complete-nodejs-developer-course-2/' },
+          { label: 'edX: Back-End Web Dev', url: 'https://www.edx.org/learn/back-end-web-development' }
+        ]
+      },
+      {
+        category: 'marketing',
+        title: '📈 Digital Marketing',
+        thumbnail: 'https://img.youtube.com/vi/nU-IIXBWlS4/0.jpg',
+        links: [
+          { label: 'YouTube: SEO for Beginners', url: 'https://www.youtube.com/watch?v=nU-IIXBWlS4' },
+          { label: 'Coursera: Marketing in Digital World', url: 'https://www.coursera.org/learn/marketing-digital' },
+          { label: 'Google Digital Garage', url: 'https://learndigital.withgoogle.com/digitalgarage/course/digital-marketing' }
+        ]
+      },
+      {
+        category: 'analytics',
+        title: '📊 Business Analytics',
+        thumbnail: 'https://img.youtube.com/vi/UBVzucVpG7k/0.jpg',
+        links: [
+          { label: 'Business Analyst Training For Beginners', url: 'https://www.youtube.com/watch?v=UBVzucVpG7k' },
+          { label: 'Coursera: Business Analytics', url: 'https://www.coursera.org/specializations/business-analytics' },
+          { label: 'edX: Data Analytics for Business', url: 'https://www.edx.org/course/data-analytics-for-business' }
+        ]
+      }
+    ];
+
+    let bookmarked = new Set();
+
+    function renderCourses(filter = 'all') {
+      const grid = document.getElementById('courseGrid');
+      grid.innerHTML = '';
+      courses
+        .filter(course => filter === 'all' || course.category === filter)
+        .forEach((course, index) => {
+          const card = document.createElement('article');
+          card.setAttribute('role', 'listitem');
+          card.className = 'glass-card p-4 rounded-xl shadow-md';
+          card.innerHTML = `
+            <img src="${course.thumbnail || 'https://via.placeholder.com/400'}" alt="Course thumbnail for ${course.title}" class="rounded mb-4 w-full h-48 object-cover" loading="lazy">
+            <div class="flex justify-between items-center">
+              <h2 class="text-2xl font-semibold mb-3">${course.title}</h2>
+              <button class="bookmark-btn" aria-label="Toggle bookmark for ${course.title}" onclick="toggleBookmark(${index})" type="button">
+                <span id="bookmark-${index}">${bookmarked.has(index) ? '⭐' : '☆'}</span>
+              </button>
+            </div>
+            <ul class="space-y-2 text-sm max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500">
+              ${course.links.map(link => `
+                <li>
+                  <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="underline hover:text-yellow-300" aria-label="Open ${link.label}">${link.label}</a>
+                </li>`).join('')}
+            </ul>
+          `;
+          grid.appendChild(card);
+        });
+    }
+
+    function filterCourses(category, btn) {
+      // Remove active class from all buttons
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderCourses(category);
+    }
+
+    function toggleBookmark(index) {
+      if (bookmarked.has(index)) {
+        bookmarked.delete(index);
+      } else {
+        bookmarked.add(index);
+      }
+      document.getElementById(`bookmark-${index}`).textContent = bookmarked.has(index) ? '⭐' : '☆';
+    }
+
+    window.onload = () => renderCourses();
+  </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home - Skill Matcher</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 1.2s ease-out;
+    }
+    .option-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    .option-card {
+      transition: all 0.3s ease;
+    }
+
+    /* Loading overlay styles */
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      z-index: 9999;
+      opacity: 1;
+      pointer-events: all;
+      transition: opacity 0.5s ease;
+    }
+    #loadingOverlay.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .dots {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out;
+      opacity: 0.6;
+    }
+    .dot:nth-child(1) {
+      animation-delay: 0s;
+      background-color: #676af6;
+    }
+    .dot:nth-child(2) {
+      animation-delay: 0.2s;
+      background-color: #f7f13b;
+    }
+    .dot:nth-child(3) {
+      animation-delay: 0.4s;
+      background-color: #ec4899;
+    }
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: translateY(0);
+        opacity: 0.6;
+      }
+      40% {
+        transform: translateY(-24px);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white min-h-screen flex flex-col items-center justify-center px-6 py-12">
+
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" aria-live="polite" aria-label="Loading" role="status">
+    <div class="dots" >
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <p>Preparing your experience...</p>
+  </div>
+
+  <!-- Main content -->
+  <div id="mainContent" style="opacity:0; transition: opacity 1s ease;">
+    <header class="mb-12 text-center animate-fadeIn">
+      <h1 class="text-5xl font-bold mb-4">💼 SkillWale.com</h1>
+      <p class="text-xl max-w-xl mx-auto">Bridge the gap between your skills and your dream job using Gen AI.</p>
+    </header>
+
+    <main class="grid gap-8 sm:grid-cols-1 md:grid-cols-3 max-w-5xl w-full animate-fadeIn">
+      <a href="upload.html" class="option-card group bg-white bg-opacity-20 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transition hover:bg-white hover:text-indigo-700 cursor-pointer">
+        <div class="text-6xl mb-4">📤</div>
+        <h2 class="text-2xl font-semibold mb-2">Upload & Analyze</h2>
+        <p>Upload your resume to find your skill gaps and get personalized learning paths.</p>
+      </a>
+
+      <a href="about.html" class="option-card group bg-white bg-opacity-20 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transition hover:bg-white hover:text-indigo-700 cursor-pointer">
+        <div class="text-6xl mb-4">ℹ️</div>
+        <h2 class="text-2xl font-semibold mb-2">About the Platform</h2>
+        <p>Learn how our AI-powered platform can help you upskill and find better jobs.</p>
+      </a>
+
+      <a href="courses.html" class="option-card group bg-white bg-opacity-20 p-8 rounded-xl shadow-lg flex flex-col items-center text-center transition hover:bg-white hover:text-indigo-700 cursor-pointer">
+        <div class="text-6xl mb-4">🎓</div>
+        <h2 class="text-2xl font-semibold mb-2">Explore Free Courses</h2>
+        <p>Discover free courses tailored to your missing skills to help you grow fast.</p>
+      </a>
+    </main>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const mainContent = document.getElementById('mainContent');
+
+      // Show loading for 3 seconds
+      setTimeout(() => {
+        // Hide loading overlay
+        loadingOverlay.classList.add('hide');
+
+        // Show main content smoothly
+        mainContent.style.opacity = 1;
+
+        // Optional: Remove loading overlay from DOM after fade-out (500ms)
+        setTimeout(() => {
+          loadingOverlay.style.display = 'none';
+        }, 500);
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

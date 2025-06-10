@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About - Skill Matcher</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1rem;
+    }
+    h1, h2 {
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+    .fade-slide {
+      opacity: 0;
+      transform: translateY(20px);
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
+    }
+    .fade-slide.delay-1 {
+      animation-delay: 0.3s;
+    }
+    .fade-slide.delay-2 {
+      animation-delay: 0.6s;
+    }
+    .fade-slide.delay-3 {
+      animation-delay: 0.9s;
+    }
+    .fade-slide.animate {
+      animation-name: fadeSlideIn;
+      animation-duration: 1s;
+    }
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .feature-card {
+      background: rgba(255 255 255 / 0.1);
+      border-radius: 1rem;
+      padding: 1.8rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      cursor: default;
+    }
+    .feature-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255 255 255 / 0.25);
+      box-shadow: 0 8px 40px rgba(255 255 255 / 0.3);
+    }
+    .feature-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7));
+      transition: transform 0.3s ease;
+    }
+    .feature-card:hover .feature-icon {
+      transform: scale(1.15);
+    }
+    a.back-btn {
+      margin-top: 3rem;
+      color: white;
+      text-decoration: underline;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    a.back-btn:hover {
+      color: #d8b4fe;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="text-5xl font-bold mb-6 fade-slide delay-1">About SkillWale</h1>
+  <p class="max-w-3xl text-lg mb-12 fade-slide delay-2" style="line-height:1.6;">
+    Our AI-powered platform bridges the gap between your existing skills and what today's employers need.
+    Upload your resume, identify skill gaps, get free personalized learning paths, and build the perfect resume tailored to job openings.
+  </p>
+
+  <section class="max-w-5xl w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 fade-slide delay-3">
+
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h2 class="text-2xl font-semibold mb-2">Smart Resume Analysis</h2>
+      <p>Upload your resume and get detailed insights about your skills, strengths, and areas for improvement.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h2 class="text-2xl font-semibold mb-2">Skill Gap Detection</h2>
+      <p>Compare your skills against in-demand job requirements to see exactly what you need to learn.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🎓</div>
+      <h2 class="text-2xl font-semibold mb-2">Free Learning Paths</h2>
+      <p>Access hand-picked free courses from top platforms to quickly gain the missing skills.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">✍️</div>
+      <h2 class="text-2xl font-semibold mb-2">AI Resume Builder</h2>
+      <p>Get AI-powered resume rewriting that matches job descriptions and highlights your most relevant skills.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🚀</div>
+      <h2 class="text-2xl font-semibold mb-2">Career Empowerment</h2>
+      <p>Ideal for fresh graduates, career switchers, and upskillers looking to accelerate their job prospects.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h2 class="text-2xl font-semibold mb-2">Gen AI Powered</h2>
+      <p>Leverages the latest AI to provide smart recommendations, resume enhancements, and interview coaching.</p>
+    </div>
+
+  </section>
+
+  <a href="index.html" class="back-btn">← Back to Home</a>
+
+  <script>
+    // Animate fade-slide elements on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const fadeSlides = document.querySelectorAll('.fade-slide');
+      fadeSlides.forEach((el) => {
+        el.classList.add('animate');
+      });
+    });
+  </script>
+</body>
+</html>
