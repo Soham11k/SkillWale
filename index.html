@@ -128,13 +128,8 @@
 
       // Show loading for 3 seconds
       setTimeout(() => {
-        // Hide loading overlay
         loadingOverlay.classList.add('hide');
-
-        // Show main content smoothly
         mainContent.style.opacity = 1;
-
-        // Optional: Remove loading overlay from DOM after fade-out (500ms)
         setTimeout(() => {
           loadingOverlay.style.display = 'none';
         }, 500);
