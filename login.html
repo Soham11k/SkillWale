@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | GenAI Job Matcher</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(circle at top left, #0f0c29, #302b63, #24243e);
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      position: relative;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 50px 40px;
+      width: 400px;
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 10;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .ai-avatar {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+      background: url('https://cdn-icons-png.flaticon.com/512/4712/4712035.png') no-repeat center/contain;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .typing {
+      text-align: center;
+      color: #fff;
+      font-size: 1.5rem;
+      min-height: 50px;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .form-group input:focus {
+      box-shadow: 0 0 10px #6c5ce7;
+    }
+
+    .form-group label {
+      position: absolute;
+      top: -12px;
+      left: 15px;
+      background: #302b63;
+      color: #fff;
+      font-size: 0.85rem;
+      padding: 0 5px;
+      border-radius: 5px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+      color: white;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+      box-shadow: 0 0 10px #a29bfe;
+    }
+
+    .alt-options {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .alt-options button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 80%;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid #666;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .alt-options button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 20%;
+      width: 100%;
+      background: url('https://i.ibb.co/pP83PNn/wave-haikei.png') repeat-x;
+      background-size: cover;
+      animation: waveMove 10s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes waveMove {
+      0% { background-position-x: 0; }
+      100% { background-position-x: 1000px; }
+    }
+
+    canvas#particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="container">
+    <div class="card" id="login-card">
+      <div class="ai-avatar"></div>
+      <div class="typing" id="typing-text">Initializing...</div>
+      <form id="login-form">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" required />
+        </div>
+        <button type="submit" class="btn">Access GenAI</button>
+      </form>
+      <div class="alt-options">
+        <button onclick="alert('Google Login Coming Soon')">Login with Google</button>
+        <button onclick="window.location.href='index.html'">Continue as Guest</button>
+      </div>
+    </div>
+  </div>
+  <div class="waves"></div>
+
+  <script>
+    // Typing effect
+    const text = "Welcome to GenAI Job Matcher!";
+    let i = 0;
+    const typingElement = document.getElementById("typing-text");
+    function type() {
+      if (i < text.length) {
+        typingElement.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(type, 80);
+      }
+    }
+    setTimeout(() => {
+      typingElement.innerHTML = "";
+      type();
+    }, 800);
+
+    // Login simulation
+    document.getElementById("login-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      typingElement.innerHTML = "Authenticating...";
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2000);
+    });
+
+    // Particles animation
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particlesArray = [];
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.color = "rgba(255,255,255,0.3)";
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    function initParticles(num = 80) {
+      for (let i = 0; i < num; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
