@@ -2,26 +2,181 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Analyzing...</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-900 flex flex-col items-center justify-center h-screen text-white">
-  <div class="loader mb-6"></div>
-  <p class="text-xl">Analyzing your resume, please wait...</p>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gen AI Job Matcher - Loading</title>
   <style>
-    .loader {
-      border: 8px solid #2d3748;
-      border-top: 8px solid #6366f1;
-      border-radius: 50%;
-      width: 70px;
-      height: 70px;
-      animation: spin 1.2s linear infinite;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #5f72bd, #9b23ea);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loader-container {
+      text-align: center;
+      color: #fff;
+      z-index: 10;
+    }
+
+    .brain {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 20px;
+      background: url('https://cdn-icons-png.flaticon.com/512/3845/3845781.png') no-repeat center/contain;
+      animation: rotate 4s infinite linear;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0); }
       100% { transform: rotate(360deg); }
     }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    p {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .dot-loader {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .dot-loader div {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #fff;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .dot-loader div:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .dot-loader div:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    .dot-loader div:nth-child(3) {
+      animation-delay: 0;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    canvas#particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
   </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="loader-container">
+    <div class="brain"></div>
+    <h1>Loading GenAI Platform...</h1>
+    <p>Finding your best career matches with AI magic ✨</p>
+    <div class="dot-loader">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <script>
+    // Redirect after delay
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 5000);
+
+    // Optional particles background
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particlesArray = [];
+
+    const colors = ['#ffffff', '#f3e8ff', '#ddd6fe', '#e0e7ff'];
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    function initParticles(num = 100) {
+      for (let i = 0; i < num; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
 </body>
 </html>
