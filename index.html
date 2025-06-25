@@ -25,11 +25,59 @@
     }
 
     body {
-      background: linear-gradient(-45deg, #1e1b2e, #2c2344, #1e1b2e);
-      background-size: 400% 400%;
-      animation: gradientMove 15s ease infinite;
+      background: var(--dark-bg);
       color: var(--text-light);
       scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* Stars Background */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .stars::before, .stars::after {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      animation: twinkle 10s linear infinite;
+      opacity: 0.3;
+    }
+
+    .stars::after {
+      animation-delay: 5s;
+    }
+
+    @keyframes twinkle {
+      from { transform: translate(0, 0); }
+      to { transform: translate(-500px, -500px); }
+    }
+
+    /* Mouse Glow */
+    #mouse-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 120px;
+      height: 120px;
+      margin-left: -60px;
+      margin-top: -60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 999;
+      transition: transform 0.05s ease-out;
     }
 
     header {
@@ -41,7 +89,7 @@
       backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 100;
     }
 
     header h1 {
@@ -73,15 +121,13 @@
     }
 
     .hero {
-      min-height: 90vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 60px 20px 40px;
-      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-      background-size: contain;
+      padding: 0 20px;
       animation: fadeIn 2s ease;
     }
 
@@ -110,7 +156,6 @@
       font-size: 1rem;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      animation: pulse 2s infinite;
     }
 
     .cta:hover {
@@ -119,7 +164,7 @@
     }
 
     .features {
-      padding: 40px 30px;
+      padding: 60px 40px;
     }
 
     .section-title {
@@ -168,14 +213,6 @@
       background: #16141f;
     }
 
-    .ai-floaty {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      animation: floatBot 3s ease-in-out infinite;
-    }
-
     @keyframes fadeIn {
       from {opacity: 0; transform: translateY(30px);}
       to {opacity: 1; transform: translateY(0);}
@@ -191,23 +228,6 @@
       to {opacity: 1; transform: scale(1);}
     }
 
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,111,97, 0.6); }
-      70% { box-shadow: 0 0 0 10px rgba(255,111,97, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,111,97, 0); }
-    }
-
-    @keyframes floatBot {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     @media (max-width: 600px) {
       .hero h2 { font-size: 2.2rem; }
       header { flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -215,6 +235,10 @@
   </style>
 </head>
 <body>
+
+  <div class="stars"></div>
+  <div id="mouse-glow"></div>
+
   <header>
     <h1>SkillWale</h1>
     <nav>
@@ -225,35 +249,35 @@
   </header>
 
   <section class="hero">
-    <h2>Let Your Skills Shine ✨</h2>
+    <h2>Let Your Skills Shine 🌟</h2>
     <p>SkillWale uses Gen AI to connect your talent to real opportunities — smarter, faster, and with heart.</p>
-    <button class="cta" onclick="window.location.href='upload'">Try It Now 🚀</button>
+    <button class="cta" onclick="window.location.href='upload'">Try It Now</button>
   </section>
 
   <section class="features" id="features">
     <h2 class="section-title">What We Do Best</h2>
     <div class="cards">
-      <div class="card" style="animation-delay: 0.2s">
+      <div class="card">
         <h3>🎯 Smart Job Recommendations</h3>
         <p>We go beyond keywords. Our AI understands your work style, domain knowledge, and ambitions to recommend roles you're truly fit for.</p>
       </div>
-      <div class="card" style="animation-delay: 0.4s">
+      <div class="card">
         <h3>📈 Personalized Growth Roadmaps</h3>
         <p>Missing something? Get a roadmap to upgrade your skills with free and relevant online content, personalized just for you.</p>
       </div>
-      <div class="card" style="animation-delay: 0.6s">
+      <div class="card">
         <h3>🧠 Resume Strength Analyzer</h3>
         <p>See your resume the way a recruiter would. Understand what's strong, what's weak, and how to improve it.</p>
       </div>
-      <div class="card" style="animation-delay: 0.8s">
+      <div class="card">
         <h3>🤝 Human-Friendly Interface</h3>
         <p>Our interface is made to feel calm and clear. Like a good career counselor, not a cold algorithm.</p>
       </div>
-      <div class="card" style="animation-delay: 1.0s">
+      <div class="card">
         <h3>🚀 Real-Time Market Trends</h3>
         <p>Get suggestions based on what's trending in your domain today — roles, salaries, and skills.</p>
       </div>
-      <div class="card" style="animation-delay: 1.2s">
+      <div class="card">
         <h3>🔎 Recruiter Insight Mode</h3>
         <p>Toggle to see how recruiters will read your resume. Identify buzzwords and common deal-breakers instantly.</p>
       </div>
@@ -264,6 +288,12 @@
     Built with ❤️ by SkillWale · © 2025
   </footer>
 
-  <img src="https://cdn-icons-png.flaticon.com/512/4712/4712102.png" alt="AI Bot" class="ai-floaty" />
+  <script>
+    const glow = document.getElementById("mouse-glow");
+    document.addEventListener("mousemove", (e) => {
+      glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    });
+  </script>
+
 </body>
 </html>
