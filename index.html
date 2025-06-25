@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SkillWale - Find Your Dream Job</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <title>SkillWale - AI Career Matcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --dark-bg: #1e1b2e;
@@ -22,12 +22,12 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
     }
 
     body {
       background: var(--dark-bg);
       color: var(--text-light);
+      scroll-behavior: smooth;
     }
 
     header {
@@ -71,27 +71,29 @@
     }
 
     .hero {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       text-align: center;
-      min-height: 95vh;
-      padding: 60px 20px;
-      animation: fadeInUp 1s ease forwards;
+      padding: 0 20px;
+      animation: fadeIn 2s ease;
     }
 
     .hero h2 {
       font-size: 3rem;
       color: var(--gold);
       margin-bottom: 20px;
+      animation: slideUp 1.2s ease forwards;
     }
 
     .hero p {
-      font-size: 1.1rem;
-      color: var(--text-muted);
       max-width: 600px;
+      color: var(--text-muted);
+      font-size: 1.1rem;
       margin-bottom: 30px;
+      animation: slideUp 1.4s ease forwards;
     }
 
     .cta {
@@ -111,16 +113,15 @@
       box-shadow: 0 0 20px var(--coral);
     }
 
-    .section-title {
-      font-size: 2.2rem;
-      text-align: center;
-      color: var(--plum);
-      margin-bottom: 40px;
-    }
-
     .features {
       padding: 60px 40px;
-      background: rgba(255,255,255,0.02);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 40px;
+      color: var(--plum);
     }
 
     .cards {
@@ -133,22 +134,14 @@
       background: var(--card-bg);
       border-radius: 20px;
       padding: 25px;
-      backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       transition: transform 0.4s ease, box-shadow 0.4s ease;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: reveal 1s ease forwards;
+      animation: fadeInCard 0.8s ease forwards;
     }
 
-    .card:nth-child(1) { animation-delay: 0.2s; }
-    .card:nth-child(2) { animation-delay: 0.4s; }
-    .card:nth-child(3) { animation-delay: 0.6s; }
-    .card:nth-child(4) { animation-delay: 0.8s; }
-
     .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
     .card h3 {
@@ -162,33 +155,6 @@
       color: var(--text-muted);
     }
 
-    .stats {
-      margin-top: 50px;
-      display: flex;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-      gap: 30px;
-    }
-
-    .stat {
-      text-align: center;
-      background: var(--glass);
-      padding: 25px 30px;
-      border-radius: 15px;
-      border: 1px solid rgba(255,255,255,0.05);
-      color: var(--text-light);
-    }
-
-    .stat h4 {
-      font-size: 2rem;
-      color: var(--coral);
-    }
-
-    .stat p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-
     footer {
       text-align: center;
       padding: 40px 20px;
@@ -197,38 +163,24 @@
       background: #16141f;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
     }
 
-    @keyframes reveal {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes slideUp {
+      from {opacity: 0; transform: translateY(40px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes fadeInCard {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
     }
 
     @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .hero h2 {
-        font-size: 2rem;
-      }
-
-      .stats {
-        flex-direction: column;
-        align-items: center;
-      }
+      .hero h2 { font-size: 2.2rem; }
+      header { flex-direction: column; align-items: flex-start; gap: 10px; }
     }
   </style>
 </head>
@@ -237,56 +189,49 @@
     <h1>SkillWale</h1>
     <nav>
       <a href="#features">Features</a>
-      <a href="upload.html">Upload</a>
-      <a href="courses.html">Courses</a>
+      <a href="upload">Upload</a>
+      <a href="/courses">Courses</a>
     </nav>
   </header>
 
   <section class="hero">
-    <h2>Unlock Your True Potential</h2>
-    <p>Welcome to SkillWale — where AI meets ambition. Upload your resume and discover your best-fit career path instantly.</p>
-    <button class="cta" onclick="window.location.href='upload.html'">Get Started</button>
+    <h2>Let Your Skills Shine 🌟</h2>
+    <p>SkillWale uses Gen AI to connect your talent to real opportunities — smarter, faster, and with heart.</p>
+    <button class="cta" onclick="window.location.href='upload'">Try It Now</button>
   </section>
 
   <section class="features" id="features">
-    <h2 class="section-title">What SkillWale Offers</h2>
+    <h2 class="section-title">What We Do Best</h2>
     <div class="cards">
       <div class="card">
-        <h3>🎯 Smart Job Matching</h3>
-        <p>AI scans your resume and pairs you with roles that match your unique skills, goals, and personality.</p>
+        <h3>🎯 Smart Job Recommendations</h3>
+        <p>We go beyond keywords. Our AI understands your work style, domain knowledge, and ambitions to recommend roles you're truly fit for.</p>
       </div>
       <div class="card">
-        <h3>📚 Personalized Learning</h3>
-        <p>Missing something? We suggest custom learning tracks to help you level up fast and land top roles.</p>
+        <h3>📈 Personalized Growth Roadmaps</h3>
+        <p>Missing something? Get a roadmap to upgrade your skills with free and relevant online content, personalized just for you.</p>
       </div>
       <div class="card">
-        <h3>🤖 Resume Insights</h3>
-        <p>Know what recruiters see in seconds. Your resume is read, ranked, and rated with transparency.</p>
+        <h3>🧠 Resume Strength Analyzer</h3>
+        <p>See your resume the way a recruiter would. Understand what's strong, what's weak, and how to improve it.</p>
       </div>
       <div class="card">
-        <h3>🌱 Human-Centered Design</h3>
-        <p>Our platform is built to feel like a mentor, not a machine. Gentle. Bright. Honest.</p>
+        <h3>🤝 Human-Friendly Interface</h3>
+        <p>Our interface is made to feel calm and clear. Like a good career counselor, not a cold algorithm.</p>
       </div>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <h4>40K+</h4>
-        <p>Matches Made</p>
+      <div class="card">
+        <h3>🚀 Real-Time Market Trends</h3>
+        <p>Get suggestions based on what's trending in your domain today — roles, salaries, and skills.</p>
       </div>
-      <div class="stat">
-        <h4>12K+</h4>
-        <p>Courses Recommended</p>
-      </div>
-      <div class="stat">
-        <h4>98%</h4>
-        <p>User Satisfaction</p>
+      <div class="card">
+        <h3>🔎 Recruiter Insight Mode</h3>
+        <p>Toggle to see how recruiters will read your resume. Identify buzzwords and common deal-breakers instantly.</p>
       </div>
     </div>
   </section>
 
   <footer>
-    Made with ❤️ by SkillWale · © 2025
+    Built with ❤️ by SkillWale · © 2025
   </footer>
 </body>
 </html>
