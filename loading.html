@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gen AI Job Matcher - Loading</title>
+  <title>SkillWale – AI Job Matcher Loading</title>
   <style>
     * {
       margin: 0;
@@ -103,8 +103,8 @@
   <canvas id="particles"></canvas>
   <div class="loader-container">
     <div class="brain"></div>
-    <h1>Loading GenAI Platform...</h1>
-    <p>Finding your best career matches with AI magic ✨</p>
+    <h1>Launching SkillWale...</h1>
+    <p>Matching you with the best opportunities using Gen AI ✨</p>
     <div class="dot-loader">
       <div></div>
       <div></div>
@@ -113,20 +113,18 @@
   </div>
 
   <script>
-    // Redirect after delay
+    // ✅ Redirect to home page after 5 seconds
     setTimeout(() => {
-      window.location.href = "login.html";
+      window.location.href = "/home";
     }, 5000);
 
-    // Optional particles background
+    // 🎇 Optional particles background
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     const particlesArray = [];
-
     const colors = ['#ffffff', '#f3e8ff', '#ddd6fe', '#e0e7ff'];
 
     class Particle {
