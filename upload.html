@@ -2,83 +2,292 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Resume Analyzer – SkillWale</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Resume | SkillWale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
-      50% { box-shadow: 0 0 20px rgba(255,255,255,0.8); }
-      100% { box-shadow: 0 0 0px rgba(255,255,255,0.6); }
+    :root {
+      --dark-bg: #1e1b2e;
+      --glass: rgba(255, 255, 255, 0.05);
+      --highlight: #fcd34d;
+      --accent: #d06aff;
+      --muted: #b0b0b0;
+      --primary: #ff6f61;
+      --text-light: #f5f5f5;
     }
-    .glow {
-      animation: pulseGlow 2s infinite;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: var(--dark-bg);
+      color: var(--text-light);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+    }
+
+    header h1 {
+      color: var(--highlight);
+    }
+
+    nav a {
+      color: var(--text-light);
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .upload-section {
+      max-width: 800px;
+      margin: 50px auto;
+      text-align: center;
+      padding: 30px;
+      background: var(--glass);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .upload-section h2 {
+      font-size: 2rem;
+      color: var(--highlight);
+      margin-bottom: 10px;
+    }
+
+    .upload-section p {
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+
+    .upload-box {
+      display: block;
+      width: 100%;
+      padding: 40px;
+      background: var(--glass);
+      border: 2px dashed var(--accent);
+      border-radius: 15px;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-bottom: 30px;
+    }
+
+    .upload-box:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .upload-box input {
+      display: none;
+    }
+
+    .upload-box img {
+      width: 60px;
+      margin-bottom: 10px;
+    }
+
+    .loader {
+      display: none;
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      border: 5px solid var(--accent);
+      border-top: 5px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .preview {
+      display: none;
+      background: var(--glass);
+      padding: 20px;
+      border-radius: 15px;
+      animation: fadeIn 1s ease;
+    }
+
+    .preview h3 {
+      font-size: 1.5rem;
+      color: var(--highlight);
+      margin-bottom: 10px;
+    }
+
+    .match-result {
+      margin-bottom: 20px;
+    }
+
+    .match-result h4 {
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .skills-list span {
+      background: var(--accent);
+      padding: 6px 12px;
+      border-radius: 20px;
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    .tips {
+      text-align: left;
+    }
+
+    .tips h4 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .tips ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    .tips li {
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.9rem;
+      color: #888;
+      background: #16141f;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-700 to-pink-500 text-white min-h-screen px-6 py-12 font-sans">
+<body>
+  <header>
+    <h1>SkillWale</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="courses.html">Courses</a>
+    </nav>
+  </header>
 
-  <div class="max-w-3xl mx-auto text-center">
-    <h1 class="text-5xl font-bold mb-4">📤 Upload & Analyze Resumes</h1>
-    <p class="text-lg mb-8">Let AI scan your skills and suggest the most suitable jobs – SkillWale style 💼✨</p>
+  <section class="upload-section">
+    <h2>Upload Your Resume</h2>
+    <p>Let us analyze your superpowers and find the perfect job role for you 🧠</p>
 
-    <label for="resumeInput" class="cursor-pointer bg-white text-indigo-700 font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-indigo-100 glow transition">
-      📎 Choose Resume Files
-      <input type="file" id="resumeInput" multiple accept=".pdf,.doc,.docx,.txt" class="hidden" />
+    <label class="upload-box" id="uploadBox">
+      <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt" />
+      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Upload Icon" />
+      <p>Click or drag your resume file here</p>
     </label>
 
-    <div id="loadingText" class="text-pink-200 mt-4 text-sm hidden">Analyzing your talent using Gen AI magic...</div>
-  </div>
+    <div class="loader" id="loader"></div>
 
-  <div id="results" class="mt-12 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    <div class="preview" id="preview">
+      <h3>🔍 AI Analysis Result</h3>
+      <div class="match-result">
+        <p>Waiting for analysis...</p>
+      </div>
+    </div>
+
+    <div class="tips">
+      <h4>✨ Tips to Enhance Your Resume</h4>
+      <ul>
+        <li>Include measurable achievements (e.g., "boosted revenue by 20%")</li>
+        <li>Tailor the resume to the job description</li>
+        <li>Use action verbs like "Led", "Created", "Designed"</li>
+        <li>Highlight tools you're proficient in</li>
+        <li>Keep layout clean and consistent</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    Crafted with ❤️ by SkillWale · © 2025
+  </footer>
 
   <script>
-    function simulateAIJobMatch(text) {
-      const lower = text.toLowerCase();
-      if (lower.includes("python") && lower.includes("ml")) return "🧠 AI/ML Engineer";
-      if (lower.includes("react") || lower.includes("javascript")) return "🎨 Frontend Developer";
-      if (lower.includes("node") || lower.includes("spring")) return "🖥️ Backend Developer";
-      if (lower.includes("marketing") || lower.includes("seo")) return "📢 Digital Marketer";
-      if (lower.includes("excel") || lower.includes("finance")) return "📊 Business Analyst";
-      return "🧩 Generalist Role";
+  const input = document.getElementById("resumeInput");
+  const loader = document.getElementById("loader");
+  const preview = document.getElementById("preview");
+  const uploadBox = document.getElementById("uploadBox");
+  const resultBox = preview.querySelector(".match-result");
+
+  uploadBox.addEventListener("click", () => input.click());
+
+  input.addEventListener("change", async () => {
+    if (input.files.length > 0) {
+      const file = input.files[0];
+      loader.style.display = 'block';
+      preview.style.display = 'none';
+      resultBox.innerHTML = "<p>Analyzing...</p>";
+
+      const formData = new FormData();
+      formData.append("resume", file);
+
+      try {
+        const response = await fetch("http://localhost:5000/analyze", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        loader.style.display = 'none';
+        preview.style.display = 'block';
+        preview.scrollIntoView({ behavior: 'smooth' });
+
+        if (data.analysis) {
+          resultBox.innerHTML = `<pre>${data.analysis}</pre>`;
+        } else {
+          resultBox.innerHTML = `<p style="color: red;">❌ ${data.error}</p>`;
+        }
+      } catch (err) {
+        loader.style.display = 'none';
+        preview.style.display = 'block';
+        resultBox.innerHTML = `<p style="color: red;">❌ Error: ${err.message}</p>`;
+      }
     }
+  });
 
-    function storeResult(filename, jobRole) {
-      const existing = JSON.parse(localStorage.getItem("resumeResults")) || [];
-      existing.push({ filename, jobRole, timestamp: new Date().toISOString() });
-      localStorage.setItem("resumeResults", JSON.stringify(existing));
-    }
+  uploadBox.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    uploadBox.style.background = 'rgba(255, 255, 255, 0.1)';
+  });
 
-    function showResult(filename, jobRole) {
-      const resultBox = document.createElement("div");
-      resultBox.className = "bg-white bg-opacity-10 p-6 rounded-xl shadow-lg backdrop-blur-sm";
-      resultBox.innerHTML = `
-        <h3 class="text-xl font-semibold mb-2">${filename}</h3>
-        <p class="text-lg">✅ <span class="text-green-300 font-medium">Suggested Job:</span> ${jobRole}</p>
-        <p class="text-xs text-pink-100 mt-2">Saved to your device</p>
-      `;
-      document.getElementById("results").appendChild(resultBox);
-    }
+  uploadBox.addEventListener("dragleave", () => {
+    uploadBox.style.background = 'var(--glass)';
+  });
 
-    async function handleResumeUpload(file) {
-      const text = await file.text();
-      const job = simulateAIJobMatch(text);
-      storeResult(file.name, job);
-      showResult(file.name, job);
-    }
-
-    document.getElementById('resumeInput').addEventListener('change', (event) => {
-      const files = Array.from(event.target.files);
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "";
-
-      document.getElementById("loadingText").classList.remove("hidden");
-
-      setTimeout(() => {
-        document.getElementById("loadingText").classList.add("hidden");
-        files.forEach(file => handleResumeUpload(file));
-      }, 2000); // simulate AI thinking
-    });
-  </script>
+  uploadBox.addEventListener("drop", (e) => {
+    e.preventDefault();
+    input.files = e.dataTransfer.files;
+    input.dispatchEvent(new Event('change'));
+  });
+</script>
 
 </body>
 </html>
