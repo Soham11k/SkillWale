@@ -1,212 +1,239 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Explore Courses – SkillWale</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recommended Courses | SkillWale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --dark-bg: #1e1b2e;
+      --highlight: #fcd34d;
+      --accent: #d06aff;
+      --muted: #b0b0b0;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --text-light: #f5f5f5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
-      min-height: 100vh;
+      background: var(--dark-bg);
+      color: var(--text-light);
     }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: default;
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
     }
-    .glass-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25);
-      cursor: pointer;
+
+    header h1 {
+      color: var(--highlight);
     }
-    .bookmark-btn {
-      cursor: pointer;
-      color: #facc15;
-      transition: transform 0.2s;
-      user-select: none;
+
+    nav a {
+      color: var(--text-light);
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 500;
     }
-    .bookmark-btn:hover {
-      transform: scale(1.2);
+
+    nav a:hover {
+      color: var(--accent);
     }
-    /* Filter button styling */
+
+    .courses-section {
+      max-width: 1100px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .courses-section h2 {
+      font-size: 2.4rem;
+      text-align: center;
+      color: var(--highlight);
+      margin-bottom: 20px;
+    }
+
+    .filter-bar {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
     .filter-btn {
+      background: none;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 16px;
+      margin: 5px;
+      border-radius: 30px;
+      font-size: 0.9rem;
       cursor: pointer;
-      background-color: rgba(255 255 255 / 0.2);
-      transition: background-color 0.3s ease;
-      padding: 0.5rem 1.2rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      color: white;
-      user-select: none;
-      border: none;
-      font-size: 1rem;
+      transition: all 0.3s ease;
     }
-    .filter-btn:hover {
-      background-color: rgba(255 255 255 / 0.35);
-    }
+
+    .filter-btn:hover,
     .filter-btn.active {
-      background-color: white;
-      color: #6366f1;
-      box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+      background: var(--accent);
+      color: white;
     }
-    /* Scroll bar fix */
-    ul {
-      scrollbar-width: thin;
-      scrollbar-color: #a855f7 transparent;
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
     }
-    ul::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+
+    .course-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    ul::-webkit-scrollbar-thumb {
-      background-color: #a855f7;
-      border-radius: 10px;
+
+    .course-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .course-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .course-content {
+      padding: 20px;
+    }
+
+    .course-content h3 {
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .course-content p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .course-content a {
+      display: inline-block;
+      margin-top: 12px;
+      background: var(--highlight);
+      color: #1e1b2e;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .course-content a:hover {
+      background: #ffe580;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.9rem;
+      color: #888;
+      background: #16141f;
     }
   </style>
 </head>
-<body class="text-white px-6 py-10 flex flex-col items-center">
-
-  <header class="text-center mb-12 max-w-4xl mx-auto">
-    <h1 class="text-4xl font-bold mb-2">🎓 Free Courses Just for You</h1>
-    <p class="text-lg max-w-2xl mx-auto text-white/90">
-      Upskill with hand-picked free courses from trusted platforms like YouTube, Coursera, NPTEL, Udemy, edX & more.
-    </p>
-
-    <!-- Filter Buttons -->
-    <div class="mt-6 flex flex-wrap justify-center gap-3" role="group" aria-label="Course categories">
-      <button type="button" class="filter-btn active" data-category="all" onclick="filterCourses('all', this)">All</button>
-      <button type="button" class="filter-btn" data-category="data" onclick="filterCourses('data', this)">Data Science</button>
-      <button type="button" class="filter-btn" data-category="frontend" onclick="filterCourses('frontend', this)">Frontend</button>
-      <button type="button" class="filter-btn" data-category="backend" onclick="filterCourses('backend', this)">Backend</button>
-      <button type="button" class="filter-btn" data-category="ai" onclick="filterCourses('ai', this)">AI/ML</button>
-      <button type="button" class="filter-btn" data-category="marketing" onclick="filterCourses('marketing', this)">Marketing</button>
-      <button type="button" class="filter-btn" data-category="analytics" onclick="filterCourses('analytics', this)">Analytics</button>
-    </div>
+<body>
+  <header>
+    <h1>SkillWale</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="upload.html">Upload</a>
+    </nav>
   </header>
 
-  <main id="courseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full" role="list">
-    <!-- Cards inserted here dynamically -->
-  </main>
+  <section class="courses-section">
+    <h2>✨ Recommended Courses Just for You</h2>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="design">Design</button>
+      <button class="filter-btn" data-category="tech">Tech</button>
+      <button class="filter-btn" data-category="marketing">Marketing</button>
+      <button class="filter-btn" data-category="leadership">Leadership</button>
+    </div>
+
+    <div class="grid">
+      <div class="course-card" data-category="design">
+        <img src="https://img-c.udemycdn.com/course/240x135/1565838_e54e_12.jpg" alt="UI/UX Design">
+        <div class="course-content">
+          <h3>UI/UX Design Masterclass</h3>
+          <p>Learn Figma, wireframing, and user empathy. Perfect for Product Designers and aspiring UX leads.</p>
+          <a href="https://www.udemy.com/course/ui-ux-web-design-using-adobe-xd/" target="_blank">Visit Course</a>
+        </div>
+      </div>
+
+      <div class="course-card" data-category="tech">
+        <img src="https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg" alt="Python Programming">
+        <div class="course-content">
+          <h3>Python for Everybody</h3>
+          <p>Start coding today! Build data tools, automate tasks, and enter the world of AI-powered development.</p>
+          <a href="https://www.coursera.org/specializations/python" target="_blank">Visit Course</a>
+        </div>
+      </div>
+
+      <div class="course-card" data-category="marketing">
+        <img src="https://img-c.udemycdn.com/course/240x135/1460384_52a4_2.jpg" alt="Digital Marketing">
+        <div class="course-content">
+          <h3>Digital Marketing 101</h3>
+          <p>SEO, content strategy, email campaigns — all in one course to power your marketing career.</p>
+          <a href="https://www.udemy.com/course/learn-digital-marketing-course/" target="_blank">Visit Course</a>
+        </div>
+      </div>
+
+      <div class="course-card" data-category="leadership">
+        <img src="https://img-c.udemycdn.com/course/240x135/851712_fc61_6.jpg" alt="Leadership Skills">
+        <div class="course-content">
+          <h3>Leadership & Management</h3>
+          <p>Develop the mindset and communication skills to lead teams with confidence and clarity.</p>
+          <a href="https://www.coursera.org/learn/leading-people-teams" target="_blank">Visit Course</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Crafted with ❤️ by SkillWale · © 2025
+  </footer>
 
   <script>
-    const courses = [
-      {
-        category: 'data',
-        title: '🧠 Data Science',
-        thumbnail: 'https://img.youtube.com/vi/ua-CiDNNj30/0.jpg',
-        links: [
-          { label: 'YouTube Full Course', url: 'https://www.youtube.com/watch?v=ua-CiDNNj30' },
-          { label: 'NPTEL: Python for DS', url: 'https://onlinecourses.nptel.ac.in/noc24_cs28/preview' },
-          { label: 'Coursera: DS Methodology', url: 'https://www.coursera.org/learn/data-science-methodology' },
-          { label: 'Udemy: DS A-Z', url: 'https://www.udemy.com/course/datascience/' },
-          { label: 'edX: DS MicroMasters', url: 'https://www.edx.org/micromasters/data-science' }
-        ]
-      },
-      {
-        category: 'frontend',
-        title: '🎨 Frontend Development',
-        thumbnail: 'https://img.youtube.com/vi/bMknfKXIFA8/0.jpg',
-        links: [
-          { label: 'React JS Full Course', url: 'https://www.youtube.com/watch?v=bMknfKXIFA8' },
-          { label: 'FreeCodeCamp Web Dev', url: 'https://www.freecodecamp.org/learn' },
-          { label: 'Udemy HTML/CSS/JS', url: 'https://www.udemy.com/course/html-css-javascript-for-web-developers/' },
-          { label: 'edX: Frontend Foundations', url: 'https://www.edx.org/learn/front-end-web-development' }
-        ]
-      },
-      {
-        category: 'ai',
-        title: '🤖 Artificial Intelligence & ML',
-        thumbnail: 'https://img.youtube.com/vi/aircAruvnKk/0.jpg',
-        links: [
-          { label: 'AI YouTube Crash Course', url: 'https://www.youtube.com/watch?v=aircAruvnKk' },
-          { label: 'NPTEL: AI Basics', url: 'https://onlinecourses.nptel.ac.in/noc24_cs29/preview' },
-          { label: 'Coursera AI For Everyone', url: 'https://www.coursera.org/learn/ai-for-everyone' },
-          { label: 'edX: AI for Beginners', url: 'https://www.edx.org/course/artificial-intelligence-ai' }
-        ]
-      },
-      {
-        category: 'backend',
-        title: '🖥️ Backend Development',
-        thumbnail: 'https://img.youtube.com/vi/Oe421EPjeBE/0.jpg',
-        links: [
-          { label: 'Node.js Crash Course', url: 'https://www.youtube.com/watch?v=Oe421EPjeBE' },
-          { label: 'Express.js Tutorial', url: 'https://www.youtube.com/watch?v=L72fhGm1tfE' },
-          { label: 'Udemy: Node.js Complete', url: 'https://www.udemy.com/course/the-complete-nodejs-developer-course-2/' },
-          { label: 'edX: Back-End Web Dev', url: 'https://www.edx.org/learn/back-end-web-development' }
-        ]
-      },
-      {
-        category: 'marketing',
-        title: '📈 Digital Marketing',
-        thumbnail: 'https://img.youtube.com/vi/nU-IIXBWlS4/0.jpg',
-        links: [
-          { label: 'YouTube: SEO for Beginners', url: 'https://www.youtube.com/watch?v=nU-IIXBWlS4' },
-          { label: 'Coursera: Marketing in Digital World', url: 'https://www.coursera.org/learn/marketing-digital' },
-          { label: 'Google Digital Garage', url: 'https://learndigital.withgoogle.com/digitalgarage/course/digital-marketing' }
-        ]
-      },
-      {
-        category: 'analytics',
-        title: '📊 Business Analytics',
-        thumbnail: 'https://img.youtube.com/vi/UBVzucVpG7k/0.jpg',
-        links: [
-          { label: 'Business Analyst Training For Beginners', url: 'https://www.youtube.com/watch?v=UBVzucVpG7k' },
-          { label: 'Coursera: Business Analytics', url: 'https://www.coursera.org/specializations/business-analytics' },
-          { label: 'edX: Data Analytics for Business', url: 'https://www.edx.org/course/data-analytics-for-business' }
-        ]
-      }
-    ];
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const courseCards = document.querySelectorAll('.course-card');
 
-    let bookmarked = new Set();
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
 
-    function renderCourses(filter = 'all') {
-      const grid = document.getElementById('courseGrid');
-      grid.innerHTML = '';
-      courses
-        .filter(course => filter === 'all' || course.category === filter)
-        .forEach((course, index) => {
-          const card = document.createElement('article');
-          card.setAttribute('role', 'listitem');
-          card.className = 'glass-card p-4 rounded-xl shadow-md';
-          card.innerHTML = `
-            <img src="${course.thumbnail || 'https://via.placeholder.com/400'}" alt="Course thumbnail for ${course.title}" class="rounded mb-4 w-full h-48 object-cover" loading="lazy">
-            <div class="flex justify-between items-center">
-              <h2 class="text-2xl font-semibold mb-3">${course.title}</h2>
-              <button class="bookmark-btn" aria-label="Toggle bookmark for ${course.title}" onclick="toggleBookmark(${index})" type="button">
-                <span id="bookmark-${index}">${bookmarked.has(index) ? '⭐' : '☆'}</span>
-              </button>
-            </div>
-            <ul class="space-y-2 text-sm max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500">
-              ${course.links.map(link => `
-                <li>
-                  <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="underline hover:text-yellow-300" aria-label="Open ${link.label}">${link.label}</a>
-                </li>`).join('')}
-            </ul>
-          `;
-          grid.appendChild(card);
+        const category = btn.dataset.category;
+
+        courseCards.forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
         });
-    }
-
-    function filterCourses(category, btn) {
-      // Remove active class from all buttons
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderCourses(category);
-    }
-
-    function toggleBookmark(index) {
-      if (bookmarked.has(index)) {
-        bookmarked.delete(index);
-      } else {
-        bookmarked.add(index);
-      }
-      document.getElementById(`bookmark-${index}`).textContent = bookmarked.has(index) ? '⭐' : '☆';
-    }
-
-    window.onload = () => renderCourses();
+      });
+    });
   </script>
 </body>
 </html>
