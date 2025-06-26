@@ -7,11 +7,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --dark-bg: #1e1b2e;
-      --glass: rgba(255, 255, 255, 0.05);
+      --dark-bg: #0d0614;
+      --glass: rgba(255, 255, 255, 0.04);
       --highlight: #fcd34d;
-      --accent: #d06aff;
-      --muted: #b0b0b0;
+      --accent: #e879f9;
+      --muted: #aaa;
       --primary: #ff6f61;
       --text-light: #f5f5f5;
     }
@@ -24,8 +24,21 @@
     }
 
     body {
-      background: var(--dark-bg);
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #0d0614, #1b0932, #250f47);
+      background-size: cover;
       color: var(--text-light);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
     }
 
     header {
@@ -35,6 +48,8 @@
       padding: 20px 50px;
       background: var(--glass);
       backdrop-filter: blur(10px);
+      z-index: 10;
+      position: relative;
     }
 
     header h1 {
@@ -54,18 +69,20 @@
 
     .upload-section {
       max-width: 800px;
-      margin: 50px auto;
+      margin: 80px auto;
       text-align: center;
-      padding: 30px;
-      background: var(--glass);
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.03);
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      z-index: 1;
+      position: relative;
     }
 
     .upload-section h2 {
-      font-size: 2rem;
+      font-size: 2.6rem;
       color: var(--highlight);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .upload-section p {
@@ -74,7 +91,10 @@
     }
 
     .upload-box {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       padding: 40px;
       background: var(--glass);
@@ -82,21 +102,25 @@
       border-radius: 15px;
       color: var(--text-light);
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: 0.3s ease;
       margin-bottom: 30px;
+      position: relative;
     }
 
     .upload-box:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(232, 121, 249, 0.1);
+      box-shadow: 0 0 25px var(--accent);
     }
 
     .upload-box input {
       display: none;
     }
 
-    .upload-box img {
-      width: 60px;
-      margin-bottom: 10px;
+    .upload-box svg {
+      width: 70px;
+      height: 70px;
+      margin-bottom: 12px;
+      fill: var(--accent);
     }
 
     .loader {
@@ -176,8 +200,8 @@
       text-align: center;
       padding: 40px 20px;
       font-size: 0.9rem;
-      color: #888;
-      background: #16141f;
+      color: #ccc;
+      background: rgba(0,0,0,0.6);
     }
 
     @keyframes fadeIn {
@@ -187,6 +211,7 @@
   </style>
 </head>
 <body>
+  <canvas id="stars"></canvas>
   <header>
     <h1>SkillWale</h1>
     <nav>
@@ -201,7 +226,7 @@
 
     <label class="upload-box" id="uploadBox">
       <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt" />
-      <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Upload Icon" />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 1H4v2h16v-2z"/></svg>
       <p>Click or drag your resume file here</p>
     </label>
 
@@ -231,63 +256,98 @@
   </footer>
 
   <script>
-  const input = document.getElementById("resumeInput");
-  const loader = document.getElementById("loader");
-  const preview = document.getElementById("preview");
-  const uploadBox = document.getElementById("uploadBox");
-  const resultBox = preview.querySelector(".match-result");
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-  uploadBox.addEventListener("click", () => input.click());
-
-  input.addEventListener("change", async () => {
-    if (input.files.length > 0) {
-      const file = input.files[0];
-      loader.style.display = 'block';
-      preview.style.display = 'none';
-      resultBox.innerHTML = "<p>Analyzing...</p>";
-
-      const formData = new FormData();
-      formData.append("resume", file);
-
-      try {
-        const response = await fetch("http://localhost:5001/analyze", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await response.json();
-        loader.style.display = 'none';
-        preview.style.display = 'block';
-        preview.scrollIntoView({ behavior: 'smooth' });
-
-        if (data.analysis) {
-          resultBox.innerHTML = `<pre>${data.analysis}</pre>`;
-        } else {
-          resultBox.innerHTML = `<p style="color: red;">❌ ${data.error}</p>`;
-        }
-      } catch (err) {
-        loader.style.display = 'none';
-        preview.style.display = 'block';
-        resultBox.innerHTML = `<p style="color: red;">❌ Error: ${err.message}</p>`;
-      }
+    const stars = [];
+    for (let i = 0; i < 100; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5,
+        alpha: Math.random(),
+        delta: Math.random() * 0.02
+      });
     }
-  });
 
-  uploadBox.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    uploadBox.style.background = 'rgba(255, 255, 255, 0.1)';
-  });
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let star of stars) {
+        star.alpha += star.delta;
+        if (star.alpha <= 0 || star.alpha >= 1) star.delta *= -1;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(animateStars);
+    }
 
-  uploadBox.addEventListener("dragleave", () => {
-    uploadBox.style.background = 'var(--glass)';
-  });
+    animateStars();
 
-  uploadBox.addEventListener("drop", (e) => {
-    e.preventDefault();
-    input.files = e.dataTransfer.files;
-    input.dispatchEvent(new Event('change'));
-  });
-</script>
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
 
+    const input = document.getElementById("resumeInput");
+    const loader = document.getElementById("loader");
+    const preview = document.getElementById("preview");
+    const uploadBox = document.getElementById("uploadBox");
+    const resultBox = preview.querySelector(".match-result");
+
+    uploadBox.addEventListener("click", () => input.click());
+
+    input.addEventListener("change", async () => {
+      if (input.files.length > 0) {
+        const file = input.files[0];
+        loader.style.display = 'block';
+        preview.style.display = 'none';
+        resultBox.innerHTML = "<p>Analyzing...</p>";
+
+        const formData = new FormData();
+        formData.append("resume", file);
+
+        try {
+          const response = await fetch("http://localhost:5001/analyze", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+          loader.style.display = 'none';
+          preview.style.display = 'block';
+          preview.scrollIntoView({ behavior: 'smooth' });
+
+          if (data.analysis) {
+            resultBox.innerHTML = `<pre>${data.analysis}</pre>`;
+          } else {
+            resultBox.innerHTML = `<p style="color: red;">❌ ${data.error}</p>`;
+          }
+        } catch (err) {
+          loader.style.display = 'none';
+          preview.style.display = 'block';
+          resultBox.innerHTML = `<p style="color: red;">❌ Error: ${err.message}</p>`;
+        }
+      }
+    });
+
+    uploadBox.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      uploadBox.style.background = 'rgba(232, 121, 249, 0.1)';
+    });
+
+    uploadBox.addEventListener("dragleave", () => {
+      uploadBox.style.background = 'var(--glass)';
+    });
+
+    uploadBox.addEventListener("drop", (e) => {
+      e.preventDefault();
+      input.files = e.dataTransfer.files;
+      input.dispatchEvent(new Event('change'));
+    });
+  </script>
 </body>
 </html>
