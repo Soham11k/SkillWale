@@ -14,7 +14,7 @@
 
     body {
       height: 100vh;
-      background: linear-gradient(135deg, #5f72bd, #9b23ea);
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -29,17 +29,21 @@
     }
 
     .brain {
-      width: 150px;
-      height: 150px;
+      width: 120px;
+      height: 120px;
       margin: 0 auto 20px;
-      background: url('https://cdn-icons-png.flaticon.com/512/3845/3845781.png') no-repeat center/contain;
-      animation: rotate 4s infinite linear;
-      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+      animation: pulse 2s infinite;
     }
 
-    @keyframes rotate {
-      0% { transform: rotate(0); }
-      100% { transform: rotate(360deg); }
+    .brain svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.85; }
     }
 
     h1 {
@@ -102,7 +106,11 @@
 <body>
   <canvas id="particles"></canvas>
   <div class="loader-container">
-    <div class="brain"></div>
+    <div class="brain">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h4m-2-8a4 4 0 014 4v8a4 4 0 01-8 0V8a4 4 0 014-4z"/>
+      </svg>
+    </div>
     <h1>Launching SkillWale...</h1>
     <p>Matching you with the best opportunities using Gen AI ✨</p>
     <div class="dot-loader">
@@ -113,12 +121,10 @@
   </div>
 
   <script>
-    // ✅ Redirect to home page after 5 seconds
     setTimeout(() => {
       window.location.href = "/home";
     }, 5000);
 
-    // 🎇 Optional particles background
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -140,7 +146,6 @@
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
         if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
       }
