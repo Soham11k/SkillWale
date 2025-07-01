@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Upload Resume | SkillWale</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style>
     :root {
-      --dark-bg: #0d0614;
+      --dark-bg: #0b0712;
+      --light-bg: #f3f4f6;
       --glass: rgba(255, 255, 255, 0.04);
       --highlight: #fcd34d;
       --accent: #e879f9;
@@ -19,6 +20,15 @@
       --purple-glow: rgba(232, 121, 249, 0.3);
     }
 
+    [data-theme='light'] {
+      --dark-bg: #f3f4f6;
+      --glass: rgba(255, 255, 255, 0.7);
+      --text-light: #111827;
+      --muted: #555;
+      --accent: #8b5cf6;
+      --highlight: #f59e0b;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -27,15 +37,14 @@
     }
 
     body {
-      min-height: 100vh;
-      background: radial-gradient(circle at top left, #0d0614, #1b0932, #250f47);
-      background-size: cover;
+      background: var(--dark-bg);
       color: var(--text-light);
+      min-height: 100vh;
       overflow-x: hidden;
       position: relative;
+      transition: background 0.3s, color 0.3s;
     }
 
-    /* ✨ Optional star texture background */
     body::before {
       content: "";
       position: fixed;
@@ -44,12 +53,12 @@
       width: 200%;
       height: 200%;
       background: transparent url('https://raw.githubusercontent.com/marcbruederlin/particles.js/master/demo/img/stars.png') repeat;
-      animation: parallaxStars 60s linear infinite;
+      animation: stars 60s linear infinite;
       z-index: -1;
       opacity: 0.05;
     }
 
-    @keyframes parallaxStars {
+    @keyframes stars {
       0% { transform: translate(0, 0); }
       100% { transform: translate(-50%, -50%); }
     }
@@ -68,35 +77,21 @@
     .bubble {
       position: absolute;
       bottom: -60px;
-      width: 8px;
-      height: 8px;
-      background: rgba(232, 121, 249, 0.7);
+      width: 10px;
+      height: 10px;
+      background: rgba(232, 121, 249, 0.6);
       border-radius: 50%;
-      box-shadow: 0 0 8px rgba(232, 121, 249, 0.9);
+      box-shadow: 0 0 10px rgba(232, 121, 249, 0.8);
       animation: rise linear infinite;
-      animation-duration: calc(6s + var(--i) * 1s);
+      animation-duration: calc(6s + var(--i) * 0.6s);
       left: calc(2% * var(--i));
-      transform: scale(calc(0.8 + var(--i) * 0.05));
+      transform: scale(calc(0.7 + var(--i) * 0.05));
     }
 
     @keyframes rise {
-      0% {
-        transform: translateY(0) scale(1);
-        opacity: 0.5;
-      }
-      50% {
-        transform: translateY(-50vh) scale(1.2);
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateY(-100vh) scale(1);
-        opacity: 0;
-      }
-    }
-
-    header, .upload-section, footer {
-      position: relative;
-      z-index: 1;
+      0% { transform: translateY(0) scale(1); opacity: 0.4; }
+      50% { transform: translateY(-50vh) scale(1.2); opacity: 0.8; }
+      100% { transform: translateY(-100vh) scale(1); opacity: 0; }
     }
 
     header {
@@ -106,42 +101,58 @@
       padding: 20px 50px;
       background: var(--glass);
       backdrop-filter: blur(10px);
+      z-index: 1;
+      position: relative;
     }
 
     header h1 {
+      font-size: 2rem;
       color: var(--highlight);
     }
 
     nav a {
-      color: var(--text-light);
-      margin-left: 20px;
+      margin-left: 24px;
       text-decoration: none;
+      color: var(--text-light);
       font-weight: 500;
+      transition: color 0.3s;
     }
 
     nav a:hover {
       color: var(--accent);
     }
 
+    .toggle-mode {
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 1.2rem;
+      margin-left: 20px;
+    }
+
     .upload-section {
       max-width: 900px;
-      margin: 80px auto;
-      text-align: center;
+      margin: 60px auto;
       padding: 40px;
-      background: rgba(255, 255, 255, 0.03);
       border-radius: 20px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: 0 0 40px rgba(0,0,0,0.4);
+      z-index: 1;
+      position: relative;
     }
 
     .upload-section h2 {
-      font-size: 2.6rem;
+      font-size: 2.5rem;
       color: var(--highlight);
-      margin-bottom: 12px;
+      text-align: center;
+      margin-bottom: 15px;
     }
 
     .upload-section p {
+      text-align: center;
       color: var(--muted);
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     .upload-box {
@@ -149,20 +160,22 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      padding: 40px;
+      padding: 50px;
+      border-radius: 15px;
       background: var(--glass);
       border: 2px dashed var(--accent);
-      border-radius: 15px;
-      color: var(--text-light);
+      transition: all 0.3s ease;
       cursor: pointer;
-      transition: 0.3s ease;
       margin-bottom: 30px;
     }
 
     .upload-box:hover {
-      background: rgba(232, 121, 249, 0.1);
-      box-shadow: 0 0 25px var(--accent);
+      background: rgba(232, 121, 249, 0.08);
+      box-shadow: 0 0 20px var(--accent);
+    }
+
+    .upload-box.dragging {
+      background: rgba(232, 121, 249, 0.12);
     }
 
     .upload-box input {
@@ -170,10 +183,10 @@
     }
 
     .upload-box svg {
-      width: 70px;
-      height: 70px;
-      margin-bottom: 12px;
+      width: 64px;
+      height: 64px;
       fill: var(--accent);
+      margin-bottom: 12px;
     }
 
     .loader {
@@ -193,22 +206,22 @@
 
     .preview {
       display: none;
-      animation: popFade 0.6s ease-in-out;
+      animation: fadeIn 0.6s ease-in-out;
     }
 
     .preview.show {
       display: block;
     }
 
-    @keyframes popFade {
-      0% { transform: scale(0.95); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .snapshot {
       background: #1e103a;
-      padding: 15px;
-      margin-bottom: 20px;
+      padding: 16px;
+      margin-bottom: 25px;
       border-radius: 12px;
       border-left: 4px solid var(--highlight);
       text-align: left;
@@ -216,7 +229,7 @@
 
     .snapshot h4 {
       color: var(--highlight);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .snapshot p {
@@ -224,99 +237,33 @@
       font-size: 0.95rem;
       margin-bottom: 6px;
     }
-
-    .scorecard {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin: 20px 0;
-    }
-
-    .scorecard div {
-      background: #1a1a2e;
-      border: 2px solid var(--green);
-      padding: 12px 18px;
-      border-radius: 10px;
-      color: var(--text-light);
-      font-size: 0.95rem;
-      animation: pulse 0.8s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulse {
-      from { transform: scale(1); opacity: 0.85; }
-      to { transform: scale(1.05); opacity: 1; }
-    }
-
-    .tips {
-      margin-top: 40px;
-      animation: floatIn 1s ease-in;
-    }
-
-    @keyframes floatIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .tips h4 {
-      color: var(--highlight);
-      font-size: 1.3rem;
-      margin-bottom: 10px;
-    }
-
-    .tips ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-
-    .tips li {
-      margin-bottom: 10px;
-      background: #231b3d;
-      padding: 10px;
-      border-radius: 8px;
-      border-left: 4px solid var(--primary);
-      color: var(--muted);
-      transition: all 0.3s;
-    }
-
-    .tips li:hover {
-      transform: scale(1.02);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-light);
-    }
-
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      font-size: 0.9rem;
-      color: #ccc;
-      background: rgba(0,0,0,0.6);
-    }
   </style>
 </head>
 <body>
 
-  <!-- 🌟 Animated Bubbles -->
+  <!-- 🌌 Background Animation -->
   <div class="bubbles">
-    <!-- 40 glowing dots -->
     ${Array.from({length: 40}).map((_, i) => `<div class="bubble" style="--i:${i + 1};"></div>`).join('')}
   </div>
 
+  <!-- 🧠 Header -->
   <header>
     <h1>SkillWale</h1>
     <nav>
       <a href="index.html">Home</a>
       <a href="courses.html">Courses</a>
+      <button class="toggle-mode" id="themeToggle" aria-label="Toggle Light/Dark Mode">🌙</button>
     </nav>
   </header>
 
+  <!-- 📤 Upload Section -->
   <section class="upload-section">
     <h2>Upload Your Resume</h2>
-    <p>Let us analyze your superpowers and find the perfect job role for you 🧠</p>
+    <p>Let our AI guide you to your perfect job match 🔍</p>
 
     <label class="upload-box" id="uploadBox">
       <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt" />
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 1H4v2h16v-2z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 1H4v2h16v-2z"/></svg>
       <p>Click or drag your resume file here</p>
     </label>
 
@@ -324,22 +271,24 @@
 
     <div class="preview" id="preview">
       <div class="snapshot" id="snapshotBox"></div>
-      <h3>🔍 AI Analysis Result</h3>
+      <h3 style="margin-top: 20px;">🔍 AI Analysis Result</h3>
       <div id="matchResult"></div>
-      <h4 style="color: var(--highlight); margin-top: 20px;">📈 Role-wise Match Scorecard</h4>
+      <h4 style="color: var(--highlight); margin-top: 20px;">📈 Role-wise Scorecards</h4>
       <div class="scorecard" id="scoreBox"></div>
     </div>
-
+        <!-- 💡 Resume Tips Section -->
     <div class="tips">
-      <h4>✨ Tips to Enhance Your Resume</h4>
+      <h4>✨ Tips to Improve Your Resume</h4>
       <ul id="tipsList"></ul>
     </div>
   </section>
 
+  <!-- 🔻 Footer -->
   <footer>
     Crafted with ❤️ by SkillWale · © 2025
   </footer>
 
+  <!-- 🌙 Script -->
   <script>
     const input = document.getElementById("resumeInput");
     const loader = document.getElementById("loader");
@@ -349,7 +298,25 @@
     const tipsList = document.getElementById("tipsList");
     const snapshotBox = document.getElementById("snapshotBox");
     const dropZone = document.getElementById("uploadBox");
+    const themeToggle = document.getElementById("themeToggle");
 
+    // 🌓 Theme toggle
+    themeToggle.addEventListener("click", () => {
+      const html = document.documentElement;
+      const newTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", newTheme);
+      themeToggle.textContent = newTheme === "dark" ? "🌙" : "☀️";
+      localStorage.setItem("theme", newTheme);
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      themeToggle.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+    }
+
+    // 🖱 Drag and Drop
     dropZone.addEventListener("dragover", (e) => {
       e.preventDefault();
       dropZone.classList.add("dragging");
@@ -369,11 +336,17 @@
       }
     });
 
+    // 📄 File Input
     input.addEventListener("change", async () => {
       if (input.files.length > 0) {
         const file = input.files[0];
+        if (!file.name.match(/\.(pdf|doc|docx|txt)$/)) {
+          alert("Please upload a valid resume file (.pdf, .doc, .docx, .txt)");
+          return;
+        }
+
         loader.style.display = 'block';
-        preview.classList.remove('show');
+        preview.classList.remove("show");
         resultBox.innerHTML = "<p>Analyzing...</p>";
         scoreBox.innerHTML = "";
         tipsList.innerHTML = "";
@@ -387,13 +360,15 @@
             method: "POST",
             body: formData
           });
+
           const data = await response.json();
 
           loader.style.display = 'none';
           preview.offsetWidth;
           preview.classList.add("show");
-          confetti({ spread: 70, origin: { y: 0.6 } });
+          confetti({ spread: 80, origin: { y: 0.6 } });
 
+          // 🧠 Snapshot
           if (data.analysis) {
             const lines = data.analysis.split("\n").filter(Boolean);
             resultBox.innerHTML = lines.map(line => `<p>• ${line}</p>`).join('');
@@ -401,32 +376,50 @@
               <h4>🧠 Candidate Snapshot</h4>
               <p><strong>Summary:</strong> ${lines[0]}</p>
               <p><strong>Estimated Salary:</strong> ₹${Math.floor(data.score * 1000)} / month</p>
-              <p><strong>Match Score:</strong> ${data.score}%</p>
+              <p><strong>Overall Match:</strong> ${data.score}%</p>
             `;
           }
 
-          if (Array.isArray(data.jobs) && data.jobs.length) {
-            scoreBox.innerHTML = data.jobs.map((job) => {
-              const score = Math.max(0, Math.min(10, Math.floor(data.score / 10 + Math.random() * 3 - 1)));
-              return `<div>${job}<br><strong>Score:</strong> ${score}/10</div>`;
+          // 🧩 Job Scorecards
+          if (Array.isArray(data.jobs)) {
+            scoreBox.innerHTML = data.jobs.map(job => {
+              return `
+                <div>
+                  <strong>${job.role}</strong><br>
+                  Match: ${job.match}%<br>
+                  Recommended for: ${job.company}<br>
+                  Missing skills: ${job.missingSkills.join(', ')}
+                </div>`;
             }).join('');
           }
 
+          // ✍️ Resume Tips
           if (Array.isArray(data.tips)) {
             tipsList.innerHTML = data.tips.map(tip => `<li>${tip}</li>`).join('');
           } else {
             tipsList.innerHTML = [
-              "Keep it concise and tailored to the job role.",
-              "Highlight achievements using numbers.",
-              "Use industry-relevant keywords.",
-              "Proofread for grammar and typos.",
-              "Avoid passive language and use action verbs."
+              "Tailor your resume to each JD.",
+              "Use measurable achievements.",
+              "Include job-specific keywords.",
+              "Avoid typos and grammar mistakes.",
+              "Add relevant soft skills."
             ].map(tip => `<li>${tip}</li>`).join('');
           }
+
+          // 🗃 Save to local history
+          let history = JSON.parse(localStorage.getItem("skillwaleHistory") || "[]");
+          history.push({
+            time: new Date().toLocaleString(),
+            score: data.score,
+            summary: data.analysis?.split("\n")[0],
+            fileName: file.name
+          });
+          localStorage.setItem("skillwaleHistory", JSON.stringify(history));
+
         } catch (err) {
           loader.style.display = 'none';
-          preview.classList.add('show');
-          resultBox.innerHTML = `<p style='color: red;'>❌ Error: ${err.message}</p>`;
+          preview.classList.add("show");
+          resultBox.innerHTML = `<p style="color: red;">❌ Error: ${err.message}</p>`;
         }
       }
     });
