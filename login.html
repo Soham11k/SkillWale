@@ -3,274 +3,314 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login | GenAI Job Matcher</title>
+  <title>Login | SkillWale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-
-    * {
+    /* Base & theme colors */
+    :root {
+      --bg-light: #fafafa;
+      --bg-dark: #1a1a2e;
+      --glass-light: rgba(255,255,255,0.1);
+      --glass-dark: rgba(0,0,0,0.4);
+      --accent-light: #ff6f61;
+      --accent-dark: #c084fc;
+      --text-light: #f5f5f5;
+      --text-dark: #1a1a2e;
+      --error: #ff4c4c;
+      --success: #4ade80;
+    }
+    html, body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    body {
-      height: 100vh;
-      background: radial-gradient(circle at top left, #0f0c29, #302b63, #24243e);
-      overflow: hidden;
-    }
-
-    .container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: 'Poppins', sans-serif;
       height: 100%;
+      overflow: hidden;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+    body.light-mode {
+      background: var(--bg-light);
+      color: var(--text-dark);
+    }
+    /* animated gradient background */
+    .bg-gradient {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+      background-size: 600% 600%;
+      animation: gradientBG 30s ease infinite;
+      z-index: -2;
+    }
+    body.light-mode .bg-gradient {
+      background: linear-gradient(45deg, #ffffff, #e0e0e0, #fafafa);
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* particle canvas */
+    canvas#bg-particles {
+      position: fixed;
+      top:0; left:0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+    /* main container */
+    .login-container {
       position: relative;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 50px 40px;
-      width: 400px;
-      border-radius: 20px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 0 30px rgba(0,0,0,0.4);
-      position: relative;
-      z-index: 10;
-      transition: transform 0.2s ease;
-    }
-
-    .card:hover {
-      transform: scale(1.02);
-    }
-
-    .ai-avatar {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 20px;
-      background: url('https://cdn-icons-png.flaticon.com/512/4712/4712035.png') no-repeat center/contain;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .typing {
-      text-align: center;
-      color: #fff;
-      font-size: 1.5rem;
-      min-height: 50px;
-      margin-bottom: 30px;
-      letter-spacing: 1px;
-    }
-
-    .form-group {
-      position: relative;
-      margin-bottom: 25px;
-    }
-
-    .form-group input {
       width: 100%;
-      padding: 15px 20px;
+      max-width: 400px;
+      margin: 0 auto;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 40px;
+      background: var(--glass-dark);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      transition: background 0.4s ease;
+    }
+    body.light-mode .login-container {
+      background: var(--glass-light);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .login-container h1 {
+      text-align: center;
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, var(--accent-dark), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .input-group {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .input-group input {
+      width: 100%;
       border: none;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.1);
-      color: #fff;
       outline: none;
-      transition: 0.3s;
+      padding: 14px 20px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.07);
+      color: var(--text-light);
+      font-size: 1rem;
+      transition: background 0.3s ease;
     }
-
-    .form-group input:focus {
-      box-shadow: 0 0 10px #6c5ce7;
+    body.light-mode .input-group input {
+      background: rgba(0,0,0,0.05);
+      color: var(--text-dark);
     }
-
-    .form-group label {
+    .input-group label {
       position: absolute;
-      top: -12px;
-      left: 15px;
-      background: #302b63;
-      color: #fff;
-      font-size: 0.85rem;
-      padding: 0 5px;
-      border-radius: 5px;
+      top: 12px;
+      left: 20px;
+      color: rgba(255,255,255,0.6);
+      pointer-events: none;
+      transition: all 0.2s ease;
+      font-size: 1rem;
     }
-
-    .btn {
+    body.light-mode .input-group label {
+      color: rgba(0,0,0,0.6);
+    }
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: -6px;
+      left: 16px;
+      font-size: 0.8rem;
+      color: var(--accent-light);
+    }
+    .submit-btn {
       width: 100%;
       padding: 14px;
       border: none;
-      background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-      color: white;
-      border-radius: 10px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-
-    .btn:hover {
-      background: linear-gradient(135deg, #a29bfe, #6c5ce7);
-      box-shadow: 0 0 10px #a29bfe;
-    }
-
-    .alt-options {
-      margin-top: 25px;
-      text-align: center;
-    }
-
-    .alt-options button {
-      margin-top: 10px;
-      padding: 10px;
-      width: 80%;
-      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      background: var(--accent-dark);
       color: #fff;
-      border: 1px solid #666;
-      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: 0.3s;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
-
-    .alt-options button:hover {
+    .submit-btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+    }
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    .error-msg, .success-msg {
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      animation: fadeSlide 0.5s ease;
+    }
+    .error-msg { background: var(--error); color: #fff; }
+    .success-msg { background: var(--success); color: #fff; }
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 1; }
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 20px; right: 20px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: background 0.3s ease;
+    }
+    .theme-toggle:hover {
       background: rgba(255,255,255,0.2);
     }
-
-    .waves {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 20%;
-      width: 100%;
-      background: url('https://i.ibb.co/pP83PNn/wave-haikei.png') repeat-x;
-      background-size: cover;
-      animation: waveMove 10s linear infinite;
-      z-index: 1;
+    .testimonials {
+      margin-top: 40px;
+      overflow: hidden;
+      position: relative;
+      height: 120px;
     }
-
-    @keyframes waveMove {
-      0% { background-position-x: 0; }
-      100% { background-position-x: 1000px; }
+    .testimonial-slide {
+      display: flex;
+      width: 300%;
+      animation: slideTesti 12s infinite;
     }
-
-    canvas#particles {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
+    .testimonial {
+      flex: 1;
+      padding: 0 20px;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+      text-align: center;
+      font-size: 0.9rem;
     }
-
-    @media (max-width: 500px) {
-      .card {
-        width: 90%;
-      }
+    .testimonial:hover {
+      opacity: 1;
+    }
+    @keyframes slideTesti {
+      0% { transform: translateX(0); }
+      33% { transform: translateX(0); }
+      44% { transform: translateX(-100%); }
+      66% { transform: translateX(-100%); }
+      77% { transform: translateX(-200%); }
+      100% { transform: translateX(-200%); }
+    }
+    /* responsive */
+    @media (max-width:480px) {
+      .login-container { padding: 20px; margin: 20px; top: unset; transform: none; }
+      .testimonials { height: auto; animation: none; }
     }
   </style>
 </head>
 <body>
-  <canvas id="particles"></canvas>
-  <div class="container">
-    <div class="card" id="login-card">
-      <div class="ai-avatar"></div>
-      <div class="typing" id="typing-text">Initializing...</div>
-      <form id="login-form">
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" required />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" required />
-        </div>
-        <button type="submit" class="btn">Access GenAI</button>
-      </form>
-      <div class="alt-options">
-        <button onclick="alert('Google Login Coming Soon')">Login with Google</button>
-        <button onclick="window.location.href='index.html'">Continue as Guest</button>
-      </div>
+
+<div class="bg-gradient"></div>
+<canvas id="bg-particles"></canvas>
+
+<div class="login-container">
+  <div class="theme-toggle" id="themeToggle">🌙</div>
+  <h1>SkillWale Login</h1>
+
+  <form id="loginForm" action="/login" method="POST">
+    <div class="input-group">
+      <input type="text" id="username" name="username" placeholder=" " required />
+      <label for="username">Username</label>
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" name="password" placeholder=" " required />
+      <label for="password">Password</label>
+    </div>
+    <button type="submit" class="submit-btn">Log In</button>
+  </form>
+
+  <div id="msgBox"></div>
+
+  <div class="testimonials">
+    <div class="testimonial-slide">
+      <div class="testimonial">"SkillWale helped me land my dream job!" — Anjali</div>
+      <div class="testimonial">"The AI suggestions are spot-on and practical." — Rahul</div>
+      <div class="testimonial">"I love the UI, so clean and motivating." — Priya</div>
     </div>
   </div>
-  <div class="waves"></div>
+</div>
 
-  <script>
-    // Typing effect
-    const text = "Welcome to GenAI Job Matcher!";
-    let i = 0;
-    const typingElement = document.getElementById("typing-text");
-    function type() {
-      if (i < text.length) {
-        typingElement.innerHTML += text.charAt(i);
-        i++;
-        setTimeout(type, 80);
-      }
-    }
-    setTimeout(() => {
-      typingElement.innerHTML = "";
-      type();
-    }, 800);
+<script>
+  // theme toggle
+  const body = document.body;
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    body.classList.toggle('light-mode');
+    toggle.textContent = body.classList.contains('light-mode') ? '🌞' : '🌙';
+    localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+  });
+  // load saved theme
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') body.classList.add('light-mode'), toggle.textContent='🌞';
 
-    // Login simulation
-    document.getElementById("login-form").addEventListener("submit", function (e) {
+  // form feedback
+  const form = document.getElementById('loginForm');
+  const msgBox = document.getElementById('msgBox');
+  form.addEventListener('submit', e => {
+    const u = form.username.value.trim();
+    const p = form.password.value.trim();
+    if (!u || !p) {
       e.preventDefault();
-      typingElement.innerHTML = "Authenticating...";
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 2000);
-    });
-
-    // Particles animation
-    const canvas = document.getElementById("particles");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const particlesArray = [];
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = "rgba(255,255,255,0.3)";
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-      }
+      msgBox.innerHTML = '<div class="error-msg">Please enter username and password.</div>';
     }
+  });
 
-    function initParticles(num = 80) {
-      for (let i = 0; i < num; i++) {
-        particlesArray.push(new Particle());
-      }
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particlesArray.forEach(p => {
-        p.update();
-        p.draw();
+  // basic particle effect
+  const canvas = document.getElementById('bg-particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  function initParticles(){
+    particles = [];
+    for(let i=0; i<60; i++){
+      particles.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*2+1,
+        dx: (Math.random()-0.5)*0.6,
+        dy: (Math.random()-0.5)*0.6
       });
-      requestAnimationFrame(animateParticles);
     }
-
-    initParticles();
-    animateParticles();
-
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,2*Math.PI);
+      ctx.fillStyle = body.classList.contains('light-mode') ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.05)';
+      ctx.fill();
+      p.x += p.dx;
+      p.y += p.dy;
+      if(p.x<0||p.x>canvas.width) p.dx *= -1;
+      if(p.y<0||p.y>canvas.height) p.dy *= -1;
     });
-  </script>
+    requestAnimationFrame(animate);
+  }
+  window.addEventListener('resize', ()=>{
+    canvas.width=innerWidth;
+    canvas.height=innerHeight;
+    initParticles();
+  });
+  initParticles();
+  animate();
+
+  // show server-side errors (Flask will insert div#error-msg in case of login failure)
+  const errDiv = document.getElementById('serverError');
+  if(errDiv) msgBox.innerHTML = `<div class="error-msg">${errDiv.innerText}</div>`;
+</script>
 </body>
 </html>
