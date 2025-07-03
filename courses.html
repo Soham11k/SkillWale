@@ -1,95 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recommended Courses | SkillWale</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --dark-bg: #1e1b2e;
+      --light-bg: #f9fafb;
+      --glass: rgba(255, 255, 255, 0.06);
       --highlight: #fcd34d;
       --accent: #d06aff;
-      --muted: #b0b0b0;
-      --card-bg: rgba(255, 255, 255, 0.05);
       --text-light: #f5f5f5;
+      --muted: #a0a0a0;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --transition: 0.3s ease;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
     }
 
-    body {
-      background: var(--dark-bg);
+    html, body {
+      background-color: var(--dark-bg);
       color: var(--text-light);
+      scroll-behavior: smooth;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 50px;
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
+      padding: 18px 40px;
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 999;
     }
 
     header h1 {
+      font-size: 1.7rem;
       color: var(--highlight);
+      letter-spacing: 1px;
     }
 
     nav a {
       color: var(--text-light);
-      margin-left: 20px;
       text-decoration: none;
+      margin-left: 25px;
+      position: relative;
       font-weight: 500;
     }
 
-    nav a:hover {
-      color: var(--accent);
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--accent);
+      transition: var(--transition);
     }
 
-    .courses-section {
-      max-width: 1100px;
-      margin: 50px auto;
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .logout-btn {
+      margin-left: 25px;
+      background: none;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .logout-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .toggle-theme {
+      margin-left: 25px;
+      background: none;
+      border: none;
+      color: var(--highlight);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .stars::before, .stars::after {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      animation: twinkle 18s linear infinite;
+      opacity: 0.2;
+    }
+
+    .stars::after {
+      animation-delay: 5s;
+    }
+
+    @keyframes twinkle {
+      from { transform: translate(0, 0); }
+      to { transform: translate(-400px, -400px); }
+    }
+
+    #glow-cursor {
+      position: fixed;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+      z-index: 998;
+    }
+
+    .courses-container {
+      max-width: 1200px;
+      margin: 60px auto;
       padding: 0 20px;
     }
 
-    .courses-section h2 {
-      font-size: 2.4rem;
+    .courses-container h2 {
       text-align: center;
+      font-size: 2.6rem;
       color: var(--highlight);
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      animation: fadeIn 1s ease;
     }
 
-    .filter-bar {
+    .filter-chips {
       text-align: center;
       margin-bottom: 40px;
     }
 
-    .filter-btn {
+    .chip {
+      display: inline-block;
       background: none;
-      border: 2px solid var(--accent);
+      border: 1.8px solid var(--accent);
       color: var(--accent);
-      padding: 8px 16px;
-      margin: 5px;
-      border-radius: 30px;
-      font-size: 0.9rem;
+      padding: 8px 18px;
+      margin: 6px;
+      border-radius: 20px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: var(--transition);
+      font-size: 0.9rem;
     }
 
-    .filter-btn:hover,
-    .filter-btn.active {
+    .chip:hover, .chip.active {
       background: var(--accent);
-      color: white;
+      color: #fff;
     }
 
-    .grid {
+    .course-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
       gap: 30px;
     }
 
@@ -97,18 +190,22 @@
       background: var(--card-bg);
       border-radius: 16px;
       overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      transform: perspective(1px) translateZ(0);
+      animation: fadeInCard 0.5s ease forwards;
     }
 
     .course-card:hover {
       transform: scale(1.03);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
 
     .course-card img {
       width: 100%;
       height: 160px;
       object-fit: cover;
+      display: block;
     }
 
     .course-content {
@@ -116,116 +213,192 @@
     }
 
     .course-content h3 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: var(--accent);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .course-content p {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: var(--muted);
       line-height: 1.5;
     }
 
+    .course-content .tags {
+      margin-top: 12px;
+    }
+
+    .course-content .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.08);
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 0.75rem;
+      margin-right: 6px;
+      margin-top: 6px;
+    }
+
     .course-content a {
       display: inline-block;
-      margin-top: 12px;
+      margin-top: 14px;
       background: var(--highlight);
       color: #1e1b2e;
       text-decoration: none;
-      padding: 8px 14px;
+      padding: 8px 16px;
       border-radius: 8px;
       font-weight: 600;
-      transition: background 0.3s;
+      transition: var(--transition);
     }
 
     .course-content a:hover {
       background: #ffe580;
     }
 
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      font-size: 0.9rem;
-      color: #888;
-      background: #16141f;
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes fadeInCard {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
+    }
+
+    @media(max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; }
+      nav { margin-top: 10px; }
+      .courses-container h2 { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
+  <div class="stars"></div>
+  <div id="glow-cursor"></div>
+
   <header>
     <h1>SkillWale</h1>
     <nav>
       <a href="index.html">Home</a>
       <a href="upload.html">Upload</a>
+      <a href="courses.html">Courses</a>
+      <button class="toggle-theme" onclick="toggleTheme()">🌓</button>
+      <button class="logout-btn" onclick="location.href='/logout'">Logout</button>
     </nav>
   </header>
 
-  <section class="courses-section">
-    <h2>✨ Recommended Courses Just for You</h2>
-    <div class="filter-bar">
-      <button class="filter-btn active" data-category="all">All</button>
-      <button class="filter-btn" data-category="design">Design</button>
-      <button class="filter-btn" data-category="tech">Tech</button>
-      <button class="filter-btn" data-category="marketing">Marketing</button>
-      <button class="filter-btn" data-category="leadership">Leadership</button>
+  <section class="courses-container">
+    <h2>🚀 Explore Premium Skill-Building Courses</h2>
+    <div class="filter-chips">
+      <span class="chip active" data-category="all">All</span>
+      <span class="chip" data-category="tech">Tech</span>
+      <span class="chip" data-category="design">Design</span>
+      <span class="chip" data-category="leadership">Leadership</span>
+      <span class="chip" data-category="marketing">Marketing</span>
     </div>
 
-    <div class="grid">
-      <div class="course-card" data-category="design">
-        <img src="https://img-c.udemycdn.com/course/240x135/1565838_e54e_12.jpg" alt="UI/UX Design">
+    <div class="course-grid">
+      <div class="course-card" data-category="tech">
+        <img src="https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg" alt="Python">
+        <div class="course-content">
+          <h3>Python for Everybody</h3>
+          <p>Learn to automate tasks, process data, and build foundations for AI.</p>
+          <div class="tags">
+            <span class="tag">Beginner</span>
+            <span class="tag">Free</span>
+            <span class="tag">Self-paced</span>
+          </div>
+          <a href="https://www.coursera.org/specializations/python" target="_blank">Visit Course</a>
+        </div>
+      </div>
+          <div class="course-card" data-category="design">
+        <img src="https://img-c.udemycdn.com/course/240x135/1565838_e54e_12.jpg" alt="UI/UX">
         <div class="course-content">
           <h3>UI/UX Design Masterclass</h3>
-          <p>Learn Figma, wireframing, and user empathy. Perfect for Product Designers and aspiring UX leads.</p>
+          <p>Figma, wireframes, and real-world UX case studies in one place.</p>
+          <div class="tags">
+            <span class="tag">Intermediate</span>
+            <span class="tag">Project-based</span>
+          </div>
           <a href="https://www.udemy.com/course/ui-ux-web-design-using-adobe-xd/" target="_blank">Visit Course</a>
         </div>
       </div>
 
-      <div class="course-card" data-category="tech">
-        <img src="https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg" alt="Python Programming">
-        <div class="course-content">
-          <h3>Python for Everybody</h3>
-          <p>Start coding today! Build data tools, automate tasks, and enter the world of AI-powered development.</p>
-          <a href="https://www.coursera.org/specializations/python" target="_blank">Visit Course</a>
-        </div>
-      </div>
-
       <div class="course-card" data-category="marketing">
-        <img src="https://img-c.udemycdn.com/course/240x135/1460384_52a4_2.jpg" alt="Digital Marketing">
+        <img src="https://img-c.udemycdn.com/course/240x135/1460384_52a4_2.jpg" alt="Marketing">
         <div class="course-content">
           <h3>Digital Marketing 101</h3>
-          <p>SEO, content strategy, email campaigns — all in one course to power your marketing career.</p>
+          <p>SEO, ads, email — learn what it takes to build a brand online.</p>
+          <div class="tags">
+            <span class="tag">Beginner</span>
+            <span class="tag">Certification</span>
+          </div>
           <a href="https://www.udemy.com/course/learn-digital-marketing-course/" target="_blank">Visit Course</a>
         </div>
       </div>
 
       <div class="course-card" data-category="leadership">
-        <img src="https://img-c.udemycdn.com/course/240x135/851712_fc61_6.jpg" alt="Leadership Skills">
+        <img src="https://img-c.udemycdn.com/course/240x135/851712_fc61_6.jpg" alt="Leadership">
         <div class="course-content">
           <h3>Leadership & Management</h3>
-          <p>Develop the mindset and communication skills to lead teams with confidence and clarity.</p>
+          <p>Lead teams with clarity, empathy and productivity frameworks.</p>
+          <div class="tags">
+            <span class="tag">Advanced</span>
+            <span class="tag">Free</span>
+          </div>
           <a href="https://www.coursera.org/learn/leading-people-teams" target="_blank">Visit Course</a>
+        </div>
+      </div>
+
+      <div class="course-card" data-category="tech">
+        <img src="https://img-c.udemycdn.com/course/240x135/2196488_8fc7.jpg" alt="Web Dev">
+        <div class="course-content">
+          <h3>Full Stack Web Dev</h3>
+          <p>HTML, CSS, JS, Node, Mongo — Build real production apps.</p>
+          <div class="tags">
+            <span class="tag">Advanced</span>
+            <span class="tag">Paid</span>
+          </div>
+          <a href="https://www.udemy.com/course/the-complete-web-developer-zero-to-mastery/" target="_blank">Visit Course</a>
+        </div>
+      </div>
+
+      <div class="course-card" data-category="design">
+        <img src="https://img-c.udemycdn.com/course/240x135/1936002_c0c5.jpg" alt="Graphic Design">
+        <div class="course-content">
+          <h3>Graphic Design Bootcamp</h3>
+          <p>Master Photoshop, Illustrator, InDesign & portfolio projects.</p>
+          <div class="tags">
+            <span class="tag">Creative</span>
+            <span class="tag">Lifetime Access</span>
+          </div>
+          <a href="https://www.udemy.com/course/graphic-design-masterclass-everything-you-need-to-know/" target="_blank">Visit Course</a>
         </div>
       </div>
     </div>
   </section>
 
   <footer>
-    Crafted with ❤️ by SkillWale · © 2025
+    Crafted with ❤️ by SkillWale · © 2025. Let your skills shine.
   </footer>
 
   <script>
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const courseCards = document.querySelectorAll('.course-card');
+    const glowCursor = document.getElementById('glow-cursor');
+    document.addEventListener('mousemove', e => {
+      glowCursor.style.left = e.pageX + 'px';
+      glowCursor.style.top = e.pageY + 'px';
+    });
 
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    const chips = document.querySelectorAll('.chip');
+    const cards = document.querySelectorAll('.course-card');
 
-        const category = btn.dataset.category;
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
 
-        courseCards.forEach(card => {
+        const category = chip.getAttribute('data-category');
+
+        cards.forEach(card => {
           if (category === 'all' || card.dataset.category === category) {
             card.style.display = 'block';
           } else {
@@ -234,6 +407,29 @@
         });
       });
     });
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const isDark = root.style.getPropertyValue('--dark-bg') === '#1e1b2e';
+
+      if (isDark) {
+        // switch to light mode
+        root.style.setProperty('--dark-bg', '#f9fafb');
+        root.style.setProperty('--text-light', '#1e1b2e');
+        root.style.setProperty('--card-bg', '#ffffff');
+        root.style.setProperty('--glass', 'rgba(0,0,0,0.06)');
+        root.style.setProperty('--border-color', '#e2e2e2');
+      } else {
+        // back to dark
+        root.style.setProperty('--dark-bg', '#1e1b2e');
+        root.style.setProperty('--text-light', '#f5f5f5');
+        root.style.setProperty('--card-bg', 'rgba(255,255,255,0.04)');
+        root.style.setProperty('--glass', 'rgba(255,255,255,0.06)');
+        root.style.setProperty('--border-color', 'rgba(255,255,255,0.1)');
+      }
+    }
   </script>
 </body>
 </html>
+
+     
