@@ -17,7 +17,10 @@
       --primary: #ff6f61;
       --text-light: #f5f5f5;
       --green: #4ade80;
+      --yellow: #facc15;
+      --red: #f87171;
       --purple-glow: rgba(232, 121, 249, 0.3);
+      --shadow: rgba(0, 0, 0, 0.6);
     }
 
     [data-theme='light'] {
@@ -189,106 +192,124 @@
       margin-bottom: 12px;
     }
 
-    .loader {
-      display: none;
-      width: 40px;
-      height: 40px;
-      margin: 20px auto;
-      border: 5px solid var(--accent);
-      border-top: 5px solid transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      margin: 3px;
+      box-shadow: 0 0 6px var(--accent);
+      transition: transform 0.2s;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .badge:hover {
+      transform: scale(1.1);
+      background: var(--highlight);
+      color: #000;
     }
 
-    .preview {
-      display: none;
-      animation: fadeIn 0.6s ease-in-out;
+    .tooltip {
+      position: relative;
+      cursor: help;
     }
 
-    .preview.show {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .snapshot {
-      background: #1e103a;
-      padding: 16px;
-      margin-bottom: 25px;
-      border-radius: 12px;
-      border-left: 4px solid var(--highlight);
-      text-align: left;
-    }
-
-    .snapshot h4 {
-      color: var(--highlight);
-      margin-bottom: 10px;
-    }
-
-    .snapshot p {
+    .tooltip::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--glass);
       color: var(--text-light);
-      font-size: 0.95rem;
-      margin-bottom: 6px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      font-size: 0.8rem;
     }
+
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+
+    .progress-bar-container {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 1.5s ease-in-out;
+      border-radius: 6px;
+    }
+
+    .bar-green { background-color: var(--green); }
+    .bar-yellow { background-color: var(--yellow); }
+    .bar-red { background-color: var(--red); }
   </style>
 </head>
 <body>
-
-  <!-- 🌌 Background Animation -->
   <div class="bubbles">
-    ${Array.from({length: 40}).map((_, i) => `<div class="bubble" style="--i:${i + 1};"></div>`).join('')}
+    <!-- background bubbles -->
+    ${Array.from({length:40}).map((_,i)=>
+      `<div class="bubble" style="--i:${i+1};"></div>`
+    ).join('')}
   </div>
 
-  <!-- 🧠 Header -->
   <header>
     <h1>SkillWale</h1>
     <nav>
       <a href="index.html">Home</a>
       <a href="courses.html">Courses</a>
-      <button class="toggle-mode" id="themeToggle" aria-label="Toggle Light/Dark Mode">🌙</button>
+      <button class="toggle-mode" id="themeToggle">🌙</button>
     </nav>
   </header>
 
-  <!-- 📤 Upload Section -->
   <section class="upload-section">
     <h2>Upload Your Resume</h2>
     <p>Let our AI guide you to your perfect job match 🔍</p>
 
     <label class="upload-box" id="uploadBox">
-      <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt" />
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 1H4v2h16v-2z"/></svg>
+      <input type="file" id="resumeInput" accept=".pdf,.doc,.docx,.txt"/>
+      <svg viewBox="0 0 24 24"><path d="M12 16l4-5h-3V4h-2v7H8l4 5zm8 1H4v2h16v-2z"/></svg>
       <p>Click or drag your resume file here</p>
     </label>
 
-    <div class="loader" id="loader"></div>
+    <div id="loader" class="loader" role="status" aria-live="polite" style="text-align:center;margin-bottom:20px;"></div>
 
     <div class="preview" id="preview">
       <div class="snapshot" id="snapshotBox"></div>
-      <h3 style="margin-top: 20px;">🔍 AI Analysis Result</h3>
+      <h3 style="text-align:center;margin-top:20px;">🔍 AI Analysis Result</h3>
       <div id="matchResult"></div>
-      <h4 style="color: var(--highlight); margin-top: 20px;">📈 Role-wise Scorecards</h4>
-      <div class="scorecard" id="scoreBox"></div>
+      <h4 style="text-align:center;color:var(--highlight);margin-top:30px;">📈 Role-wise Scorecards</h4>
+      <div id="scoreBox"></div>
     </div>
-        <!-- 💡 Resume Tips Section -->
+
     <div class="tips">
-      <h4>✨ Tips to Improve Your Resume</h4>
-      <ul id="tipsList"></ul>
+      <h4 style="text-align:center;color:var(--highlight);margin-top:40px;">✨ Resume Improvement Tips</h4>
+      <ul id="tipsList" style="list-style:none;padding:0;text-align:center;"></ul>
+    </div>
+
+    <div class="history" style="margin-top:50px;text-align:center;">
+      <button id="toggleHistory" style="padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;">
+        📂 Show Resume Upload History
+      </button>
+      <div id="historyBox" style="display:none;margin-top:20px;"></div>
     </div>
   </section>
 
-  <!-- 🔻 Footer -->
-  <footer>
+  <footer style="text-align:center;padding:20px;color:var(--muted);">
     Crafted with ❤️ by SkillWale · © 2025
   </footer>
 
-  <!-- 🌙 Script -->
   <script>
     const input = document.getElementById("resumeInput");
     const loader = document.getElementById("loader");
@@ -299,128 +320,130 @@
     const snapshotBox = document.getElementById("snapshotBox");
     const dropZone = document.getElementById("uploadBox");
     const themeToggle = document.getElementById("themeToggle");
+    const historyBox = document.getElementById("historyBox");
+    const toggleHistoryBtn = document.getElementById("toggleHistory");
 
-    // 🌓 Theme toggle
+    // Theme toggle with localStorage
     themeToggle.addEventListener("click", () => {
       const html = document.documentElement;
-      const newTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      html.setAttribute("data-theme", newTheme);
-      themeToggle.textContent = newTheme === "dark" ? "🌙" : "☀️";
-      localStorage.setItem("theme", newTheme);
+      const mode = html.getAttribute("data-theme");
+      const next = mode === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", next);
+      themeToggle.textContent = next === "dark" ? "🌙" : "☀️";
+      localStorage.setItem("theme", next);
     });
-
-    // Load saved theme
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      document.documentElement.setAttribute("data-theme", savedTheme);
-      themeToggle.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+    const saved = localStorage.getItem("theme");
+    if (saved) {
+      document.documentElement.setAttribute("data-theme", saved);
+      themeToggle.textContent = saved === "dark" ? "🌙" : "☀️";
     }
 
-    // 🖱 Drag and Drop
-    dropZone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropZone.classList.add("dragging");
-    });
-
-    dropZone.addEventListener("dragleave", () => {
-      dropZone.classList.remove("dragging");
-    });
-
-    dropZone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropZone.classList.remove("dragging");
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        input.files = files;
+    // Drag & drop zone
+    dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("dragging"); });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragging"));
+    dropZone.addEventListener("drop", e => {
+      e.preventDefault(); dropZone.classList.remove("dragging");
+      const [file] = e.dataTransfer.files;
+      if (file) {
+        input.files = e.dataTransfer.files;
         input.dispatchEvent(new Event("change"));
       }
     });
 
-    // 📄 File Input
+    // Toggle history
+    toggleHistoryBtn.addEventListener("click", () => {
+      const show = historyBox.style.display === "none";
+      if (show) {
+        const hist = JSON.parse(localStorage.getItem("skillwaleHistory") || "[]");
+        if (hist.length) {
+          historyBox.innerHTML = "<ul>" + hist.reverse().map(h =>
+            `<li style="margin:10px;padding:10px;border-left:4px solid var(--highlight);background:rgba(255,255,255,0.03);border-radius:8px;">
+              <strong>${h.fileName}</strong><br>Score: ${h.score} | ${h.time}<br>Summary: ${h.summary}
+            </li>`
+          ).join("") + "</ul>";
+        } else {
+          historyBox.innerHTML = "<p>No previous uploads.</p>";
+        }
+        toggleHistoryBtn.textContent = "🔽 Hide Resume Upload History";
+        historyBox.style.display = "block";
+      } else {
+        toggleHistoryBtn.textContent = "📂 Show Resume Upload History";
+        historyBox.style.display = "none";
+      }
+    });
+
+    // File input & analysis
     input.addEventListener("change", async () => {
-      if (input.files.length > 0) {
-        const file = input.files[0];
-        if (!file.name.match(/\.(pdf|doc|docx|txt)$/)) {
-          alert("Please upload a valid resume file (.pdf, .doc, .docx, .txt)");
-          return;
+      if (!input.files.length) return;
+      const file = input.files[0];
+      if (!/\.(pdf|docx?|txt)$/i.test(file.name)) {
+        alert("Please upload a valid resume (.pdf, .doc/.docx, .txt)");
+        return;
+      }
+
+      loader.textContent = "Analyzing…";
+      preview.classList.remove("show");
+      resultBox.innerHTML = "";
+      scoreBox.innerHTML = "";
+      tipsList.innerHTML = "";
+      snapshotBox.innerHTML = "";
+
+      const form = new FormData();
+      form.append("resume", file);
+
+      try {
+        const res = await fetch("http://localhost:5001/analyze", { method: "POST", body: form });
+        const data = await res.json();
+
+        loader.textContent = "";
+        preview.offsetWidth;
+        preview.classList.add("show");
+        confetti({ spread: 90, origin: { y: 0.6 }, particleCount: 100 });
+
+        if (data.analysis) {
+          const lines = data.analysis.split("\n").filter(Boolean);
+          resultBox.innerHTML = lines.map(l => `<p>• ${l}</p>`).join("");
+          snapshotBox.innerHTML = `
+            <h4>🧠 Candidate Summary</h4>
+            <p><strong>Skills:</strong> ${data.resume_skills.join(", ")}</p>
+            <p><strong>Overall Match:</strong> ${data.score}%</p>`;
         }
 
-        loader.style.display = 'block';
-        preview.classList.remove("show");
-        resultBox.innerHTML = "<p>Analyzing...</p>";
-        scoreBox.innerHTML = "";
-        tipsList.innerHTML = "";
-        snapshotBox.innerHTML = "";
-
-        const formData = new FormData();
-        formData.append("resume", file);
-
-        try {
-          const response = await fetch("http://localhost:5001/analyze", {
-            method: "POST",
-            body: formData
-          });
-
-          const data = await response.json();
-
-          loader.style.display = 'none';
-          preview.offsetWidth;
-          preview.classList.add("show");
-          confetti({ spread: 80, origin: { y: 0.6 } });
-
-          // 🧠 Snapshot
-          if (data.analysis) {
-            const lines = data.analysis.split("\n").filter(Boolean);
-            resultBox.innerHTML = lines.map(line => `<p>• ${line}</p>`).join('');
-            snapshotBox.innerHTML = `
-              <h4>🧠 Candidate Snapshot</h4>
-              <p><strong>Summary:</strong> ${lines[0]}</p>
-              <p><strong>Estimated Salary:</strong> ₹${Math.floor(data.score * 1000)} / month</p>
-              <p><strong>Overall Match:</strong> ${data.score}%</p>
-            `;
-          }
-
-          // 🧩 Job Scorecards
-          if (Array.isArray(data.jobs)) {
-            scoreBox.innerHTML = data.jobs.map(job => {
-              return `
-                <div>
-                  <strong>${job.role}</strong><br>
-                  Match: ${job.match}%<br>
-                  Recommended for: ${job.company}<br>
-                  Missing skills: ${job.missingSkills.join(', ')}
-                </div>`;
-            }).join('');
-          }
-
-          // ✍️ Resume Tips
-          if (Array.isArray(data.tips)) {
-            tipsList.innerHTML = data.tips.map(tip => `<li>${tip}</li>`).join('');
-          } else {
-            tipsList.innerHTML = [
-              "Tailor your resume to each JD.",
-              "Use measurable achievements.",
-              "Include job-specific keywords.",
-              "Avoid typos and grammar mistakes.",
-              "Add relevant soft skills."
-            ].map(tip => `<li>${tip}</li>`).join('');
-          }
-
-          // 🗃 Save to local history
-          let history = JSON.parse(localStorage.getItem("skillwaleHistory") || "[]");
-          history.push({
-            time: new Date().toLocaleString(),
-            score: data.score,
-            summary: data.analysis?.split("\n")[0],
-            fileName: file.name
-          });
-          localStorage.setItem("skillwaleHistory", JSON.stringify(history));
-
-        } catch (err) {
-          loader.style.display = 'none';
-          preview.classList.add("show");
-          resultBox.innerHTML = `<p style="color: red;">❌ Error: ${err.message}</p>`;
+        if (Array.isArray(data.jobs)) {
+          scoreBox.innerHTML = data.jobs.map(job => {
+            const missing = job.missingSkills.length
+              ? job.missingSkills.map(s => `<span class="badge tooltip" data-tip="Missing">{{s}}</span>`).join("")
+              : `<span class="badge">No missing skills 🎯</span>`;
+            const progColor = job.match >= 80 ? "bar-green" : job.match >= 50 ? "bar-yellow" : "bar-red";
+            return `
+              <div style="margin:20px;padding:16px;background:rgba(255,255,255,0.03);border-radius:12px;border-left:4px solid var(--accent);">
+                <h4 style="color:var(--accent);margin-bottom:6px;">🧩 ${job.role} @ ${job.company}</h4>
+                <p>Match: <strong>${job.match}%</strong> (${job.matchDetail})</p>
+                <div class="progress-bar-container">
+                  <div class="progress-bar ${progColor}" style="width:${job.match}%"></div>
+                </div>
+                <div style="margin-top:10px;">${missing}</div>
+                <p style="margin-top:10px;color:var(--muted);font-size:0.9rem;">💡 ${job.improvement}</p>
+              </div>`;
+          }).join("");
         }
+
+        tipsList.innerHTML = Array.isArray(data.tips)
+          ? data.tips.map(t => `<li>${t}</li>`).join("")
+          : "<li>No tips available.</li>";
+
+        const history = JSON.parse(localStorage.getItem("skillwaleHistory") || "[]");
+        history.push({
+          fileName: file.name,
+          score: data.score,
+          time: new Date().toLocaleString(),
+          summary: data.analysis.split("\n")[0]
+        });
+        localStorage.setItem("skillwaleHistory", JSON.stringify(history));
+      } catch (err) {
+        loader.textContent = "";
+        preview.classList.add("show");
+        resultBox.innerHTML = `<p style="color:red;">❌ ${err.message}</p>`;
       }
     });
   </script>
