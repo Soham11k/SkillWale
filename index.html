@@ -8,6 +8,7 @@
   <style>
     :root {
       --dark-bg: #1e1b2e;
+      --light-bg: #f5f5f5;
       --card-bg: rgba(255, 255, 255, 0.05);
       --glass: rgba(255, 255, 255, 0.08);
       --coral: #ff6f61;
@@ -15,6 +16,7 @@
       --gold: #fcd34d;
       --text-light: #fdf6f6;
       --text-muted: #b4b4b4;
+      --text-dark: #222;
     }
 
     * {
@@ -29,17 +31,20 @@
       color: var(--text-light);
       scroll-behavior: smooth;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
 
-    /* Stars Background */
+    body.light {
+      background: var(--light-bg);
+      color: var(--text-dark);
+    }
+
     .stars {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: -1;
+      background: transparent;
       pointer-events: none;
       overflow: hidden;
     }
@@ -47,15 +52,14 @@
     .stars::before, .stars::after {
       content: "";
       position: absolute;
-      width: 200%;
-      height: 200%;
+      width: 200%; height: 200%;
       background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-      animation: twinkle 10s linear infinite;
-      opacity: 0.3;
+      animation: twinkle 12s linear infinite;
+      opacity: 0.2;
     }
 
     .stars::after {
-      animation-delay: 5s;
+      animation-delay: 6s;
     }
 
     @keyframes twinkle {
@@ -63,30 +67,27 @@
       to { transform: translate(-500px, -500px); }
     }
 
-    /* Mouse Glow */
     #mouse-glow {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 120px;
-      height: 120px;
+      top: 0; left: 0;
+      width: 120px; height: 120px;
       margin-left: -60px;
       margin-top: -60px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
       pointer-events: none;
       mix-blend-mode: screen;
       z-index: 999;
-      transition: transform 0.05s ease-out;
+      transition: transform 0.04s ease-out;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 50px;
+      padding: 18px 45px;
       background: var(--glass);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -100,7 +101,7 @@
     nav a {
       color: var(--text-light);
       text-decoration: none;
-      margin-left: 30px;
+      margin-left: 28px;
       font-weight: 500;
       position: relative;
     }
@@ -120,6 +121,13 @@
       width: 100%;
     }
 
+    .theme-toggle {
+      margin-left: 30px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--coral);
+    }
+
     .hero {
       min-height: 100vh;
       display: flex;
@@ -128,26 +136,26 @@
       justify-content: center;
       text-align: center;
       padding: 0 20px;
-      animation: fadeIn 2s ease;
+      animation: fadeIn 1.5s ease;
     }
 
     .hero h2 {
-      font-size: 3rem;
+      font-size: 3.2rem;
       color: var(--gold);
-      margin-bottom: 20px;
-      animation: slideUp 1.2s ease forwards;
+      margin-bottom: 18px;
+      animation: slideUp 1s ease forwards;
     }
 
     .hero p {
-      max-width: 600px;
+      max-width: 620px;
       color: var(--text-muted);
-      font-size: 1.1rem;
-      margin-bottom: 30px;
-      animation: slideUp 1.4s ease forwards;
+      font-size: 1.15rem;
+      margin-bottom: 32px;
+      animation: slideUp 1.2s ease forwards;
     }
 
     .cta {
-      padding: 14px 30px;
+      padding: 14px 34px;
       background: var(--coral);
       border: none;
       border-radius: 30px;
@@ -205,14 +213,6 @@
       color: var(--text-muted);
     }
 
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      font-size: 0.9rem;
-      color: #888;
-      background: #16141f;
-    }
-
     @keyframes fadeIn {
       from {opacity: 0; transform: translateY(30px);}
       to {opacity: 1; transform: translateY(0);}
@@ -235,7 +235,6 @@
   </style>
 </head>
 <body>
-
   <div class="stars"></div>
   <div id="mouse-glow"></div>
 
@@ -243,15 +242,17 @@
     <h1>SkillWale</h1>
     <nav>
       <a href="#features">Features</a>
-      <a href="upload">Upload</a>
+      <a href="/upload">Upload</a>
       <a href="/courses">Courses</a>
+      <a href="/logout">Logout</a>
+      <span class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Mode</span>
     </nav>
   </header>
 
   <section class="hero">
     <h2>Let Your Skills Shine 🌟</h2>
     <p>SkillWale uses Gen AI to connect your talent to real opportunities — smarter, faster, and with heart.</p>
-    <button class="cta" onclick="window.location.href='upload'">Try It Now</button>
+    <button class="cta" onclick="window.location.href='/upload'">Try It Now</button>
   </section>
 
   <section class="features" id="features">
@@ -259,33 +260,79 @@
     <div class="cards">
       <div class="card">
         <h3>🎯 Smart Job Recommendations</h3>
-        <p>We go beyond keywords. Our AI understands your work style, domain knowledge, and ambitions to recommend roles you're truly fit for.</p>
+        <p>AI understands your domain and ambitions to recommend best-fit roles — not just keyword matches.</p>
       </div>
       <div class="card">
-        <h3>📈 Personalized Growth Roadmaps</h3>
-        <p>Missing something? Get a roadmap to upgrade your skills with free and relevant online content, personalized just for you.</p>
+        <h3>📈 Personalized Growth Plans</h3>
+        <p>Know what's missing? We’ll give you a roadmap with curated free content.</p>
       </div>
       <div class="card">
-        <h3>🧠 Resume Strength Analyzer</h3>
-        <p>See your resume the way a recruiter would. Understand what's strong, what's weak, and how to improve it.</p>
+        <h3>🧠 Resume Analyzer</h3>
+        <p>See how recruiters view your resume. Get suggestions for maximum impact.</p>
       </div>
       <div class="card">
-        <h3>🤝 Human-Friendly Interface</h3>
-        <p>Our interface is made to feel calm and clear. Like a good career counselor, not a cold algorithm.</p>
+        <h3>🤝 Calm, Clean Interface</h3>
+        <p>Less noise. More clarity. Our UI feels like a human counselor, not a form.</p>
       </div>
       <div class="card">
-        <h3>🚀 Real-Time Market Trends</h3>
-        <p>Get suggestions based on what's trending in your domain today — roles, salaries, and skills.</p>
+        <h3>🚀 Real-Time Skill Trends</h3>
+        <p>Know what’s hot — updated suggestions for roles, salaries, and tools.</p>
       </div>
       <div class="card">
-        <h3>🔎 Recruiter Insight Mode</h3>
-        <p>Toggle to see how recruiters will read your resume. Identify buzzwords and common deal-breakers instantly.</p>
+        <h3>🔎 Recruiter Lens Mode</h3>
+        <p>Toggle to see how hiring managers interpret your resume line-by-line.</p>
       </div>
     </div>
   </section>
 
+  <!-- 📊 Stats Section -->
+  <section class="features">
+    <h2 class="section-title">Our Impact</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>10,000+</h3>
+        <p>Resumes analyzed with precision AI feedback</p>
+      </div>
+      <div class="card">
+        <h3>95%</h3>
+        <p>Users felt more confident applying after using SkillWale</p>
+      </div>
+      <div class="card">
+        <h3>500+</h3>
+        <p>Courses linked to user profiles for skill upgrades</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🙌 Testimonials -->
+  <section class="features">
+    <h2 class="section-title">Voices from Our Users</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>💬 Priya (Frontend Dev)</h3>
+        <p>"I found a role I never imagined I was fit for. The AI’s feedback was spot on!"</p>
+      </div>
+      <div class="card">
+        <h3>💬 Arun (Data Analyst)</h3>
+        <p>"It’s like having a career coach 24/7. Loved the scorecard and skill tips!"</p>
+      </div>
+      <div class="card">
+        <h3>💬 Megha (PM Intern)</h3>
+        <p>"The resume insight tool felt like a cheat code — so useful!"</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💡 Final CTA Section -->
+  <section class="hero" style="padding-top: 50px;">
+    <h2>Ready to Level Up? 🚀</h2>
+    <p>Don’t just apply. Apply smart. Discover where you belong with SkillWale.</p>
+    <button class="cta" onclick="window.location.href='/upload'">Upload Your Resume</button>
+  </section>
+
   <footer>
-    Built with ❤️ by SkillWale · © 2025
+    Built with ❤️ by SkillWale · © 2025<br>
+    <a href="/logout" style="color:#888;text-decoration:underline;">Logout</a>
   </footer>
 
   <script>
@@ -293,7 +340,12 @@
     document.addEventListener("mousemove", (e) => {
       glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
     });
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
   </script>
 
 </body>
 </html>
+
