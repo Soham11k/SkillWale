@@ -1,316 +1,370 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login | SkillWale</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkillWale – Login</title>
   <style>
-    /* Base & theme colors */
+    @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;600&display=swap');
+
     :root {
-      --bg-light: #fafafa;
-      --bg-dark: #1a1a2e;
-      --glass-light: rgba(255,255,255,0.1);
-      --glass-dark: rgba(0,0,0,0.4);
-      --accent-light: #ff6f61;
-      --accent-dark: #c084fc;
-      --text-light: #f5f5f5;
-      --text-dark: #1a1a2e;
-      --error: #ff4c4c;
-      --success: #4ade80;
+      --bg: #090040;
+      --text: #ffffff;
+      --subtle: #cccccc;
+      --primary: #0071E3;
+      --highlight: #FF9500;
+      --border: #3e3e60;
+      --white: #1A1A3D;
     }
-    html, body {
+
+    * {
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
-      height: 100%;
-      overflow: hidden;
-      background: var(--bg-dark);
-      color: var(--text-light);
-      transition: background 0.4s ease, color 0.4s ease;
+      box-sizing: border-box;
     }
-    body.light-mode {
-      background: var(--bg-light);
-      color: var(--text-dark);
-    }
-    /* animated gradient background */
-    .bg-gradient {
-      position: fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
-      background-size: 600% 600%;
-      animation: gradientBG 30s ease infinite;
-      z-index: -2;
-    }
-    body.light-mode .bg-gradient {
-      background: linear-gradient(45deg, #ffffff, #e0e0e0, #fafafa);
-    }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    /* particle canvas */
-    canvas#bg-particles {
-      position: fixed;
-      top:0; left:0;
-      width: 100%; height: 100%;
-      z-index: -1;
-    }
-    /* main container */
-    .login-container {
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      top: 50%;
-      transform: translateY(-50%);
-      padding: 40px;
-      background: var(--glass-dark);
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+
+    body {
+      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
       transition: background 0.4s ease;
+      overflow: hidden;
+      position: relative;
     }
-    body.light-mode .login-container {
-      background: var(--glass-light);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+
+    canvas#bubbles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100vh;
     }
-    .login-container h1 {
-      text-align: center;
-      font-size: 2.4rem;
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      max-width: 1100px;
+      width: 100%;
+      padding: 40px 20px;
+      gap: 60px;
+    }
+
+    .left-panel {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
       margin-bottom: 20px;
-      background: linear-gradient(90deg, var(--accent-dark), var(--accent-light));
+    }
+
+    .brand-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .brand-title span {
+      background: linear-gradient(90deg, #ff9500, #ffcc00);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .input-group {
-      position: relative;
-      margin-bottom: 24px;
-    }
-    .input-group input {
-      width: 100%;
-      border: none;
-      outline: none;
-      padding: 14px 20px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.07);
-      color: var(--text-light);
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
-    body.light-mode .input-group input {
-      background: rgba(0,0,0,0.05);
-      color: var(--text-dark);
-    }
-    .input-group label {
-      position: absolute;
-      top: 12px;
-      left: 20px;
-      color: rgba(255,255,255,0.6);
-      pointer-events: none;
-      transition: all 0.2s ease;
-      font-size: 1rem;
-    }
-    body.light-mode .input-group label {
-      color: rgba(0,0,0,0.6);
-    }
-    .input-group input:focus + label,
-    .input-group input:not(:placeholder-shown) + label {
-      top: -6px;
-      left: 16px;
-      font-size: 0.8rem;
-      color: var(--accent-light);
-    }
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: var(--accent-dark);
-      color: #fff;
+
+    .tagline {
       font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      color: var(--subtle);
+      margin: 12px 0 24px;
+      max-width: 420px;
     }
-    .submit-btn:hover {
-      background: var(--accent-light);
-      transform: translateY(-2px);
+
+    .roles {
+      font-size: 0.95rem;
+      color: var(--subtle);
+      line-height: 1.8;
     }
-    .submit-btn:active {
-      transform: translateY(0);
+
+    .roles strong {
+      color: var(--highlight);
     }
-    .error-msg, .success-msg {
+
+    .login-card {
+      position: relative;
+      background: rgba(26, 26, 61, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 48px;
+      width: 100%;
+      max-width: 400px;
+      animation: fadeInUp 0.8s ease;
       text-align: center;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-      animation: fadeSlide 0.5s ease;
     }
-    .error-msg { background: var(--error); color: #fff; }
-    .success-msg { background: var(--success); color: #fff; }
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(-10px); }
-      100% { opacity: 1; }
-    }
-    .theme-toggle {
+
+    .login-card::before {
+      content: '';
       position: absolute;
-      top: 20px; right: 20px;
-      cursor: pointer;
-      background: rgba(255,255,255,0.1);
-      width: 36px;
-      height: 36px;
+      top: 0;
+      left: 0;
+      height: 8px;
+      width: 100%;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.25), rgba(255,255,255,0));
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-card h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--highlight);
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 60px;
+      margin-bottom: 16px;
       border-radius: 50%;
+    }
+
+    .oauth-btn {
+      background: #fff;
+      color: #111;
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      transition: background 0.3s ease;
+      gap: 10px;
+      margin-bottom: 16px;
+      cursor: pointer;
     }
-    .theme-toggle:hover {
-      background: rgba(255,255,255,0.2);
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      font-size: 1rem;
+      background: #0d0033;
+      color: #ffffff;
     }
-    .testimonials {
-      margin-top: 40px;
-      overflow: hidden;
-      position: relative;
-      height: 120px;
+
+    input:valid {
+      border-color: limegreen;
     }
-    .testimonial-slide {
-      display: flex;
-      width: 300%;
-      animation: slideTesti 12s infinite;
+
+    input:invalid:focus {
+      border-color: #ff3b30;
     }
-    .testimonial {
-      flex: 1;
-      padding: 0 20px;
-      opacity: 0.8;
-      transition: opacity 0.3s ease;
+
+    input::placeholder {
+      color: #bbbbbb;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(0, 113, 227, 0.3);
+    }
+
+    .show-password {
+      text-align: right;
+      margin: -12px 0 12px;
+      font-size: 0.85rem;
+      color: var(--subtle);
+    }
+
+    .show-password input {
+      transform: scale(1.1);
+      margin-right: 6px;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 6px 18px rgba(0, 113, 227, 0.4);
+    }
+
+    button[type="submit"]:hover {
+      background: #005bb5;
+      transform: scale(1.02);
+    }
+
+    .footer-text {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 14px;
+      color: var(--subtle);
+      margin-top: 24px;
     }
-    .testimonial:hover {
-      opacity: 1;
+
+    .theme-switch {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: var(--subtle);
     }
-    @keyframes slideTesti {
-      0% { transform: translateX(0); }
-      33% { transform: translateX(0); }
-      44% { transform: translateX(-100%); }
-      66% { transform: translateX(-100%); }
-      77% { transform: translateX(-200%); }
-      100% { transform: translateX(-200%); }
+
+    .welcome-typing {
+      color: var(--primary);
+      font-size: 1rem;
+      margin-top: 12px;
+      min-height: 24px;
     }
-    /* responsive */
-    @media (max-width:480px) {
-      .login-container { padding: 20px; margin: 20px; top: unset; transform: none; }
-      .testimonials { height: auto; animation: none; }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px;
+      }
+
+      .left-panel {
+        text-align: center;
+      }
+
+      .brand-title {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
 <body>
-
-<div class="bg-gradient"></div>
-<canvas id="bg-particles"></canvas>
-
-<div class="login-container">
-  <div class="theme-toggle" id="themeToggle">🌙</div>
-  <h1>SkillWale Login</h1>
-
-  <form id="loginForm" action="/login" method="POST">
-    <div class="input-group">
-      <input type="text" id="username" name="username" placeholder=" " required />
-      <label for="username">Username</label>
+  <canvas id="bubbles"></canvas>
+  <div class="container">
+    <div class="left-panel">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1024px-Test-Logo.svg.png" alt="SkillWale Logo" class="logo">
+      <h1 class="brand-title">Welcome to <span>SkillWale</span></h1>
+      <p class="tagline">Your personalized AI-powered career matcher platform</p>
+      <div class="roles">
+        <p><strong>🧑‍💼 Candidate?</strong> Upload your resume and get your ideal job role instantly.</p>
+        <p><strong>👩‍💻 Student?</strong> Learn what skills top companies want.</p>
+        <p><strong>🏢 HR?</strong> Find the right talent with SkillWale AI.</p>
+        <p class="welcome-typing" id="welcomeText"></p>
+      </div>
     </div>
-    <div class="input-group">
-      <input type="password" id="password" name="password" placeholder=" " required />
-      <label for="password">Password</label>
-    </div>
-    <button type="submit" class="submit-btn">Log In</button>
-  </form>
-
-  <div id="msgBox"></div>
-
-  <div class="testimonials">
-    <div class="testimonial-slide">
-      <div class="testimonial">"SkillWale helped me land my dream job!" — Anjali</div>
-      <div class="testimonial">"The AI suggestions are spot-on and practical." — Rahul</div>
-      <div class="testimonial">"I love the UI, so clean and motivating." — Priya</div>
-    </div>
+    <form class="login-card" method="POST" action="/login">
+      <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed=User" class="avatar" alt="avatar">
+      <button class="oauth-btn" type="button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> Continue with Google
+      </button>
+      <h2>Sign In to Continue</h2>
+      <input type="email" name="email" placeholder="Email address" required autocomplete="email" autofocus />
+      <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
+      <div class="show-password">
+        <label><input type="checkbox" onclick="togglePassword()"> Show Password</label>
+      </div>
+      <button type="submit">Log In</button>
+      <div class="theme-switch">
+        <label><input type="checkbox" id="modeToggle" /> Enable Dark Mode</label>
+      </div>
+      <div class="footer-text">© 2025 SkillWale. All rights reserved.</div>
+    </form>
   </div>
-</div>
-
-<script>
-  // theme toggle
-  const body = document.body;
-  const toggle = document.getElementById('themeToggle');
-  toggle.addEventListener('click', () => {
-    body.classList.toggle('light-mode');
-    toggle.textContent = body.classList.contains('light-mode') ? '🌞' : '🌙';
-    localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
-  });
-  // load saved theme
-  const saved = localStorage.getItem('theme');
-  if (saved === 'light') body.classList.add('light-mode'), toggle.textContent='🌞';
-
-  // form feedback
-  const form = document.getElementById('loginForm');
-  const msgBox = document.getElementById('msgBox');
-  form.addEventListener('submit', e => {
-    const u = form.username.value.trim();
-    const p = form.password.value.trim();
-    if (!u || !p) {
-      e.preventDefault();
-      msgBox.innerHTML = '<div class="error-msg">Please enter username and password.</div>';
+  <script>
+    const canvas = document.getElementById('bubbles');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    const bubbles = [];
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     }
-  });
-
-  // basic particle effect
-  const canvas = document.getElementById('bg-particles');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  function initParticles(){
-    particles = [];
-    for(let i=0; i<60; i++){
-      particles.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        r: Math.random()*2+1,
-        dx: (Math.random()-0.5)*0.6,
-        dy: (Math.random()-0.5)*0.6
+    window.addEventListener('resize', resize);
+    resize();
+    for (let i = 0; i < 40; i++) {
+      bubbles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 1 + 0.5
       });
     }
-  }
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p=>{
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,2*Math.PI);
-      ctx.fillStyle = body.classList.contains('light-mode') ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.05)';
-      ctx.fill();
-      p.x += p.dx;
-      p.y += p.dy;
-      if(p.x<0||p.x>canvas.width) p.dx *= -1;
-      if(p.y<0||p.y>canvas.height) p.dy *= -1;
-    });
-    requestAnimationFrame(animate);
-  }
-  window.addEventListener('resize', ()=>{
-    canvas.width=innerWidth;
-    canvas.height=innerHeight;
-    initParticles();
-  });
-  initParticles();
-  animate();
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      for (let b of bubbles) {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fill();
+      }
+      move();
+    }
+    function move() {
+      for (let b of bubbles) {
+        b.y -= b.d;
+        if (b.y < -10) {
+          b.y = h + 10;
+          b.x = Math.random() * w;
+        }
+      }
+    }
+    function animate() {
+      draw();
+      requestAnimationFrame(animate);
+    }
+    animate();
 
-  // show server-side errors (Flask will insert div#error-msg in case of login failure)
-  const errDiv = document.getElementById('serverError');
-  if(errDiv) msgBox.innerHTML = `<div class="error-msg">${errDiv.innerText}</div>`;
-</script>
+    const toggle = document.getElementById('modeToggle');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+    toggle.addEventListener('change', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+
+    const messages = [
+      "\u2728 Ready to boost your career?",
+      "\ud83d\ude80 Get AI-powered job matches instantly!",
+      "\ud83d\udca1 SkillWale helps you shine."
+    ];
+    let msgIndex = 0;
+    const typing = document.getElementById("welcomeText");
+    function typeMsg() {
+      typing.textContent = messages[msgIndex];
+      msgIndex = (msgIndex + 1) % messages.length;
+      setTimeout(typeMsg, 4000);
+    }
+    typeMsg();
+
+    function togglePassword() {
+      const pwd = document.querySelector('input[name="password"]');
+      pwd.type = pwd.type === "password" ? "text" : "password";
+    }
+
+    document.querySelector('form').addEventListener('submit', e => {
+      const btn = document.querySelector('button[type=submit]');
+      btn.disabled = true;
+      btn.innerHTML = 'Logging in... ⏳';
+      document.body.style.transition = 'opacity 0.5s ease';
+      document.body.style.opacity = '0.8';
+    });
+  </script>
 </body>
 </html>
