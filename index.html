@@ -1,351 +1,385 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SkillWale - AI Career Matcher</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <title>SkillWale – Find Your Dream Role ✨</title>
+
+  <!-- Fonts + Animation Libraries -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player"></script>
+
   <style>
+    /* Colors & Theme */
     :root {
-      --dark-bg: #1e1b2e;
-      --light-bg: #f5f5f5;
-      --card-bg: rgba(255, 255, 255, 0.05);
-      --glass: rgba(255, 255, 255, 0.08);
-      --coral: #ff6f61;
-      --plum: #d06aff;
-      --gold: #fcd34d;
-      --text-light: #fdf6f6;
-      --text-muted: #b4b4b4;
-      --text-dark: #222;
+      --bg: #0a0a2f;
+      --surface: #12123b;
+      --text: #ffffff;
+      --subtle: #aaaaaa;
+      --accent1: #FFDD33;
+      --accent2: #FF4F0F;
+      --accent3: #FF66B3;
+      --glass: rgba(255,255,255,0.04);
+      --glow-gradient: linear-gradient(90deg, #FFDD33, #FF66B3, #00F0FF);
     }
 
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
 
     body {
-      background: var(--dark-bg);
-      color: var(--text-light);
-      scroll-behavior: smooth;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
       overflow-x: hidden;
-      transition: background 0.3s, color 0.3s;
-    }
-
-    body.light {
-      background: var(--light-bg);
-      color: var(--text-dark);
-    }
-
-    .stars {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: -1;
-      background: transparent;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .stars::before, .stars::after {
-      content: "";
-      position: absolute;
-      width: 200%; height: 200%;
-      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-      animation: twinkle 12s linear infinite;
-      opacity: 0.2;
-    }
-
-    .stars::after {
-      animation-delay: 6s;
-    }
-
-    @keyframes twinkle {
-      from { transform: translate(0, 0); }
-      to { transform: translate(-500px, -500px); }
-    }
-
-    #mouse-glow {
-      position: fixed;
-      top: 0; left: 0;
-      width: 120px; height: 120px;
-      margin-left: -60px;
-      margin-top: -60px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-      pointer-events: none;
-      mix-blend-mode: screen;
-      z-index: 999;
-      transition: transform 0.04s ease-out;
+      scroll-behavior: smooth;
     }
 
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 45px;
-      background: var(--glass);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
 
-    header h1 {
-      font-size: 1.8rem;
-      color: var(--gold);
+    .logo {
+      font-size: 2.4rem; font-weight: 600;
+      animation: fadeInDown 1s ease forwards;
+    }
+    .logo span { color: var(--accent1); }
+
+    nav {
+      display: flex;
     }
 
     nav a {
-      color: var(--text-light);
+      margin-left: 30px;
+      color: var(--subtle);
       text-decoration: none;
-      margin-left: 28px;
       font-weight: 500;
       position: relative;
+      padding-bottom: 4px;
+      transition: color .3s ease;
     }
-
     nav a::after {
       content: '';
-      position: absolute;
-      left: 0;
-      bottom: -5px;
-      width: 0%;
-      height: 2px;
-      background: var(--plum);
-      transition: 0.3s ease;
+      position: absolute; bottom: 0;
+      left: 0; width: 0; height: 2px;
+      background: var(--accent2);
+      transition: width .35s ease;
     }
-
+    nav a:hover {
+      color: var(--accent2);
+    }
     nav a:hover::after {
       width: 100%;
     }
 
-    .theme-toggle {
-      margin-left: 30px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--coral);
-    }
-
+    /* Hero Section */
     .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0 20px;
-      animation: fadeIn 1.5s ease;
+      text-align: center; padding: 120px 20px 80px;
+      position: relative; overflow: hidden;
     }
 
-    .hero h2 {
-      font-size: 3.2rem;
-      color: var(--gold);
-      margin-bottom: 18px;
-      animation: slideUp 1s ease forwards;
+    .hero-bg-blur {
+      position: absolute; top: -150px; left: -150px;
+      width: 600px; height: 600px;
+      background: var(--glow-gradient);
+      filter: blur(200px);
+      opacity: 0.35;
+      animation: pulse 6s ease-in-out infinite alternate;
+      z-index: 0;
     }
 
-    .hero p {
-      max-width: 620px;
-      color: var(--text-muted);
-      font-size: 1.15rem;
-      margin-bottom: 32px;
-      animation: slideUp 1.2s ease forwards;
+    @keyframes pulse {
+      from { transform: scale(0.9); }
+      to { transform: scale(1.1); }
+    }
+
+    .hero h1 {
+      font-size: 3.8rem; color: var(--accent2);
+      margin-bottom: 20px;
+      animation: fadeInLeft 1.2s ease forwards;
+    }
+
+    .hero .typing {
+      font-size: 1.25rem;
+      color: var(--subtle);
+      border-right: 2px solid var(--accent1);
+      width: 0;
+      overflow: hidden;
+      margin: 0 auto;
+      animation: typing 3.5s steps(40,end) 0.8s 1 normal both,
+                 blink 0.7s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
     }
 
     .cta {
-      padding: 14px 34px;
-      background: var(--coral);
+      margin-top: 32px;
+      padding: 16px 48px;
       border: none;
       border-radius: 30px;
-      color: white;
+      font-size: 1.2rem;
       font-weight: 600;
-      font-size: 1rem;
+      background: var(--accent1);
+      color: var(--bg);
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 22px rgba(255,221,51,0.3);
+      animation: fadeInUp 1.4s ease forwards;
+      transition: all .3s ease;
     }
-
     .cta:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px var(--coral);
+      transform: scale(1.05) translateY(-2px);
+      background: var(--accent2);
+      box-shadow: 0 12px 30px rgba(255,79,15,0.3);
     }
 
+    .hero lottie-player {
+      width: 380px; margin: 40px auto;
+      animation: fadeInUp 1.4s ease forwards;
+      z-index: 1;
+      position: relative;
+    }
+
+    /* Features Section */
     .features {
-      padding: 60px 40px;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 2.2rem;
-      margin-bottom: 40px;
-      color: var(--plum);
-    }
-
-    .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 30px;
+      gap: 28px;
+      padding: 80px 48px;
     }
 
-    .card {
-      background: var(--card-bg);
+    .feature-card {
+      background: var(--glass);
       border-radius: 20px;
-      padding: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      animation: fadeInCard 0.8s ease forwards;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform .4s ease, box-shadow .3s ease;
+      cursor: pointer;
     }
 
-    .card:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    .feature-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
     }
 
-    .card h3 {
-      color: var(--gold);
-      font-size: 1.3rem;
-      margin-bottom: 10px;
+    .feature-card h3 {
+      font-size: 1.4rem;
+      color: var(--accent1);
+      margin-bottom: 12px;
     }
 
-    .card p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
+    .feature-card p {
+      color: var(--subtle);
+      line-height: 1.6;
+      margin-bottom: 20px;
     }
 
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(30px);}
-      to {opacity: 1; transform: translateY(0);}
+    .feature-card::before {
+      content: '✨';
+      position: absolute;
+      top: -10px; right: -10px;
+      font-size: 2rem;
+      opacity: 0;
+      transform: rotate(45deg);
+      transition: opacity .4s ease, transform .4s ease;
     }
 
-    @keyframes slideUp {
-      from {opacity: 0; transform: translateY(40px);}
-      to {opacity: 1; transform: translateY(0);}
+    .feature-card:hover::before {
+      opacity: 0.6;
+      transform: rotate(0deg) translate(10px, -10px);
     }
 
-    @keyframes fadeInCard {
-      from {opacity: 0; transform: scale(0.95);}
-      to {opacity: 1; transform: scale(1);}
+    .feature-card:nth-child(1) { animation: fadeInUp 1s both; animation-delay: .5s; }
+    .feature-card:nth-child(2) { animation: fadeInUp 1s both; animation-delay: .7s; }
+    .feature-card:nth-child(3) { animation: fadeInUp 1s both; animation-delay: .9s; }
+    .feature-card:nth-child(4) { animation: fadeInUp 1s both; animation-delay: 1.1s; }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+      nav a { margin-left: 16px; }
+      .features { padding: 60px 24px; }
     }
 
-    @media (max-width: 600px) {
-      .hero h2 { font-size: 2.2rem; }
-      header { flex-direction: column; align-items: flex-start; gap: 10px; }
-    }
   </style>
 </head>
-<body>
-  <div class="stars"></div>
-  <div id="mouse-glow"></div>
 
+<body>
   <header>
-    <h1>SkillWale</h1>
+    <div class="logo">Skill<span>Wale</span></div>
     <nav>
       <a href="#features">Features</a>
       <a href="/upload">Upload</a>
       <a href="/courses">Courses</a>
-      <a href="/logout">Logout</a>
-      <span class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Mode</span>
+      <a href="/login">Login</a>
     </nav>
   </header>
 
   <section class="hero">
-    <h2>Let Your Skills Shine 🌟</h2>
-    <p>SkillWale uses Gen AI to connect your talent to real opportunities — smarter, faster, and with heart.</p>
-    <button class="cta" onclick="window.location.href='/upload'">Try It Now</button>
+    <div class="hero-bg-blur"></div>
+    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_4kx2q32n.json" background="transparent" speed="1" loop autoplay></lottie-player>
+    <h1>Discover Your Dream Job Path</h1>
+    <p class="typing">AI resume analysis · Role matching · Course suggestions</p>
+    <button class="cta" onclick="window.location.href='/upload'">Launch Now 🚀</button>
   </section>
 
   <section class="features" id="features">
-    <h2 class="section-title">What We Do Best</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>🎯 Smart Job Recommendations</h3>
-        <p>AI understands your domain and ambitions to recommend best-fit roles — not just keyword matches.</p>
-      </div>
-      <div class="card">
-        <h3>📈 Personalized Growth Plans</h3>
-        <p>Know what's missing? We’ll give you a roadmap with curated free content.</p>
-      </div>
-      <div class="card">
-        <h3>🧠 Resume Analyzer</h3>
-        <p>See how recruiters view your resume. Get suggestions for maximum impact.</p>
-      </div>
-      <div class="card">
-        <h3>🤝 Calm, Clean Interface</h3>
-        <p>Less noise. More clarity. Our UI feels like a human counselor, not a form.</p>
-      </div>
-      <div class="card">
-        <h3>🚀 Real-Time Skill Trends</h3>
-        <p>Know what’s hot — updated suggestions for roles, salaries, and tools.</p>
-      </div>
-      <div class="card">
-        <h3>🔎 Recruiter Lens Mode</h3>
-        <p>Toggle to see how hiring managers interpret your resume line-by-line.</p>
+    <div class="feature-card">
+      <h3>🧠 AI Matching</h3>
+      <p>Instantly match your resume with top global job roles using GPT‑4 powered smart analysis.</p>
+    </div>
+    <div class="feature-card">
+      <h3>📊 Interactive Scoreboards</h3>
+      <p>Visualize your match percentage, missing skills, and feedback in stunning animated cards.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🎓 Tailored Courses</h3>
+      <p>We recommend only what matters — top-rated courses to close your skill gaps fast.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🏢 Real Job Descriptions</h3>
+      <p>Resume matches are compared against actual job descriptions from real companies.</p>
+    </div>
+  </section>
+    <!-- Testimonials Carousel -->
+  <section class="testimonials" style="padding: 80px 40px; background: #120030; text-align: center;">
+    <h2 class="animate__animated animate__fadeInDown" style="font-size: 2.6rem; color: var(--accent2); margin-bottom: 40px;">💬 What Users Say</h2>
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <blockquote>"SkillWale helped me understand what skills I was missing for my dream job. The course suggestions were perfect!"<br><br><strong>– Aarav, Developer</strong></blockquote>
+        </div>
+        <div class="swiper-slide">
+          <blockquote>"I love the animations and feedback. It's more than a job tool — it’s like a smart career friend!"<br><br><strong>– Meera, Data Analyst</strong></blockquote>
+        </div>
+        <div class="swiper-slide">
+          <blockquote>"As a recruiter, I use it to match candidates quickly. The UI and AI are both amazing!"<br><br><strong>– Rishi, HR Manager</strong></blockquote>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 📊 Stats Section -->
-  <section class="features">
-    <h2 class="section-title">Our Impact</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>10,000+</h3>
-        <p>Resumes analyzed with precision AI feedback</p>
-      </div>
-      <div class="card">
-        <h3>95%</h3>
-        <p>Users felt more confident applying after using SkillWale</p>
-      </div>
-      <div class="card">
-        <h3>500+</h3>
-        <p>Courses linked to user profiles for skill upgrades</p>
-      </div>
-    </div>
-  </section>
+  <!-- Floating Mascot -->
+  <img src="https://media.giphy.com/media/IThjAlJnD9WNO/giphy.gif" alt="Mascot" class="mascot" style="
+    position: fixed;
+    bottom: 90px;
+    left: 24px;
+    width: 60px;
+    height: 60px;
+    animation: floaty 3s ease-in-out infinite;
+    z-index: 999;
+    cursor: pointer;
+  " />
 
-  <!-- 🙌 Testimonials -->
-  <section class="features">
-    <h2 class="section-title">Voices from Our Users</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>💬 Priya (Frontend Dev)</h3>
-        <p>"I found a role I never imagined I was fit for. The AI’s feedback was spot on!"</p>
-      </div>
-      <div class="card">
-        <h3>💬 Arun (Data Analyst)</h3>
-        <p>"It’s like having a career coach 24/7. Loved the scorecard and skill tips!"</p>
-      </div>
-      <div class="card">
-        <h3>💬 Megha (PM Intern)</h3>
-        <p>"The resume insight tool felt like a cheat code — so useful!"</p>
-      </div>
-    </div>
-  </section>
+  <!-- Scroll to Top Button -->
+  <button id="scrollTop" title="Back to top" style="
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    font-size: 1.4rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--accent2);
+    color: white;
+    box-shadow: 0 0 16px rgba(255, 79, 15, 0.4);
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+  ">↑</button>
 
-  <!-- 💡 Final CTA Section -->
-  <section class="hero" style="padding-top: 50px;">
-    <h2>Ready to Level Up? 🚀</h2>
-    <p>Don’t just apply. Apply smart. Discover where you belong with SkillWale.</p>
-    <button class="cta" onclick="window.location.href='/upload'">Upload Your Resume</button>
-  </section>
-
-  <footer>
-    Built with ❤️ by SkillWale · © 2025<br>
-    <a href="/logout" style="color:#888;text-decoration:underline;">Logout</a>
+  <!-- Footer -->
+  <footer style="
+    text-align: center;
+    padding: 60px 0 40px;
+    font-size: 0.9rem;
+    color: var(--subtle);
+    background: #0b0025;
+  ">
+    &copy; 2025 <strong>SkillWale</strong>. Built with 🧡 by Dreamers & Designers.
+    <br><br>
+    <a href="/privacy" style="color: var(--accent1); margin: 0 12px;">Privacy</a> |
+    <a href="/terms" style="color: var(--accent1); margin: 0 12px;">Terms</a> |
+    <a href="/contact" style="color: var(--accent1); margin: 0 12px;">Contact</a>
   </footer>
 
+  <!-- Swiper + Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <script>
-    const glow = document.getElementById("mouse-glow");
-    document.addEventListener("mousemove", (e) => {
-      glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    // Swiper init
+    new Swiper(".mySwiper", {
+      loop: true,
+      autoplay: { delay: 5000 },
+      speed: 800,
     });
 
-    function toggleTheme() {
-      document.body.classList.toggle("light");
-    }
+    // Scroll-to-top logic
+    const scrollTopBtn = document.getElementById("scrollTop");
+    window.addEventListener("scroll", () => {
+      scrollTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
+    });
+    scrollTopBtn.onclick = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    // Mascot confetti click
+    const mascot = document.querySelector(".mascot");
+    mascot.addEventListener("click", () => {
+      for (let i = 0; i < 3; i++) {
+        confetti({
+          particleCount: 60,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#FFCC00", "#FF4F0F", "#FF66B3"],
+        });
+      }
+    });
   </script>
 
+  <!-- Extra styling -->
+  <style>
+    .swiper {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .swiper-slide {
+      background: rgba(255,255,255,0.05);
+      padding: 28px;
+      border-radius: 20px;
+      font-size: 1rem;
+      color: var(--text);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    blockquote {
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    @keyframes floaty {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
 </body>
 </html>
-
