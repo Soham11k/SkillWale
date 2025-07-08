@@ -1,215 +1,423 @@
-from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
-from dotenv import load_dotenv
+# SkillWale: Production-Ready, Feature-Rich Flask Backend
 import os
-import random
+import json
+import re
+import logging
+from datetime import datetime
+from flask import Flask, request, jsonify, render_template, send_file, session, Blueprint, make_response
+from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+from io import BytesIO
 import fitz  # PyMuPDF
 import docx2txt
-import re
+from openai import OpenAI
+from config import Config
 
+# --- Setup ---
 load_dotenv()
-
-app = Flask(__name__, template_folder="templates", static_folder="static")
+app = Flask(__name__)
+app.config.from_object(Config)
 CORS(app)
+db = SQLAlchemy(app)
+limiter = Limiter(get_remote_address, app=app, default_limits=["30/minute"])
+app.secret_key = Config.SECRET_KEY
 
-# 📘 Skill Glossary with Explanations
-SKILL_EXPLANATIONS = {
-    "Deep Learning": "Building neural networks for image, speech, and language tasks.",
-    "PyTorch": "Popular framework for deep learning model development and research.",
-    "Transformers": "State-of-the-art models used in NLP (e.g., BERT, GPT).",
-    "TensorFlow": "End-to-end open-source platform for machine learning.",
-    "NLP": "Natural Language Processing — making machines understand human language.",
-    "SQL": "Structured Query Language for managing and querying databases.",
-    "React": "A JavaScript library for building interactive user interfaces.",
-    "Docker": "Tool for containerizing and deploying applications.",
-    "Kubernetes": "System for automating container deployment, scaling, and management.",
-    "System Design": "Designing scalable and efficient software systems.",
-    "AWS": "Amazon Web Services — cloud computing platform.",
-    "CI/CD": "Automated testing and deployment in development pipelines.",
-    "Redux": "State management library used with React.",
-    "Scikit-learn": "Python library for simple and efficient machine learning.",
-    "Spring": "Java framework for building scalable backend applications.",
-    "Figma": "Design tool for UI/UX collaboration.",
-    "JIRA": "Tool for project management and issue tracking.",
-    "Firebase": "Google platform for mobile/web app development.",
-    "MVVM": "Architecture pattern used in Android development.",
-    "Pandas": "Data manipulation and analysis library in Python.",
-    "Excel": "Spreadsheet tool for data analysis and modeling.",
-    "HTML": "Standard markup language for web pages.",
-    "CSS": "Stylesheet language for styling HTML elements.",
-    "JavaScript": "Scripting language for interactive web functionality.",
-    "Manual Testing": "Manually checking software for bugs and issues.",
-    "Bug Reporting": "Logging defects found during testing.",
-    "Roadmapping": "Planning and strategizing product features.",
-    "Analytics": "Interpreting data to make informed decisions.",
-    "Communication": "Effectively exchanging information and ideas.",
-}
+# --- Logging ---
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("skillwale")
 
-# 🧠 Known skills set
-KNOWN_SKILLS = set(map(str.lower, SKILL_EXPLANATIONS.keys()))
+# --- OpenAI Client ---
+client = OpenAI(api_key=Config.OPENAI_API_KEY)
 
-# 🏢 Simulated Job Descriptions
-JOB_DATABASE = [
-    {"company": "Google", "role": "Software Engineer", "skills": ["Python", "C++", "Distributed Systems", "Cloud", "Algorithms", "System Design"]},
-    {"company": "Microsoft", "role": "Data Scientist", "skills": ["Python", "SQL", "Machine Learning", "Pandas", "Power BI", "Azure"]},
-    {"company": "Amazon", "role": "Backend Developer", "skills": ["Java", "Spring", "Docker", "AWS", "REST API", "CI/CD"]},
-    {"company": "Meta", "role": "AI Researcher", "skills": ["Deep Learning", "PyTorch", "Transformers", "NLP", "Research Papers"]},
-    {"company": "Netflix", "role": "SRE", "skills": ["Kubernetes", "Linux", "Monitoring", "AWS", "DevOps", "Incident Management"]},
-    {"company": "CRED", "role": "ML Engineer", "skills": ["Python", "TensorFlow", "Scikit-learn", "Data Pipelines", "Feature Engineering"]},
-    {"company": "Flipkart", "role": "Frontend Developer", "skills": ["React", "JavaScript", "HTML", "CSS", "Redux", "Figma"]},
-    {"company": "Zomato", "role": "Product Manager", "skills": ["Roadmapping", "Analytics", "Communication", "Market Research", "A/B Testing"]},
-    {"company": "Uber", "role": "Data Analyst", "skills": ["SQL", "Excel", "Tableau", "Python", "Business Insights"]},
-    {"company": "Infosys", "role": "QA Engineer", "skills": ["Manual Testing", "Selenium", "Bug Reporting", "Test Cases", "JIRA"]},
-    {"company": "Paytm", "role": "Android Developer", "skills": ["Kotlin", "Java", "Android Studio", "MVVM", "Firebase"]},
-]
+# --- Models ---
+class Analysis(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    session_id = db.Column(db.String(64))
+    resume_skills = db.Column(db.Text)
+    roles = db.Column(db.Text)
+    scores = db.Column(db.Text)
+    summary = db.Column(db.Text)
+    tips = db.Column(db.Text)
+    interview_questions = db.Column(db.Text)
 
-# 📄 Extract text from uploaded resume
-def extract_text(file, ext):
+# --- Utility Functions ---
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_EXTENSIONS
+
+def validate_file(file):
+    filename = secure_filename(file.filename)
+    if not allowed_file(filename):
+        return False, "File type not allowed."
+    file.seek(0, os.SEEK_END)
+    size = file.tell()
+    file.seek(0)
+    if size > Config.MAX_CONTENT_LENGTH:
+        return False, "File too large."
+    return True, ""
+
+def extract_text(file):
+    filename = secure_filename(file.filename)
+    if filename.endswith('.pdf'):
+        return extract_from_pdf(file)
+    elif filename.endswith('.docx') or filename.endswith('.doc'):
+        return docx2txt.process(file)
+    elif filename.endswith('.txt'):
+        return file.read().decode('utf-8')
+    return ""
+
+def extract_from_pdf(file):
+    content = ""
+    file.seek(0)
+    with fitz.open(stream=file.read(), filetype="pdf") as doc:
+        for page in doc:
+            content += page.get_text()
+    return content
+
+def parse_json_like(text):
     try:
-        if ext == "pdf":
-            doc = fitz.open(stream=file.read(), filetype='pdf')
-            return "".join([page.get_text() for page in doc])
-        elif ext in ["doc", "docx"]:
-            return docx2txt.process(file)
-        elif ext == "txt":
-            return file.read().decode()
-        else:
-            return ""
-    except Exception as e:
-        print(f"[ERROR] Failed to extract text: {e}")
-        return ""
+        return json.loads(text)
+    except Exception:
+        match = re.search(r"\[.*\]", text, re.DOTALL)
+        if match:
+            try:
+                return json.loads(match.group(0))
+            except Exception:
+                return []
+    return []
 
-# 🧠 Extract lowercase skills from resume
-def extract_skills(text):
-    words = set(word.lower() for word in re.findall(r'\w+', text))
-    return sorted(KNOWN_SKILLS.intersection(words))
+def get_session_id():
+    if 'session_id' not in session:
+        session['session_id'] = os.urandom(16).hex()
+    return session['session_id']
 
-# 🔎 Analyze resume against job DB
-def analyze_against_jobs(resume_skills, jobs):
-    results = []
-    best_match = None
-    best_score = 0
-    tips = []
+# --- AI Functions ---
+def summarize_resume(text):
+    prompt = f"Summarize this resume into 2–3 lines (role, key skills, experience):\n\n{text[:1500]}"
+    res = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.4
+    )
+    return res.choices[0].message.content.strip()
 
-    for job in jobs:
-        required = job["skills"]
-        matched = [s for s in required if s.lower() in resume_skills]
-        missing = [s for s in required if s.lower() not in resume_skills]
-        score = int((len(matched) / len(required)) * 100)
+def extract_skills_ai(text):
+    prompt = f"""
+Extract 10–15 skills (tech + soft) from this resume:
+"""
+    prompt += text[:1500]
+    prompt += """
+Return only a JSON array like:
+["Python", "Leadership", "SQL", "Public Speaking"]
+"""
+    res = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.3
+    )
+    return parse_json_like(res.choices[0].message.content.strip())
 
-        # Suggestions
-        explanation_lines = [
-            f"- **{skill}**: {SKILL_EXPLANATIONS.get(skill, 'No description available.')}"
-            for skill in missing[:4]
-        ]
-        improvement_text = f"Improve your skills for **{job['role']}**:\n" + "\n".join(explanation_lines)
+def generate_job_roles(candidate_summary):
+    prompt = f"""
+Generate 7 job roles suitable for this candidate summary:
+"""
+    prompt += candidate_summary
+    prompt += """
 
-        if score > best_score:
-            best_score = score
-            best_match = {
-                "company": job["company"],
-                "role": job["role"],
-                "score": score,
-                "missing": missing
-            }
+For each role, include:
+- Role Title
+- Company (Google, Amazon, Microsoft, Zomato, CRED, etc.)
+- Required Skills (5–8)
+- Expected Salary in LPA
+- Confidence Level (High/Medium/Low)
 
-        results.append({
-            "company": job["company"],
-            "role": job["role"],
-            "match": score,
-            "matchDetail": f"{len(matched)}/{len(required)} skills matched",
-            "matchedSkills": matched,
-            "missingSkills": missing,
-            "improvement": improvement_text
-        })
+Return JSON like:
+[
+  {
+    "role": "Data Analyst",
+    "company": "Zomato",
+    "skills": ["SQL", "Python", "Data Visualization"],
+    "salary": "10-14 LPA",
+    "confidence": "High"
+  },
+  ...
+]
+"""
+    res = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5
+    )
+    return parse_json_like(res.choices[0].message.content.strip())
 
-        tips.extend([
-            f"{skill}: {SKILL_EXPLANATIONS.get(skill, 'No description.')}"
-            for skill in missing
-        ])
+def get_improvement_tips(missing_skills, resume_snippet, role, company):
+    prompt = f"""
+Resume snippet:
+"""
+    prompt += resume_snippet
+    prompt += f"""
 
-    results.sort(key=lambda x: x["match"], reverse=True)
-    return results, best_match, list(set(tips))
+Missing skills: {', '.join(missing_skills)}
 
-# 🌐 Routes
-@app.route('/')
+Provide 2–3 specific resources (free or paid) to improve these skills for the role of {role} at {company}.
+Return as bullet points.
+"""
+    res = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.6
+    )
+    return res.choices[0].message.content.strip()
+
+def generate_interview_questions(role, company, summary):
+    prompt = f"""
+Generate 5 interview questions for the role of {role} at {company}, based on this candidate summary:
+"""
+    prompt += summary
+    prompt += """
+Return as a JSON array of questions.
+"""
+    res = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5
+    )
+    return parse_json_like(res.choices[0].message.content.strip())
+
+def ai_resume_tips(text):
+    prompt = f"Give 3 specific, actionable tips to improve this resume:\n\n{text[:1500]}\n\nReturn as a JSON array."
+    res = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5
+    )
+    return parse_json_like(res.choices[0].message.content.strip())
+
+# --- Blueprints ---
+main_bp = Blueprint('main', __name__)
+analysis_bp = Blueprint('analysis', __name__)
+scoreboard_bp = Blueprint('scoreboard', __name__)
+admin_bp = Blueprint('admin', __name__)
+
+# --- Main Routes ---
+@main_bp.route('/')
 def loading_screen():
     return render_template("loading.html")
 
-@app.route('/home')
+@main_bp.route('/home')
 def home():
     return render_template("index.html")
 
-@app.route('/upload')
+@main_bp.route('/upload')
 def upload_page():
     return render_template("upload.html")
 
-@app.route('/courses')
+@main_bp.route('/courses')
 def courses_page():
     return render_template("courses.html")
 
-@app.route('/ping')
+@main_bp.route('/ping')
 def ping():
     return jsonify({'message': 'pong'})
 
-# 📤 Upload and analyze resume
-@app.route('/analyze', methods=["POST"])
+# --- Analysis Route ---
+@analysis_bp.route('/analyze', methods=["POST"])
+@limiter.limit("10/minute")
 def analyze_resume():
-    if 'resume' not in request.files:
-        return jsonify({"error": "No resume uploaded"}), 400
+    if 'resume' not in request.files or 'description' not in request.form:
+        return jsonify({"error": "Missing file or description"}), 400
+    file = request.files['resume']
+    desc = request.form['description']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    valid, msg = validate_file(file)
+    if not valid:
+        return jsonify({"error": msg}), 400
+    try:
+        text = extract_text(file)
+        if not text:
+            return jsonify({"error": "Unable to extract resume text"}), 500
+        summary = summarize_resume(text)
+        resume_skills = set(s.lower() for s in extract_skills_ai(text))
+        job_roles = generate_job_roles(summary)
+        results = []
+        all_tips = []
+        all_questions = []
+        for jd in job_roles:
+            required_skills = set(skill.lower() for skill in jd['skills'])
+            matched = required_skills & resume_skills
+            missing = required_skills - resume_skills
+            score = round((len(matched) / len(required_skills)) * 10, 1)
+            tips = get_improvement_tips(list(missing), text[:1000], jd['role'], jd['company'])
+            interview_qs = generate_interview_questions(jd['role'], jd['company'], summary)
+            all_tips.append(tips)
+            all_questions.append(interview_qs)
+            results.append({
+                "role": jd['role'],
+                "company": jd['company'],
+                "expected_salary": jd.get('salary', ''),
+                "match_score": score,
+                "matched_skills": list(matched),
+                "missing_skills": list(missing),
+                "improvement_tips": tips,
+                "interview_questions": interview_qs
+            })
+        # AI resume tips
+        resume_tips = ai_resume_tips(text)
+        # Save analysis to DB
+        analysis = Analysis(
+            session_id=get_session_id(),
+            resume_skills=','.join(resume_skills),
+            roles=','.join([r['role'] for r in job_roles]),
+            scores=','.join([str(r['match_score']) for r in results]),
+            summary=summary,
+            tips=json.dumps(resume_tips),
+            interview_questions=json.dumps(all_questions)
+        )
+        db.session.add(analysis)
+        db.session.commit()
+        return jsonify({"results": results, "resume_summary": summary, "resume_tips": resume_tips})
+    except Exception as e:
+        logger.error(f"Analysis error: {e}")
+        return jsonify({"error": f"Analysis failed: {e}"}), 500
 
-    file = request.files["resume"]
-    ext = file.filename.split('.')[-1].lower()
+# --- Scoreboard Route ---
+@scoreboard_bp.route('/scoreboard')
+def scoreboard():
+    try:
+        analyses = Analysis.query.order_by(Analysis.timestamp.desc()).limit(100).all()
+        stats = {
+            "total_analyses": Analysis.query.count(),
+            "recent_roles": [],
+            "top_skills": [],
+            "avg_score": 0
+        }
+        all_skills = []
+        all_scores = []
+        all_roles = []
+        for a in analyses:
+            all_skills.extend(a.resume_skills.split(','))
+            all_scores.extend([float(s) for s in a.scores.split(',') if s])
+            all_roles.extend(a.roles.split(','))
+        from collections import Counter
+        stats["recent_roles"] = all_roles[:10]
+        stats["top_skills"] = [s for s, _ in Counter(all_skills).most_common(10)]
+        stats["avg_score"] = round(sum(all_scores)/len(all_scores), 2) if all_scores else 0
+        return jsonify(stats)
+    except Exception as e:
+        logger.error(f"Scoreboard error: {e}")
+        return jsonify({"error": f"Scoreboard failed: {e}"}), 500
 
-    if ext not in ["pdf", "doc", "docx", "txt"]:
-        return jsonify({"error": f"Unsupported file type: .{ext}"}), 400
+# --- Leaderboard Route ---
+@scoreboard_bp.route('/leaderboard')
+def leaderboard():
+    try:
+        analyses = Analysis.query.order_by(Analysis.timestamp.desc()).limit(100).all()
+        leaderboard = []
+        for a in analyses:
+            if a.scores:
+                max_score = max([float(s) for s in a.scores.split(',') if s])
+                leaderboard.append({
+                    "session_id": a.session_id[-6:],
+                    "max_score": max_score,
+                    "roles": a.roles.split(',')
+                })
+        leaderboard = sorted(leaderboard, key=lambda x: x["max_score"], reverse=True)[:10]
+        return jsonify(leaderboard)
+    except Exception as e:
+        logger.error(f"Leaderboard error: {e}")
+        return jsonify({"error": f"Leaderboard failed: {e}"}), 500
 
-    resume_text = extract_text(file, ext)
+# --- AI Tips Endpoint ---
+@analysis_bp.route('/tips', methods=["POST"])
+@limiter.limit("20/minute")
+def ai_tips():
+    data = request.get_json()
+    text = data.get("text", "")
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
+    try:
+        tips = ai_resume_tips(text)
+        return jsonify({"tips": tips})
+    except Exception as e:
+        logger.error(f"AI tips error: {e}")
+        return jsonify({"error": f"AI tips failed: {e}"}), 500
 
-    if not resume_text.strip():
-        return jsonify({"error": "Couldn't extract text from the resume"}), 500
+# --- Download Report Endpoint ---
+@analysis_bp.route('/download_report', methods=["POST"])
+def download_report():
+    data = request.get_json()
+    summary = data.get("summary", "")
+    results = data.get("results", [])
+    tips = data.get("tips", [])
+    # Generate a simple text report (could be PDF with more work)
+    report = f"SkillWale Resume Analysis Report\n\nSummary:\n{summary}\n\nResults:\n"
+    for r in results:
+        report += f"\nRole: {r['role']} at {r['company']}\nMatch Score: {r['match_score']}\nMatched Skills: {', '.join(r['matched_skills'])}\nMissing Skills: {', '.join(r['missing_skills'])}\nTips: {r['improvement_tips']}\n"
+    report += f"\nGeneral Resume Tips:\n"
+    for t in tips:
+        report += f"- {t}\n"
+    buf = BytesIO()
+    buf.write(report.encode('utf-8'))
+    buf.seek(0)
+    return send_file(buf, as_attachment=True, download_name="SkillWale_Resume_Report.txt", mimetype="text/plain")
 
-    resume_skills = extract_skills(resume_text)
+# --- Interview Questions Endpoint ---
+@analysis_bp.route('/interview_questions', methods=["POST"])
+def interview_questions():
+    data = request.get_json()
+    role = data.get("role", "")
+    company = data.get("company", "")
+    summary = data.get("summary", "")
+    if not (role and company and summary):
+        return jsonify({"error": "Missing data"}), 400
+    try:
+        questions = generate_interview_questions(role, company, summary)
+        return jsonify({"questions": questions})
+    except Exception as e:
+        logger.error(f"Interview questions error: {e}")
+        return jsonify({"error": f"Interview questions failed: {e}"}), 500
 
-    if not resume_skills:
-        return jsonify({"error": "No recognizable skills found in the resume. Please include industry-relevant skills."}), 200
+# --- Admin CLI Commands ---
+@admin_bp.cli.command("init-db")
+def init_db():
+    db.create_all()
+    print("Database initialized.")
 
-    selected_jobs = [
-        job for job in JOB_DATABASE
-        if any(skill.lower() in resume_skills for skill in job["skills"])
+@admin_bp.cli.command("reset-scoreboard")
+def reset_scoreboard():
+    db.drop_all()
+    db.create_all()
+    print("Scoreboard reset.")
+
+@admin_bp.cli.command("export-analyses")
+def export_analyses():
+    analyses = Analysis.query.all()
+    data = [
+        {
+            "timestamp": a.timestamp.isoformat(),
+            "summary": a.summary,
+            "roles": a.roles,
+            "scores": a.scores,
+            "tips": a.tips
+        } for a in analyses
     ]
+    with open("analyses_export.json", "w") as f:
+        json.dump(data, f, indent=2)
+    print(f"Exported {len(data)} analyses to analyses_export.json")
 
-    if len(selected_jobs) < 5:
-        selected_jobs += random.sample(JOB_DATABASE, 5)
+# --- Register Blueprints ---
+app.register_blueprint(main_bp)
+app.register_blueprint(analysis_bp)
+app.register_blueprint(scoreboard_bp)
+app.register_blueprint(admin_bp)
 
-    results, best_match, tips = analyze_against_jobs(resume_skills, selected_jobs)
-
-    summary = (
-        f"The resume demonstrates skills in {', '.join(resume_skills[:6])}."
-        if resume_skills else
-        "No significant skills were detected in the resume."
-    )
-    if best_match:
-        summary += f" Best match: {best_match['role']} at {best_match['company']} ({best_match['score']}%)."
-
-    return jsonify({
-        "analysis": summary,
-        "score": best_match["score"] if best_match else 0,
-        "resume_skills": resume_skills,
-        "resume_skill_count": len(resume_skills),
-        "jobs": results,
-        "tips": tips,
-        "best_company": best_match["company"] if best_match else None,
-        "best_role": best_match["role"] if best_match else None,
-        "missing_skills": best_match["missing"] if best_match else []
-    })
-
-# 🛠 Error handler
-@app.errorhandler(500)
-def internal_error(error):
-    return jsonify({"error": "Internal server error occurred."}), 500
-
-# 🚀 Start Server
+# --- Main ---
+   
 if __name__ == "__main__":
-    print("🚀 SkillWale running on http://localhost:5001")
+    print("🚀 SkillWale AI Backend running at http://localhost:5001")
     app.run(debug=True, port=5001)
