@@ -24,6 +24,17 @@
       --glass: rgba(255,255,255,0.04);
       --glow-gradient: linear-gradient(90deg, #FFDD33, #FF66B3, #00F0FF);
     }
+    :root[data-theme='light'] {
+      --bg: #f7f7fa;
+      --surface: #fff;
+      --text: #181818;
+      --subtle: #555;
+      --accent1: #FFD600;
+      --accent2: #FF4F0F;
+      --accent3: #FF66B3;
+      --glass: rgba(0,0,0,0.04);
+      --glow-gradient: linear-gradient(90deg, #FFD600, #FF66B3, #00F0FF);
+    }
 
     * {
       margin: 0; padding: 0; box-sizing: border-box;
@@ -35,6 +46,10 @@
       font-family: 'Space Grotesk', sans-serif;
       overflow-x: hidden;
       scroll-behavior: smooth;
+    }
+    body[data-theme='light'] {
+      background: var(--bg);
+      color: var(--text);
     }
 
     header {
@@ -101,7 +116,25 @@
     .hero h1 {
       font-size: 3.8rem; color: var(--accent2);
       margin-bottom: 20px;
-      animation: fadeInLeft 1.2s ease forwards;
+      background: linear-gradient(90deg, var(--accent2), var(--accent1), var(--accent3), var(--accent2));
+      background-size: 200% auto;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 3s ease-in-out infinite alternate, bounceIn 1.2s cubic-bezier(.68,-0.55,.27,1.55) 1;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.8) translateY(60px); opacity: 0; }
+      60% { transform: scale(1.05) translateY(-10px); opacity: 1; }
+      80% { transform: scale(0.97) translateY(5px); }
+      100% { transform: scale(1) translateY(0); }
     }
 
     .hero .typing {
@@ -135,13 +168,19 @@
       color: var(--bg);
       cursor: pointer;
       box-shadow: 0 8px 22px rgba(255,221,51,0.3);
-      animation: fadeInUp 1.4s ease forwards;
+      animation: fadeInUp 1.4s cubic-bezier(.68,-0.55,.27,1.55) 1, ctaPulse 2.5s 2.2s infinite alternate;
       transition: all .3s ease;
     }
     .cta:hover {
-      transform: scale(1.05) translateY(-2px);
-      background: var(--accent2);
-      box-shadow: 0 12px 30px rgba(255,79,15,0.3);
+      transform: scale(1.09) translateY(-6px) rotate(-2deg);
+      background: linear-gradient(90deg, var(--accent2), var(--accent1));
+      color: var(--text);
+      box-shadow: 0 16px 40px rgba(255,79,15,0.25);
+      letter-spacing: 1px;
+    }
+    @keyframes ctaPulse {
+      0% { box-shadow: 0 8px 22px rgba(255,221,51,0.3); }
+      100% { box-shadow: 0 16px 40px rgba(255,221,51,0.5); }
     }
 
     .hero lottie-player {
@@ -212,8 +251,33 @@
       .hero h1 {
         font-size: 2.4rem;
       }
-      nav a { margin-left: 16px; }
-      .features { padding: 60px 24px; }
+      .main-nav {
+        display: none;
+      }
+      #hamburger {
+        display: block;
+      }
+      #mobileNav {
+        display: flex;
+      }
+      .features { padding: 60px 12px; }
+      .feature-card, .how-it-works > div, .trusted-by > div {
+        min-width: 90vw !important;
+        max-width: 98vw !important;
+        margin: 0 auto 18px auto !important;
+      }
+      .how-it-works > div {
+        flex-direction: column;
+        gap: 18px;
+      }
+      .trusted-by > div {
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+      .testimonials, .how-it-works, .trusted-by {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+      }
     }
 
   </style>
@@ -222,7 +286,18 @@
 <body>
   <header>
     <div class="logo">Skill<span>Wale</span></div>
-    <nav>
+    <nav class="main-nav">
+      <a href="#features">Features</a>
+      <a href="/upload">Upload</a>
+      <a href="/courses">Courses</a>
+      <a href="/login">Login</a>
+    </nav>
+    <button id="hamburger" aria-label="Open navigation" style="display:none; background:none; border:none; font-size:2rem; color:var(--accent1); margin-left:18px; cursor:pointer;">
+      <span>&#9776;</span>
+    </button>
+    <button id="themeToggle" title="Toggle dark/light mode" style="margin-left:12px; background:var(--surface); color:var(--accent1); border:none; border-radius:50%; width:40px; height:40px; font-size:1.3rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.12); transition:background .3s;">🌙</button>
+    <nav id="mobileNav" style="display:none; position:fixed; top:0; right:0; width:70vw; max-width:320px; height:100vh; background:var(--surface); box-shadow:-2px 0 24px rgba(0,0,0,0.18); z-index:2000; flex-direction:column; align-items:flex-start; padding:48px 28px; gap:28px;">
+      <button id="closeMobileNav" aria-label="Close navigation" style="background:none; border:none; font-size:2rem; color:var(--accent2); align-self:flex-end; margin-bottom:24px; cursor:pointer;">&times;</button>
       <a href="#features">Features</a>
       <a href="/upload">Upload</a>
       <a href="/courses">Courses</a>
@@ -236,6 +311,40 @@
     <h1>Discover Your Dream Job Path</h1>
     <p class="typing">AI resume analysis · Role matching · Course suggestions</p>
     <button class="cta" onclick="window.location.href='/upload'">Launch Now 🚀</button>
+  </section>
+
+  <!-- How it Works Section -->
+  <section class="how-it-works" style="padding: 70px 0 40px; background: var(--surface);">
+    <h2 style="text-align:center; font-size:2.2rem; color:var(--accent1); margin-bottom:40px; letter-spacing:1px;">How it Works</h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:40px; max-width:900px; margin:0 auto;">
+      <div style="flex:1 1 220px; min-width:220px; max-width:260px; background:var(--glass); border-radius:18px; padding:32px 20px; text-align:center; box-shadow:0 2px 16px rgba(0,0,0,0.07);">
+        <div style="font-size:2.5rem; margin-bottom:18px;">📤</div>
+        <h3 style="font-size:1.2rem; color:var(--accent2); margin-bottom:10px;">Upload Resume</h3>
+        <p style="color:var(--subtle); font-size:1rem;">Easily upload your CV or LinkedIn profile in seconds.</p>
+      </div>
+      <div style="flex:1 1 220px; min-width:220px; max-width:260px; background:var(--glass); border-radius:18px; padding:32px 20px; text-align:center; box-shadow:0 2px 16px rgba(0,0,0,0.07);">
+        <div style="font-size:2.5rem; margin-bottom:18px;">🤖</div>
+        <h3 style="font-size:1.2rem; color:var(--accent2); margin-bottom:10px;">Get Matched</h3>
+        <p style="color:var(--subtle); font-size:1rem;">Our AI instantly analyzes and matches you to top roles.</p>
+      </div>
+      <div style="flex:1 1 220px; min-width:220px; max-width:260px; background:var(--glass); border-radius:18px; padding:32px 20px; text-align:center; box-shadow:0 2px 16px rgba(0,0,0,0.07);">
+        <div style="font-size:2.5rem; margin-bottom:18px;">🚀</div>
+        <h3 style="font-size:1.2rem; color:var(--accent2); margin-bottom:10px;">Upskill Fast</h3>
+        <p style="color:var(--subtle); font-size:1rem;">Get personalized course recommendations to close your skill gaps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted by Logos Section -->
+  <section class="trusted-by" style="padding: 36px 0 24px; background: var(--bg);">
+    <h3 style="text-align:center; color:var(--subtle); font-size:1.1rem; letter-spacing:1px; margin-bottom:18px;">Trusted by professionals at</h3>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:36px; align-items:center; max-width:900px; margin:0 auto;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" style="height:36px; opacity:0.7; filter: grayscale(1);">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Google_Logo.svg" alt="Google" style="height:36px; opacity:0.7; filter: grayscale(1);">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Amazon_Web_Services_Logo.svg" alt="AWS" style="height:36px; opacity:0.7; filter: grayscale(1);">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" style="height:36px; opacity:0.7; filter: grayscale(1);">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/Stack_Overflow_logo.svg" alt="Stack Overflow" style="height:36px; opacity:0.7; filter: grayscale(1);">
+    </div>
   </section>
 
   <section class="features" id="features">
@@ -352,6 +461,44 @@
         });
       }
     });
+
+    // Theme toggle logic
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      document.body.setAttribute('data-theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+    }
+    // Load theme from localStorage or system
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light'));
+    themeToggle.addEventListener('click', () => {
+      const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+
+    // Hamburger menu logic
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    const closeMobileNav = document.getElementById('closeMobileNav');
+    hamburger.addEventListener('click', () => {
+      mobileNav.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
+    closeMobileNav.addEventListener('click', () => {
+      mobileNav.style.display = 'none';
+      document.body.style.overflow = '';
+    });
+    // Close mobile nav on link click
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileNav.style.display = 'none';
+        document.body.style.overflow = '';
+      });
+    });
   </script>
 
   <!-- Extra styling -->
@@ -379,6 +526,13 @@
       0% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0); }
+    }
+    .main-nav a.active {
+      color: var(--accent2) !important;
+    }
+    .main-nav a.active::after {
+      width: 100%;
+      background: var(--accent2);
     }
   </style>
 </body>
