@@ -3,182 +3,367 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SkillWale – AI Job Matcher Loading</title>
+  <title>Launching SkillWale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/templates/style.css" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    * {
+    :root {
+      --rocket-size: 120px;
+      --step-active: #4ade80;
+      --step-inactive: #fff3;
+      --step-complete: #F97A00;
+    }
+    body {
+      min-height: 100vh;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: var(--gradient-animated);
+      background-size: 200% 200%;
+      animation: bgMove 12s ease-in-out infinite alternate;
+      overflow: hidden;
+      position: relative;
+      color: var(--text);
     }
-
-    body {
+    /* Animated SVG Blobs */
+    .blob {
+      position: absolute;
+      z-index: 0;
+      opacity: 0.22;
+      filter: blur(0.5px);
+      pointer-events: none;
+      animation: blobMove 18s ease-in-out infinite alternate;
+    }
+    .blob1 { top: -120px; left: -80px; width: 420px; animation-delay: 0s; }
+    .blob2 { bottom: -100px; right: -120px; width: 380px; animation-delay: 3s; }
+    .blob3 { top: 40%; left: 60vw; width: 220px; animation-delay: 7s; }
+    @keyframes blobMove {
+      0% { transform: scale(1) translateY(0) rotate(0deg); }
+      100% { transform: scale(1.15) translateY(40px) rotate(20deg); }
+    }
+    /* Parallax Stars */
+    .stars {
+      position: absolute;
+      width: 100vw;
       height: 100vh;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      top: 0; left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: #fff8;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: twinkle 2.5s infinite alternate;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    /* Centered Content */
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      z-index: 2;
+    }
+    .glass-card {
+      min-width: 340px;
+      max-width: 480px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      animation: fadeInDown 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+      background: var(--glass);
+      backdrop-filter: var(--glass-blur);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+      overflow: visible;
+    }
+    /* Animated Rocket Lottie */
+    .rocket-lottie {
+      width: var(--rocket-size);
+      height: var(--rocket-size);
+      margin: 0 auto 18px auto;
+      display: block;
+      filter: drop-shadow(0 4px 24px #F97A00aa);
+      z-index: 2;
+    }
+    /* Animated Progress Steps */
+    .progress-steps {
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .loader-container {
-      text-align: center;
-      color: #fff;
-      z-index: 10;
-    }
-
-    .brain {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 20px;
-      animation: pulse 2s infinite;
-    }
-
-    .brain svg {
+      gap: 18px;
+      margin: 32px auto 18px auto;
       width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
     }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.85; }
+    .step {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--step-inactive);
+      color: #fff;
+      font-weight: 900;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px #0002;
+      transition: background 0.4s, color 0.3s, box-shadow 0.3s;
+      position: relative;
+      z-index: 2;
     }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      animation: fadeIn 2s ease forwards;
+    .step.active {
+      background: var(--step-active);
+      color: #181818;
+      box-shadow: 0 4px 16px #4ade8088;
+      animation: pulseStep 1.2s infinite alternate;
     }
-
-    p {
-      font-size: 1.1rem;
-      opacity: 0.85;
-      animation: fadeIn 3s ease forwards;
+    .step.complete {
+      background: var(--step-complete);
+      color: #fff;
+      box-shadow: 0 4px 16px #F97A0088;
     }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
+    @keyframes pulseStep {
+      0% { box-shadow: 0 4px 16px #4ade8088; }
+      100% { box-shadow: 0 8px 32px #4ade80cc; }
     }
-
-    .dot-loader {
-      margin-top: 30px;
+    .step-labels {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 18px;
+      margin-bottom: 18px;
+      font-size: 0.98rem;
+      color: var(--subtle);
+      font-weight: 600;
+      letter-spacing: 0.2px;
     }
-
-    .dot-loader div {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background-color: #fff;
-      animation: bounce 1.4s infinite ease-in-out both;
+    .step-labels span {
+      width: 38px;
+      text-align: center;
+      display: block;
     }
-
-    .dot-loader div:nth-child(1) {
-      animation-delay: -0.32s;
+    /* Animated Progress Bar */
+    .progress-bar {
+      width: 80%;
+      max-width: 320px;
+      height: 16px;
+      background: #fff3;
+      border-radius: 8px;
+      margin: 18px auto 24px auto;
+      overflow: hidden;
+      box-shadow: 0 2px 8px 0 #0002;
+      border: 2px solid #090040;
+      position: relative;
+      outline: none;
     }
-
-    .dot-loader div:nth-child(2) {
-      animation-delay: -0.16s;
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--orange), var(--bright-orange), var(--accent2));
+      border-radius: 8px;
+      box-shadow: 0 0 12px 2px var(--bright-orange), 0 0 2px var(--orange);
+      transition: width 0.3s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.2s;
+      animation: pulseGlow 1.2s infinite alternate;
     }
-
-    .dot-loader div:nth-child(3) {
-      animation-delay: 0;
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 12px 2px var(--bright-orange), 0 0 2px var(--orange); }
+      100% { box-shadow: 0 0 24px 6px var(--orange), 0 0 8px var(--deep-blue); }
     }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1); }
+    /* Animated Text */
+    .loading-text {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: 1.5px;
+      margin-top: 18px;
+      text-align: center;
+      text-shadow: 0 2px 0 #fff8, 0 0 8px var(--bright-orange);
+      user-select: none;
+      line-height: 1.2;
+      min-height: 60px;
+      animation: fadeInText 1.2s;
     }
-
-    canvas#particles {
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tip {
+      color: var(--accent2);
+      font-size: 1.1rem;
+      margin-top: 18px;
+      font-weight: 600;
+      animation: fadeInText 1.2s 0.5s both;
+    }
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 10;
+    }
+    /* Theme Toggle */
+    .theme-toggle {
       position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
+      top: 18px;
+      right: 18px;
+      background: var(--glass);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 1.5rem;
+      color: var(--bright-orange);
+      cursor: pointer;
+      box-shadow: 0 2px 8px #0002;
+      transition: background 0.3s;
+      z-index: 20;
     }
+    .theme-toggle:hover {
+      background: var(--accent2);
+      color: #fff;
+    }
+    /* Responsive */
+    @media (max-width: 700px) {
+      .glass-card { min-width: 90vw; max-width: 98vw; padding: 1.2rem 0.5rem; }
+      .rocket-lottie { width: 70vw; height: 70vw; min-width: 120px; }
+      .progress-bar { width: 98vw; max-width: 98vw; }
+      .progress-steps, .step-labels { gap: 8px; }
+    }
+    @media (max-width: 400px) {
+      .glass-card { min-width: 99vw; max-width: 99vw; padding: 0.5rem 0.2rem; }
+    }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
-  <canvas id="particles"></canvas>
-  <div class="loader-container">
-    <div class="brain">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h4m-2-8a4 4 0 014 4v8a4 4 0 01-8 0V8a4 4 0 014-4z"/>
-      </svg>
-    </div>
-    <h1>Launching SkillWale...</h1>
-    <p>Matching you with the best opportunities using Gen AI ✨</p>
-    <div class="dot-loader">
-      <div></div>
-      <div></div>
-      <div></div>
+  <!-- SVG Blobs for background -->
+  <svg class="blob blob1" viewBox="0 0 600 600"><g><path fill="#4ade80" d="M300,521Q220,542,144,500Q68,458,61,379Q54,300,97,236Q140,172,217,120Q294,68,370,120Q446,172,489,236Q532,300,525,379Q518,458,442,500Q366,542,300,521Z"/></g></svg>
+  <svg class="blob blob2" viewBox="0 0 600 600"><g><path fill="#F97A00" d="M300,521Q220,542,144,500Q68,458,61,379Q54,300,97,236Q140,172,217,120Q294,68,370,120Q446,172,489,236Q532,300,525,379Q518,458,442,500Q366,542,300,521Z"/></g></svg>
+  <svg class="blob blob3" viewBox="0 0 600 600"><g><path fill="#00E0FF" d="M300,521Q220,542,144,500Q68,458,61,379Q54,300,97,236Q140,172,217,120Q294,68,370,120Q446,172,489,236Q532,300,525,379Q518,458,442,500Q366,542,300,521Z"/></g></svg>
+  <canvas id="confetti-canvas"></canvas>
+  <div class="stars" id="stars"></div>
+  <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
+  <div class="center">
+    <div class="glass-card">
+      <lottie-player class="rocket-lottie" src="https://assets2.lottiefiles.com/packages/lf20_8wREpI.json" background="transparent" speed="1.2" loop autoplay></lottie-player>
+      <div class="progress-steps" id="progressSteps">
+        <div class="step active" id="step1">1</div>
+        <div class="step" id="step2">2</div>
+        <div class="step" id="step3">3</div>
+        <div class="step" id="step4">4</div>
+      </div>
+      <div class="step-labels">
+        <span>Ignition</span><span>Lift-off</span><span>Orbit</span><span>Ready!</span>
+      </div>
+      <div class="progress-bar" tabindex="0" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Loading progress">
+        <div class="progress" id="progress"></div>
+      </div>
+      <div class="loading-text" id="loadingText">Launching<br>SkillWale</div>
+      <div class="tip" id="tip">AI is preparing your personalized experience...</div>
+      <span class="sr-only">Loading, please wait...</span>
     </div>
   </div>
-
   <script>
-    setTimeout(() => {
-      window.location.href = "/home";
-    }, 5000);
-
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particlesArray = [];
-    const colors = ['#ffffff', '#f3e8ff', '#ddd6fe', '#e0e7ff'];
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
+    // Animated stars
+    function createStars() {
+      const stars = document.getElementById('stars');
+      for (let i = 0; i < 80; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.animationDelay = (Math.random() * 2.5) + 's';
+        star.style.width = star.style.height = (Math.random() * 2 + 1) + 'px';
+        stars.appendChild(star);
       }
     }
-
-    function initParticles(num = 100) {
-      for (let i = 0; i < num; i++) {
-        particlesArray.push(new Particle());
-      }
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particlesArray.forEach(p => {
-        p.update();
-        p.draw();
+    createStars();
+    // Progress logic
+    let progress = 0;
+    const progressBar = document.getElementById('progress');
+    const steps = [
+      { id: 'step1', label: 'Ignition', tip: 'AI is preparing your personalized experience...' },
+      { id: 'step2', label: 'Lift-off', tip: 'Matching your skills to top roles...' },
+      { id: 'step3', label: 'Orbit', tip: 'Curating the best courses for you...' },
+      { id: 'step4', label: 'Ready!', tip: 'Almost there! Get ready to skill up!' }
+    ];
+    let currentStep = 0;
+    function updateSteps(step) {
+      steps.forEach((s, i) => {
+        const el = document.getElementById(s.id);
+        if (i < step) {
+          el.classList.add('complete');
+          el.classList.remove('active');
+        } else if (i === step) {
+          el.classList.add('active');
+          el.classList.remove('complete');
+        } else {
+          el.classList.remove('active', 'complete');
+        }
       });
-      requestAnimationFrame(animateParticles);
+      document.getElementById('tip').textContent = steps[step].tip;
     }
-
-    initParticles();
-    animateParticles();
-
-    window.addEventListener("resize", () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    function animateProgress() {
+      if (progress < 100) {
+        progress += Math.random() * 8 + 4;
+        if (progress > 100) progress = 100;
+        progressBar.style.width = progress + '%';
+        document.querySelector('.progress-bar').setAttribute('aria-valuenow', Math.round(progress));
+        // Step logic
+        if (progress > 80 && currentStep < 3) { currentStep = 3; updateSteps(3); }
+        else if (progress > 55 && currentStep < 2) { currentStep = 2; updateSteps(2); }
+        else if (progress > 30 && currentStep < 1) { currentStep = 1; updateSteps(1); }
+        setTimeout(animateProgress, 320);
+      } else {
+        updateSteps(3);
+        setTimeout(() => {
+          confetti({ particleCount: 120, spread: 80, origin: { y: 0.3 }, colors: ['#4ade80','#F97A00','#00E0FF','#fff'] });
+          document.getElementById('loadingText').innerHTML = 'Welcome to <br>SkillWale!';
+          setTimeout(() => {
+            window.location.href = "/home";
+          }, 1200);
+        }, 800);
+      }
+    }
+    animateProgress();
+    // Confetti on finish
+    // Theme toggle logic
+    const themeToggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      document.body.setAttribute('data-theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+    }
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light'));
+    themeToggle.addEventListener('click', () => {
+      const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+    // Micro-interaction: hover rocket
+    const rocket = document.querySelector('.rocket-lottie');
+    rocket.addEventListener('mouseenter', () => {
+      rocket.setSpeed(2.2);
+    });
+    rocket.addEventListener('mouseleave', () => {
+      rocket.setSpeed(1.2);
     });
   </script>
 </body>
