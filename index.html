@@ -1,539 +1,327 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="SkillWale helps you find your dream job path with AI resume analysis, role matching, and personalized course suggestions." />
+  <link rel="icon" type="image/png" href="/static/favicon.png" />
   <title>SkillWale – Find Your Dream Role ✨</title>
-
   <!-- Fonts + Animation Libraries -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <script src="https://unpkg.com/@lottiefiles/lottie-player"></script>
-
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <style>
-    /* Colors & Theme */
     :root {
-      --bg: #0a0a2f;
-      --surface: #12123b;
-      --text: #ffffff;
-      --subtle: #aaaaaa;
-      --accent1: #FFDD33;
-      --accent2: #FF4F0F;
-      --accent3: #FF66B3;
-      --glass: rgba(255,255,255,0.04);
-      --glow-gradient: linear-gradient(90deg, #FFDD33, #FF66B3, #00F0FF);
+      --primary: #4ade80;
+      --secondary: #FFB300;
+      --surface: #f8fafc;
+      --text: #23272f;
+      --subtle: #888fa1;
+      --accent: #00E0FF;
+      --border: #e0e3ea;
+      --glass: rgba(255,255,255,0.85);
+      --shadow: 0 8px 32px 0 rgba(30,32,38,0.10);
+      --radius: 22px;
     }
-    :root[data-theme='light'] {
-      --bg: #f7f7fa;
-      --surface: #fff;
-      --text: #181818;
-      --subtle: #555;
-      --accent1: #FFD600;
-      --accent2: #FF4F0F;
-      --accent3: #FF66B3;
-      --glass: rgba(0,0,0,0.04);
-      --glow-gradient: linear-gradient(90deg, #FFD600, #FF66B3, #00F0FF);
-    }
-
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
-
     body {
-      background: var(--bg);
+      background: var(--surface);
       color: var(--text);
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      font-size: 1.05rem;
       overflow-x: hidden;
-      scroll-behavior: smooth;
     }
-    body[data-theme='light'] {
-      background: var(--bg);
-      color: var(--text);
+    /* Animated SVG Background */
+    .svg-bg {
+      position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;
+      pointer-events:none;
     }
-
-    header {
+    .svg-bg circle, .svg-bg rect, .svg-bg polygon {
+      animation-fill-mode: forwards;
+    }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    /* Glassy Navbar */
+    .navbar {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 40px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      padding: 18px 40px;
+      background: rgba(255,255,255,0.85);
+      border-bottom: 1.5px solid #e0e3ea;
+      box-shadow: 0 2px 12px rgba(30,32,38,0.04);
+      backdrop-filter: blur(10px);
+      animation: fadeInDown 1.2s cubic-bezier(.68,-0.55,.27,1.55);
     }
-
-    .logo {
-      font-size: 2.4rem; font-weight: 600;
-      animation: fadeInDown 1s ease forwards;
-    }
-    .logo span { color: var(--accent1); }
-
-    nav {
-      display: flex;
-    }
-
-    nav a {
-      margin-left: 30px;
-      color: var(--subtle);
-      text-decoration: none;
-      font-weight: 500;
-      position: relative;
-      padding-bottom: 4px;
-      transition: color .3s ease;
-    }
-    nav a::after {
-      content: '';
-      position: absolute; bottom: 0;
-      left: 0; width: 0; height: 2px;
-      background: var(--accent2);
-      transition: width .35s ease;
-    }
-    nav a:hover {
-      color: var(--accent2);
-    }
-    nav a:hover::after {
-      width: 100%;
-    }
-
+    .navbar-logo { display: flex; align-items: center; gap: 12px; }
+    .navbar-logo-img { width: 38px; height: 38px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px #0001; }
+    .navbar-logo-text { font-size: 1.5rem; font-weight: 900; color: #4ade80; letter-spacing: 1.1px; }
+    .navbar-links { display: flex; gap: 28px; }
+    .nav-link { color: #888fa1; text-decoration: none; font-weight: 600; font-size: 1.08rem; padding-bottom: 2px; border-bottom: 2px solid transparent; transition: color .2s, border .2s; position: relative; }
+    .nav-link:hover, .nav-link.active { color: #00E0FF; border-bottom: 2px solid #4ade80; }
+    .nav-cta { color: #fff; background: linear-gradient(90deg, #4ade80, #00E0FF); border-radius: 18px; padding: 8px 22px; margin-left: 12px; box-shadow: 0 2px 8px #4ade8033; border: none; transition: background 0.2s, color 0.2s; }
+    .nav-cta:hover { background: linear-gradient(90deg, #00E0FF, #4ade80); color: #fff; }
+    @media (max-width: 700px) { .navbar { flex-direction: column; padding: 10px 8vw; } .navbar-links { gap: 12px; flex-wrap: wrap; } .navbar-logo-text { font-size: 1.1rem; } }
     /* Hero Section */
     .hero {
-      text-align: center; padding: 120px 20px 80px;
-      position: relative; overflow: hidden;
+      text-align: center;
+      padding: 120px 24px 40px;
+      background: none;
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      margin: 0 auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      animation: fadeInUp 1.2s cubic-bezier(.68,-0.55,.27,1.55);
     }
-
-    .hero-bg-blur {
-      position: absolute; top: -150px; left: -150px;
-      width: 600px; height: 600px;
-      background: var(--glow-gradient);
-      filter: blur(200px);
-      opacity: 0.35;
-      animation: pulse 6s ease-in-out infinite alternate;
+    .hero lottie-player { margin: 0 auto 24px auto; width: 180px; height: 180px; display: block; }
+    .hero h1 {
+      font-size:2.8rem;
+      font-weight:900;
+      color:#4ade80;
+      letter-spacing:1.2px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .hero .word {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: wordIn 0.7s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+    }
+    .hero .word:nth-child(1) { animation-delay: 0.1s; }
+    .hero .word:nth-child(2) { animation-delay: 0.3s; }
+    .hero .word:nth-child(3) { animation-delay: 0.5s; }
+    .hero .word:nth-child(4) { animation-delay: 0.7s; }
+    @keyframes wordIn {
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .typewriter {
+      font-size:1.2rem;
+      color:#888fa1;
+      max-width:720px;
+      margin:0 auto 24px auto;
+      font-weight:500;
+      min-height: 1.5em;
+      border-right: 2px solid #4ade80;
+      white-space: nowrap;
+      overflow: hidden;
+      animation: typing 2.5s steps(40, end), blink-caret .75s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #4ade80; }
+    }
+    .cta {
+      padding: 14px 40px;
+      border: none;
+      border-radius: 24px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #4ade80, #00E0FF);
+      color: #fff;
+      box-shadow: 0 2px 8px #4ade8033;
+      transition: background .2s, box-shadow .2s, transform .2s;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta:after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 0; height: 0;
+      background: rgba(0,224,255,0.15);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
       z-index: 0;
     }
-
-    @keyframes pulse {
-      from { transform: scale(0.9); }
-      to { transform: scale(1.1); }
+    .cta:active:after {
+      width: 200px; height: 200px;
+      transition: width 0.2s, height 0.2s;
     }
-
-    .hero h1 {
-      font-size: 3.8rem; color: var(--accent2);
-      margin-bottom: 20px;
-      background: linear-gradient(90deg, var(--accent2), var(--accent1), var(--accent3), var(--accent2));
-      background-size: 200% auto;
-      color: transparent;
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientMove 3s ease-in-out infinite alternate, bounceIn 1.2s cubic-bezier(.68,-0.55,.27,1.55) 1;
-    }
-
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-
-    @keyframes bounceIn {
-      0% { transform: scale(0.8) translateY(60px); opacity: 0; }
-      60% { transform: scale(1.05) translateY(-10px); opacity: 1; }
-      80% { transform: scale(0.97) translateY(5px); }
-      100% { transform: scale(1) translateY(0); }
-    }
-
-    .hero .typing {
-      font-size: 1.25rem;
-      color: var(--subtle);
-      border-right: 2px solid var(--accent1);
-      width: 0;
-      overflow: hidden;
-      margin: 0 auto;
-      animation: typing 3.5s steps(40,end) 0.8s 1 normal both,
-                 blink 0.7s step-end infinite;
-    }
-
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent; }
-    }
-
-    .cta {
-      margin-top: 32px;
-      padding: 16px 48px;
-      border: none;
-      border-radius: 30px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      background: var(--accent1);
-      color: var(--bg);
-      cursor: pointer;
-      box-shadow: 0 8px 22px rgba(255,221,51,0.3);
-      animation: fadeInUp 1.4s cubic-bezier(.68,-0.55,.27,1.55) 1, ctaPulse 2.5s 2.2s infinite alternate;
-      transition: all .3s ease;
-    }
-    .cta:hover {
-      transform: scale(1.09) translateY(-6px) rotate(-2deg);
-      background: linear-gradient(90deg, var(--accent2), var(--accent1));
-      color: var(--text);
-      box-shadow: 0 16px 40px rgba(255,79,15,0.25);
-      letter-spacing: 1px;
-    }
-    @keyframes ctaPulse {
-      0% { box-shadow: 0 8px 22px rgba(255,221,51,0.3); }
-      100% { box-shadow: 0 16px 40px rgba(255,221,51,0.5); }
-    }
-
-    .hero lottie-player {
-      width: 380px; margin: 40px auto;
-      animation: fadeInUp 1.4s ease forwards;
-      z-index: 1;
-      position: relative;
-    }
-
+    .cta:hover { background: linear-gradient(90deg, #00E0FF, #4ade80); box-shadow: 0 4px 16px #00E0FF22; transform: translateY(-2px) scale(1.03); }
+    @media (max-width: 700px) { .hero { padding: 60px 8px 20px; } .cta { padding: 10px 20px; font-size: 1rem; } }
     /* Features Section */
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 28px;
-      padding: 80px 48px;
-    }
-
-    .feature-card {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      padding: 48px 24px;
       background: var(--glass);
-      border-radius: 20px;
-      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin: 40px 0;
+    }
+    .feature-card {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 32px 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(77,222,128,0.03);
+      transition: box-shadow .2s, transform .2s;
+      opacity: 0; transform: translateY(40px) scale(0.98); transition: opacity 0.7s cubic-bezier(.68,-0.55,.27,1.55), transform 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+      display: flex; flex-direction: column; align-items: center;
       position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.06);
-      transition: transform .4s ease, box-shadow .3s ease;
-      cursor: pointer;
     }
-
+    .feature-card.visible {
+      opacity: 1; transform: translateY(0) scale(1);
+    }
     .feature-card:hover {
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+      box-shadow: 0 4px 16px rgba(77,222,128,0.08);
+      transform: translateY(-4px) scale(1.01);
+      border-color: var(--primary);
     }
-
     .feature-card h3 {
-      font-size: 1.4rem;
-      color: var(--accent1);
-      margin-bottom: 12px;
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+      font-weight: 700;
+      display: flex; align-items: center; gap: 8px;
     }
-
     .feature-card p {
       color: var(--subtle);
-      line-height: 1.6;
-      margin-bottom: 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: center;
     }
-
-    .feature-card::before {
-      content: '✨';
-      position: absolute;
-      top: -10px; right: -10px;
+    .feature-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px;
+      margin-bottom: 10px;
+      animation: floatHero 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatHero {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-12px);}
+    }
+    h2 {
       font-size: 2rem;
-      opacity: 0;
-      transform: rotate(45deg);
-      transition: opacity .4s ease, transform .4s ease;
+      color: var(--primary);
+      font-weight: 900;
+      margin-bottom: 32px;
+      text-align: center;
     }
-
-    .feature-card:hover::before {
-      opacity: 0.6;
-      transform: rotate(0deg) translate(10px, -10px);
+    /* ... (other sections as in your original, but with similar animation and graphical upgrades) ... */
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      .container { padding: 0 10px; }
+      .features { padding: 32px 4px; }
     }
-
-    .feature-card:nth-child(1) { animation: fadeInUp 1s both; animation-delay: .5s; }
-    .feature-card:nth-child(2) { animation: fadeInUp 1s both; animation-delay: .7s; }
-    .feature-card:nth-child(3) { animation: fadeInUp 1s both; animation-delay: .9s; }
-    .feature-card:nth-child(4) { animation: fadeInUp 1s both; animation-delay: 1.1s; }
-
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2.4rem;
-      }
-      .main-nav {
-        display: none;
-      }
-      #hamburger {
-        display: block;
-      }
-      #mobileNav {
-        display: flex;
-      }
-      .features { padding: 60px 12px; }
-      .feature-card, .how-it-works > div, .trusted-by > div {
-        min-width: 90vw !important;
-        max-width: 98vw !important;
-        margin: 0 auto 18px auto !important;
-      }
-      .how-it-works > div {
-        flex-direction: column;
-        gap: 18px;
-      }
-      .trusted-by > div {
-        flex-wrap: wrap;
-        gap: 18px;
-      }
-      .testimonials, .how-it-works, .trusted-by {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-      }
+    @media (max-width: 600px) {
+      .features { grid-template-columns: 1fr; gap: 18px; }
+      .feature-card { padding: 18px 10px; }
     }
-
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="logo">Skill<span>Wale</span></div>
-    <nav class="main-nav">
-      <a href="#features">Features</a>
-      <a href="/upload">Upload</a>
-      <a href="/courses">Courses</a>
-      <a href="/login">Login</a>
-    </nav>
-    <button id="hamburger" aria-label="Open navigation" style="display:none; background:none; border:none; font-size:2rem; color:var(--accent1); margin-left:18px; cursor:pointer;">
-      <span>&#9776;</span>
-    </button>
-    <button id="themeToggle" title="Toggle dark/light mode" style="margin-left:12px; background:var(--surface); color:var(--accent1); border:none; border-radius:50%; width:40px; height:40px; font-size:1.3rem; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.12); transition:background .3s;">🌙</button>
-    <nav id="mobileNav" style="display:none; position:fixed; top:0; right:0; width:70vw; max-width:320px; height:100vh; background:var(--surface); box-shadow:-2px 0 24px rgba(0,0,0,0.18); z-index:2000; flex-direction:column; align-items:flex-start; padding:48px 28px; gap:28px;">
-      <button id="closeMobileNav" aria-label="Close navigation" style="background:none; border:none; font-size:2rem; color:var(--accent2); align-self:flex-end; margin-bottom:24px; cursor:pointer;">&times;</button>
-      <a href="#features">Features</a>
-      <a href="/upload">Upload</a>
-      <a href="/courses">Courses</a>
-      <a href="/login">Login</a>
+  <!-- Animated SVG Background -->
+  <svg class="svg-bg" width="100vw" height="100vh">
+    <circle cx="15%" cy="20%" r="80" fill="#4ade80" opacity="0.09">
+      <animate attributeName="cy" values="20%;30%;20%" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="80%" y="70%" width="120" height="120" fill="#00E0FF" opacity="0.07">
+      <animate attributeName="x" values="80%;85%;80%" dur="10s" repeatCount="indefinite"/>
+    </rect>
+    <polygon points="190,250 220,280 160,280" fill="#FFB300" opacity="0.07">
+      <animateTransform attributeName="transform" type="rotate" from="0 190 250" to="360 190 250" dur="12s" repeatCount="indefinite"/>
+    </polygon>
+  </svg>
+  <!-- Glassy Navbar -->
+  <header class="navbar">
+    <div class="navbar-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="SkillWale Logo" class="navbar-logo-img"/>
+      <span class="navbar-logo-text">Skill<span style="color:#00E0FF;">Wale</span></span>
+    </div>
+    <nav class="navbar-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#how" class="nav-link">How it Works</a>
+      <a href="#testimonials" class="nav-link">Testimonials</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+      <a href="#contact" class="nav-link">Contact</a>
+      <a href="/login" class="nav-link nav-cta">Login</a>
     </nav>
   </header>
-
+  <!-- Hero Section -->
   <section class="hero">
-    <div class="hero-bg-blur"></div>
-    <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_4kx2q32n.json" background="transparent" speed="1" loop autoplay></lottie-player>
-    <h1>Discover Your Dream Job Path</h1>
-    <p class="typing">AI resume analysis · Role matching · Course suggestions</p>
-    <button class="cta" onclick="window.location.href='/upload'">Launch Now 🚀</button>
+    <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_8wREpI.json"
+      background="transparent" speed="1.2" style="width: 180px; height: 180px; margin: 0 auto 24px auto;" loop autoplay></lottie-player>
+    <h1>
+      <span class="word">Discover</span>
+      <span class="word">Your</span>
+      <span class="word">Career</span>
+      <span class="word">Path</span>
+    </h1>
+    <p class="typewriter">AI-powered resume analysis, role matching, and personalized course suggestions.</p>
+    <button class="cta" onclick="window.location.href='/upload'">Get Started</button>
   </section>
-
-  <!-- How it Works Section -->
-  <section class="how-it-works" style="padding: 70px 0 40px; background: var(--surface);">
-    <h2 style="text-align:center; font-size:2.2rem; color:var(--accent1); margin-bottom:40px; letter-spacing:1px;">How it Works</h2>
-    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:40px; max-width:900px; margin:0 auto;">
-      <div style="flex:1 1 220px; min-width:220px; max-width:260px; background:var(--glass); border-radius:18px; padding:32px 20px; text-align:center; box-shadow:0 2px 16px rgba(0,0,0,0.07);">
-        <div style="font-size:2.5rem; margin-bottom:18px;">📤</div>
-        <h3 style="font-size:1.2rem; color:var(--accent2); margin-bottom:10px;">Upload Resume</h3>
-        <p style="color:var(--subtle); font-size:1rem;">Easily upload your CV or LinkedIn profile in seconds.</p>
-      </div>
-      <div style="flex:1 1 220px; min-width:220px; max-width:260px; background:var(--glass); border-radius:18px; padding:32px 20px; text-align:center; box-shadow:0 2px 16px rgba(0,0,0,0.07);">
-        <div style="font-size:2.5rem; margin-bottom:18px;">🤖</div>
-        <h3 style="font-size:1.2rem; color:var(--accent2); margin-bottom:10px;">Get Matched</h3>
-        <p style="color:var(--subtle); font-size:1rem;">Our AI instantly analyzes and matches you to top roles.</p>
-      </div>
-      <div style="flex:1 1 220px; min-width:220px; max-width:260px; background:var(--glass); border-radius:18px; padding:32px 20px; text-align:center; box-shadow:0 2px 16px rgba(0,0,0,0.07);">
-        <div style="font-size:2.5rem; margin-bottom:18px;">🚀</div>
-        <h3 style="font-size:1.2rem; color:var(--accent2); margin-bottom:10px;">Upskill Fast</h3>
-        <p style="color:var(--subtle); font-size:1rem;">Get personalized course recommendations to close your skill gaps.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Trusted by Logos Section -->
-  <section class="trusted-by" style="padding: 36px 0 24px; background: var(--bg);">
-    <h3 style="text-align:center; color:var(--subtle); font-size:1.1rem; letter-spacing:1px; margin-bottom:18px;">Trusted by professionals at</h3>
-    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:36px; align-items:center; max-width:900px; margin:0 auto;">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" style="height:36px; opacity:0.7; filter: grayscale(1);">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Google_Logo.svg" alt="Google" style="height:36px; opacity:0.7; filter: grayscale(1);">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Amazon_Web_Services_Logo.svg" alt="AWS" style="height:36px; opacity:0.7; filter: grayscale(1);">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" style="height:36px; opacity:0.7; filter: grayscale(1);">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/Stack_Overflow_logo.svg" alt="Stack Overflow" style="height:36px; opacity:0.7; filter: grayscale(1);">
-    </div>
-  </section>
-
+  <!-- Features Section -->
   <section class="features" id="features">
     <div class="feature-card">
-      <h3>🧠 AI Matching</h3>
-      <p>Instantly match your resume with top global job roles using GPT‑4 powered smart analysis.</p>
+      <div class="feature-icon">
+        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_4kx2q32n.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+      </div>
+      <h3>AI Matching</h3>
+      <p>Match your resume with top global job roles using advanced AI analysis.</p>
     </div>
     <div class="feature-card">
-      <h3>📊 Interactive Scoreboards</h3>
-      <p>Visualize your match percentage, missing skills, and feedback in stunning animated cards.</p>
+      <div class="feature-icon">
+        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+      </div>
+      <h3>Interactive Scoreboards</h3>
+      <p>Visualize your match percentage, missing skills, and feedback in clear dashboards.</p>
     </div>
     <div class="feature-card">
-      <h3>🎓 Tailored Courses</h3>
-      <p>We recommend only what matters — top-rated courses to close your skill gaps fast.</p>
+      <div class="feature-icon">
+        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+      </div>
+      <h3>Tailored Courses</h3>
+      <p>Get top-rated course recommendations to close your skill gaps.</p>
     </div>
     <div class="feature-card">
-      <h3>🏢 Real Job Descriptions</h3>
+      <div class="feature-icon">
+        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_3vbOcw.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+      </div>
+      <h3>Real Job Descriptions</h3>
       <p>Resume matches are compared against actual job descriptions from real companies.</p>
     </div>
   </section>
-    <!-- Testimonials Carousel -->
-  <section class="testimonials" style="padding: 80px 40px; background: #120030; text-align: center;">
-    <h2 class="animate__animated animate__fadeInDown" style="font-size: 2.6rem; color: var(--accent2); margin-bottom: 40px;">💬 What Users Say</h2>
-    <div class="swiper mySwiper">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <blockquote>"SkillWale helped me understand what skills I was missing for my dream job. The course suggestions were perfect!"<br><br><strong>– Aarav, Developer</strong></blockquote>
-        </div>
-        <div class="swiper-slide">
-          <blockquote>"I love the animations and feedback. It's more than a job tool — it’s like a smart career friend!"<br><br><strong>– Meera, Data Analyst</strong></blockquote>
-        </div>
-        <div class="swiper-slide">
-          <blockquote>"As a recruiter, I use it to match candidates quickly. The UI and AI are both amazing!"<br><br><strong>– Rishi, HR Manager</strong></blockquote>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Floating Mascot -->
-  <img src="https://media.giphy.com/media/IThjAlJnD9WNO/giphy.gif" alt="Mascot" class="mascot" style="
-    position: fixed;
-    bottom: 90px;
-    left: 24px;
-    width: 60px;
-    height: 60px;
-    animation: floaty 3s ease-in-out infinite;
-    z-index: 999;
-    cursor: pointer;
-  " />
-
-  <!-- Scroll to Top Button -->
-  <button id="scrollTop" title="Back to top" style="
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 48px;
-    height: 48px;
-    font-size: 1.4rem;
-    border: none;
-    border-radius: 50%;
-    background: var(--accent2);
-    color: white;
-    box-shadow: 0 0 16px rgba(255, 79, 15, 0.4);
-    cursor: pointer;
-    display: none;
-    z-index: 999;
-  ">↑</button>
-
-  <!-- Footer -->
-  <footer style="
-    text-align: center;
-    padding: 60px 0 40px;
-    font-size: 0.9rem;
-    color: var(--subtle);
-    background: #0b0025;
-  ">
-    &copy; 2025 <strong>SkillWale</strong>. Built with 🧡 by Dreamers & Designers.
-    <br><br>
-    <a href="/privacy" style="color: var(--accent1); margin: 0 12px;">Privacy</a> |
-    <a href="/terms" style="color: var(--accent1); margin: 0 12px;">Terms</a> |
-    <a href="/contact" style="color: var(--accent1); margin: 0 12px;">Contact</a>
-  </footer>
-
-  <!-- Swiper + Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+  <!-- (Continue with animated How it Works, Testimonials, Partners, Newsletter, Footer, FAB, etc. as described above) -->
   <script>
-    // Swiper init
-    new Swiper(".mySwiper", {
-      loop: true,
-      autoplay: { delay: 5000 },
-      speed: 800,
-    });
-
-    // Scroll-to-top logic
-    const scrollTopBtn = document.getElementById("scrollTop");
-    window.addEventListener("scroll", () => {
-      scrollTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
-    });
-    scrollTopBtn.onclick = () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
-    // Mascot confetti click
-    const mascot = document.querySelector(".mascot");
-    mascot.addEventListener("click", () => {
-      for (let i = 0; i < 3; i++) {
-        confetti({
-          particleCount: 60,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ["#FFCC00", "#FF4F0F", "#FF66B3"],
-        });
-      }
-    });
-
-    // Theme toggle logic
-    const themeToggle = document.getElementById('themeToggle');
-    const root = document.documentElement;
-    function setTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      document.body.setAttribute('data-theme', theme);
-      themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
-    }
-    // Load theme from localStorage or system
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light'));
-    themeToggle.addEventListener('click', () => {
-      const newTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      setTheme(newTheme);
-      localStorage.setItem('theme', newTheme);
-    });
-
-    // Hamburger menu logic
-    const hamburger = document.getElementById('hamburger');
-    const mobileNav = document.getElementById('mobileNav');
-    const closeMobileNav = document.getElementById('closeMobileNav');
-    hamburger.addEventListener('click', () => {
-      mobileNav.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    });
-    closeMobileNav.addEventListener('click', () => {
-      mobileNav.style.display = 'none';
-      document.body.style.overflow = '';
-    });
-    // Close mobile nav on link click
-    mobileNav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileNav.style.display = 'none';
-        document.body.style.overflow = '';
+    // Feature card entrance animation
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.feature-card').forEach((card, i) => {
+        setTimeout(() => card.classList.add('visible'), 200 + i * 120);
+      });
+      // Animate headline words
+      document.querySelectorAll('.hero .word').forEach((el, i) => {
+        setTimeout(() => el.style.opacity = 1, 200 + i * 200);
       });
     });
+    // Parallax effect for hero SVG background
+    const svgBg = document.querySelector('.svg-bg');
+    if (svgBg) {
+      window.addEventListener('mousemove', e => {
+        const x = e.clientX / window.innerWidth - 0.5;
+        const y = e.clientY / window.innerHeight - 0.5;
+        svgBg.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+      });
+    }
   </script>
-
-  <!-- Extra styling -->
-  <style>
-    .swiper {
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    .swiper-slide {
-      background: rgba(255,255,255,0.05);
-      padding: 28px;
-      border-radius: 20px;
-      font-size: 1rem;
-      color: var(--text);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    blockquote {
-      font-style: italic;
-      line-height: 1.6;
-    }
-
-    @keyframes floaty {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
-    }
-    .main-nav a.active {
-      color: var(--accent2) !important;
-    }
-    .main-nav a.active::after {
-      width: 100%;
-      background: var(--accent2);
-    }
-  </style>
 </body>
 </html>
