@@ -1,370 +1,581 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SkillWale – Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | SkillWale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;600&display=swap');
-
     :root {
-      --bg: #090040;
-      --text: #ffffff;
-      --subtle: #cccccc;
-      --primary: #0071E3;
-      --highlight: #FF9500;
-      --border: #3e3e60;
-      --white: #1A1A3D;
+      --primary: #4ade80;
+      --accent: #00E0FF;
+      --danger: #ff3860;
+      --bg: #fff;
+      --card-bg: #fff;
+      --shadow: 0 8px 32px 0 rgba(30,32,38,0.10);
+      --radius: 28px;
+      --text: #23272f;
+      --muted: #888fa1;
+      --input-bg: #fff;
+      --input-border: #e0e3ea;
+      --footer-bg: #f4f8fb;
+      --footer-text: #888fa1;
+      --social-google: #ea4335;
+      --social-microsoft: #2f2f2f;
+      --social-linkedin: #0077b5;
+      --transition: 0.3s cubic-bezier(.68,-0.55,.27,1.55);
     }
-
-    * {
+    html, body {
+      min-height: 100vh;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Montserrat', Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      transition: background 0.4s ease;
-      overflow: hidden;
-      position: relative;
+      transition: background 0.5s, color 0.5s;
+      overflow-x: hidden;
     }
-
-    canvas#bubbles {
+    /* Animated SVG Geometric Background */
+    .svg-bg {
       position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* Centered Content */
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       width: 100vw;
       height: 100vh;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      max-width: 1100px;
-      width: 100%;
-      padding: 40px 20px;
-      gap: 60px;
-    }
-
-    .left-panel {
-      flex: 1;
-      min-width: 280px;
-    }
-
-    .logo {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 20px;
-    }
-
-    .brand-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .brand-title span {
-      background: linear-gradient(90deg, #ff9500, #ffcc00);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .tagline {
-      font-size: 1.1rem;
-      color: var(--subtle);
-      margin: 12px 0 24px;
-      max-width: 420px;
-    }
-
-    .roles {
-      font-size: 0.95rem;
-      color: var(--subtle);
-      line-height: 1.8;
-    }
-
-    .roles strong {
-      color: var(--highlight);
-    }
-
-    .login-card {
       position: relative;
-      background: rgba(26, 26, 61, 0.85);
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 48px;
-      width: 100%;
-      max-width: 400px;
-      animation: fadeInUp 0.8s ease;
-      text-align: center;
+      z-index: 2;
     }
-
-    .login-card::before {
+    /* Glass Card */
+    .glass-card {
+      min-width: 340px;
+      max-width: 420px;
+      margin: 0 auto;
+      text-align: center;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1.5px solid #e0e3ea;
+      padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInDown 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+      position: relative;
+    }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    /* Branding & Animation */
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    .logo-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 2px 8px #0001;
+      object-fit: contain;
+    }
+    .logo-text {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: 1.1px;
+    }
+    .logo-text span { color: var(--accent); }
+    .tagline {
+      color: var(--muted);
+      font-size: 1.08rem;
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+    .lottie-hero {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 18px auto;
+      display: block;
+      filter: drop-shadow(0 4px 24px #4ade80aa);
+      z-index: 2;
+      animation: floatHero 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatHero {
+      0% { transform: translateY(0);}
+      100% { transform: translateY(-18px);}
+    }
+    /* Login Form */
+    .login-form {
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin: 0 auto;
+      margin-top: 10px;
+    }
+    .input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 18px 44px 18px 18px;
+      background: var(--input-bg);
+      color: var(--text);
+      border: 1.5px solid var(--input-border);
+      font-size: 1.08rem;
+      font-family: 'Montserrat', Arial, sans-serif;
+      border-radius: 12px;
+      transition: box-shadow 0.2s, border 0.2s, background 0.5s, color 0.5s;
+      outline: none;
+    }
+    .input-group input:focus {
+      box-shadow: 0 0 0 2px var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+    .input-group .input-icon {
+      position: absolute;
+      right: 16px;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+      z-index: 2;
+    }
+    .input-group .input-icon.left {
+      left: 12px;
+      right: auto;
+      pointer-events: none;
+    }
+    .input-group input:focus ~ .input-icon {
+      color: var(--primary);
+      transform: scale(1.2);
+    }
+    .login-form label {
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-size: 1rem;
+      letter-spacing: 0.1px;
+      text-align: left;
+      display: block;
+      transition: color 0.2s;
+    }
+    .login-form input:focus ~ label {
+      color: var(--primary);
+    }
+    .login-form button[type="submit"] {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 1rem 0;
+      font-weight: 700;
+      font-size: 1.08rem;
+      box-shadow: 0 2px 12px rgba(77,222,128,0.10);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      outline: none;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .login-form button[type="submit"]:focus-visible {
+      outline: 2px solid var(--primary);
+    }
+    .login-form button[type="submit"]:hover, .login-form button[type="submit"]:focus {
+      background: #43c97a;
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 6px 24px rgba(77,222,128,0.13);
+    }
+    .login-form button[type="submit"]::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      height: 8px;
-      width: 100%;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.25), rgba(255,255,255,0));
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .login-card h2 {
-      font-size: 1.6rem;
-      font-weight: 600;
-      color: var(--highlight);
-      margin-bottom: 20px;
-    }
-
-    .avatar {
-      width: 60px;
-      margin-bottom: 16px;
+      left: 50%; top: 50%;
+      width: 0; height: 0;
+      background: rgba(0,224,255,0.15);
       border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+      z-index: 0;
     }
-
-    .oauth-btn {
-      background: #fff;
-      color: #111;
-      border: 1px solid #ddd;
-      padding: 10px 16px;
-      font-size: 0.95rem;
-      border-radius: 14px;
+    .login-form button[type="submit"]:active::after {
+      width: 200px; height: 200px;
+      transition: width 0.2s, height 0.2s;
+    }
+    /* Loading spinner for button */
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* Social Login Buttons */
+    .social-login {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 18px 0 0 0;
+      width: 100%;
+    }
+    .social-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 16px;
-      cursor: pointer;
-    }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 16px;
-      margin-bottom: 10px;
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      font-size: 1rem;
-      background: #0d0033;
-      color: #ffffff;
-    }
-
-    input:valid {
-      border-color: limegreen;
-    }
-
-    input:invalid:focus {
-      border-color: #ff3b30;
-    }
-
-    input::placeholder {
-      color: #bbbbbb;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 12px rgba(0, 113, 227, 0.3);
-    }
-
-    .show-password {
-      text-align: right;
-      margin: -12px 0 12px;
-      font-size: 0.85rem;
-      color: var(--subtle);
-    }
-
-    .show-password input {
-      transform: scale(1.1);
-      margin-right: 6px;
-    }
-
-    button[type="submit"] {
-      width: 100%;
-      padding: 16px;
-      font-size: 1rem;
-      font-weight: 600;
-      background: var(--primary);
-      color: white;
       border: none;
-      border-radius: 20px;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 12px 0;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 6px 18px rgba(0, 113, 227, 0.4);
+      transition: background 0.2s, box-shadow 0.2s, color 0.2s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(30,32,38,0.04);
+      outline: none;
+      background: #fff;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
     }
-
-    button[type="submit"]:hover {
-      background: #005bb5;
-      transform: scale(1.02);
-    }
-
-    .footer-text {
-      text-align: center;
-      font-size: 14px;
-      color: var(--subtle);
-      margin-top: 24px;
-    }
-
-    .theme-switch {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 14px;
-      color: var(--subtle);
-    }
-
-    .welcome-typing {
+    .social-btn.google { border: 1.5px solid var(--social-google); color: var(--social-google); }
+    .social-btn.microsoft { border: 1.5px solid var(--social-microsoft); color: var(--social-microsoft); }
+    .social-btn.linkedin { border: 1.5px solid var(--social-linkedin); color: var(--social-linkedin); }
+    .social-btn:hover, .social-btn:focus {
+      background: var(--bg);
+      box-shadow: 0 4px 16px rgba(0,224,255,0.08);
       color: var(--primary);
-      font-size: 1rem;
-      margin-top: 12px;
-      min-height: 24px;
+      transform: scale(1.04);
     }
-
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        gap: 30px;
-        padding: 20px;
-      }
-
-      .left-panel {
-        text-align: center;
-      }
-
-      .brand-title {
-        font-size: 2rem;
-      }
+    .social-btn svg { width: 22px; height: 22px; }
+    /* Forgot password & footer */
+    .login-footer {
+      margin-top: 18px;
+      text-align: right;
+      width: 100%;
+    }
+    .forgot {
+      color: var(--muted);
+      font-size: 0.98rem;
+      text-align: right;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s, text-decoration 0.2s;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .forgot:hover, .forgot:focus {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 16px 32px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      font-size: 1.05rem;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1000;
+      transition: opacity 0.4s, bottom 0.4s;
+      border-left: 6px solid var(--primary);
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      bottom: 56px;
+    }
+    /* Testimonials Carousel */
+    .testimonials {
+      margin: 32px 0 0 0;
+      width: 100%;
+      max-width: 340px;
+      background: #f8fafc;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(30,32,38,0.04);
+      padding: 18px 18px 12px 18px;
+      font-size: 1.02rem;
+      color: var(--muted);
+      position: relative;
+      min-height: 80px;
+      text-align: left;
+      overflow: hidden;
+    }
+    .testimonial-quote {
+      font-style: italic;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      opacity: 1;
+      transition: opacity 0.5s;
+    }
+    .testimonial-author {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.98rem;
+      display: block;
+      margin-top: 2px;
+      opacity: 1;
+      transition: opacity 0.5s;
+    }
+    .testimonial-nav {
+      position: absolute;
+      right: 12px;
+      bottom: 8px;
+      display: flex;
+      gap: 6px;
+    }
+    .testimonial-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .testimonial-dot.active { background: var(--primary); }
+    /* Footer */
+    footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      text-align: center;
+      padding: 36px 0 24px;
+      font-size: 0.98rem;
+      border-top: 1px solid #e0e3ea;
+      margin-top: 60px;
+      width: 100vw;
+    }
+    footer a {
+      color: var(--accent);
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    footer a:hover {
+      color: var(--primary);
+    }
+    /* Responsive */
+    @media (max-width: 700px) {
+      .glass-card { min-width: 90vw; max-width: 98vw; padding: 1.2rem 0.5rem; }
+      .testimonials { max-width: 98vw; }
+      .logo-row { flex-direction: column; gap: 4px; }
+    }
+    @media (max-width: 400px) {
+      .glass-card { min-width: 99vw; max-width: 99vw; padding: 0.5rem 0.2rem; }
+    }
+    .visually-hidden {
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+      border: 0;
+      padding: 0;
+      margin: -1px;
     }
   </style>
 </head>
 <body>
-  <canvas id="bubbles"></canvas>
-  <div class="container">
-    <div class="left-panel">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/1024px-Test-Logo.svg.png" alt="SkillWale Logo" class="logo">
-      <h1 class="brand-title">Welcome to <span>SkillWale</span></h1>
-      <p class="tagline">Your personalized AI-powered career matcher platform</p>
-      <div class="roles">
-        <p><strong>🧑‍💼 Candidate?</strong> Upload your resume and get your ideal job role instantly.</p>
-        <p><strong>👩‍💻 Student?</strong> Learn what skills top companies want.</p>
-        <p><strong>🏢 HR?</strong> Find the right talent with SkillWale AI.</p>
-        <p class="welcome-typing" id="welcomeText"></p>
+  <!-- Animated SVG Geometric Background -->
+  <svg class="svg-bg" width="100vw" height="100vh">
+    <circle cx="10%" cy="20%" r="60" fill="#4ade80" opacity="0.08">
+      <animate attributeName="cy" values="20%;30%;20%" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="80%" y="70%" width="80" height="80" fill="#00E0FF" opacity="0.07">
+      <animate attributeName="x" values="80%;85%;80%" dur="10s" repeatCount="indefinite"/>
+    </rect>
+    <polygon points="90,150 120,180 60,180" fill="#FFB300" opacity="0.07">
+      <animateTransform attributeName="transform" type="rotate" from="0 90 150" to="360 90 150" dur="12s" repeatCount="indefinite"/>
+    </polygon>
+    <circle cx="90%" cy="10%" r="30" fill="#00E0FF" opacity="0.06">
+      <animate attributeName="cx" values="90%;95%;90%" dur="7s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="10%" y="80%" width="40" height="40" fill="#4ade80" opacity="0.06">
+      <animate attributeName="y" values="80%;85%;80%" dur="9s" repeatCount="indefinite"/>
+    </rect>
+  </svg>
+  <div class="center">
+    <div class="glass-card animate__animated animate__fadeInDown">
+      <!-- Branding Row -->
+      <div class="logo-row">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="SkillWale Logo" class="logo-img"/>
+        <div class="logo-text">Skill<span>Wale</span></div>
+    </div>
+      <div class="tagline">AI-powered career platform</div>
+      <lottie-player class="lottie-hero" src="https://assets2.lottiefiles.com/packages/lf20_8wREpI.json" background="transparent" speed="1.2" loop autoplay></lottie-player>
+      <h2 style="margin-bottom: 8px;">Welcome Back</h2>
+      <p style="color:var(--muted);margin-bottom:18px;">Sign in to your SkillWale account</p>
+      <!-- Login Form -->
+    <form class="login-form" autocomplete="on" aria-describedby="loginDesc" tabindex="0">
+      <span id="loginDesc" class="visually-hidden">Login to your SkillWale account</span>
+      <label for="email">Email</label>
+        <div class="input-group">
+      <input type="email" id="email" name="email" required autocomplete="email" aria-required="true" aria-label="Email address" />
+          <span class="input-icon left">
+            <!-- Email SVG -->
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
+          </span>
+        </div>
+      <label for="password">Password</label>
+        <div class="input-group">
+      <input type="password" id="password" name="password" required autocomplete="current-password" aria-required="true" aria-label="Password" />
+          <span class="input-icon" id="togglePassword" title="Show/Hide password">
+            <!-- Eye SVG -->
+            <svg id="eyeOpen" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="5"/><circle cx="12" cy="12" r="2.5"/></svg>
+            <svg id="eyeClosed" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><ellipse cx="12" cy="12" rx="8" ry="5"/><line x1="4" y1="4" x2="20" y2="20"/></svg>
+          </span>
+        </div>
+        <button type="submit" aria-label="Login to SkillWale"><span id="loginBtnText">Login</span><span id="loginSpinner" class="spinner" style="display:none;"></span></button>
+      </form>
+      <!-- Social Login -->
+      <div class="social-login">
+        <button class="social-btn google" tabindex="0"><svg viewBox="0 0 24 24"><g><path fill="#ea4335" d="M21.805 10.023h-9.765v3.977h5.617c-.242 1.242-1.484 3.648-5.617 3.648-3.375 0-6.125-2.789-6.125-6.25s2.75-6.25 6.125-6.25c1.922 0 3.211.82 3.953 1.523l2.703-2.633c-1.703-1.57-3.898-2.539-6.656-2.539-5.523 0-10 4.477-10 10s4.477 10 10 10c5.781 0 9.594-4.055 9.594-9.766 0-.656-.07-1.156-.164-1.609z"/></g></svg>Continue with Google</button>
+        <button class="social-btn microsoft" tabindex="0"><svg viewBox="0 0 24 24"><g><rect fill="#f25022" x="1" y="1" width="10" height="10"/><rect fill="#7fba00" x="13" y="1" width="10" height="10"/><rect fill="#00a4ef" x="1" y="13" width="10" height="10"/><rect fill="#ffb900" x="13" y="13" width="10" height="10"/></g></svg>Continue with Microsoft</button>
+        <button class="social-btn linkedin" tabindex="0"><svg viewBox="0 0 24 24"><g><path fill="#0077b5" d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.28c-.97 0-1.75-.79-1.75-1.75s.78-1.75 1.75-1.75 1.75.79 1.75 1.75-.78 1.75-1.75 1.75zm15.5 10.28h-3v-4.5c0-1.08-.02-2.47-1.5-2.47-1.5 0-1.73 1.17-1.73 2.39v4.58h-3v-9h2.89v1.23h.04c.4-.75 1.38-1.54 2.84-1.54 3.04 0 3.6 2 3.6 4.59v4.72z"/></g></svg>Continue with LinkedIn</button>
+      </div>
+      <!-- Forgot password -->
+      <div class="login-footer">
+        <a href="#" class="forgot" tabindex="0" role="button" aria-label="Forgot password?">Forgot password?</a>
+      </div>
+      <!-- Testimonials Carousel -->
+      <div class="testimonials" id="testimonials">
+        <span class="testimonial-quote" id="testimonialQuote">"SkillWale helped me land my dream job! The feedback was spot on."</span>
+        <span class="testimonial-author" id="testimonialAuthor">– Aarav, Developer</span>
+        <div class="testimonial-nav" id="testimonialNav"></div>
       </div>
     </div>
-    <form class="login-card" method="POST" action="/login">
-      <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed=User" class="avatar" alt="avatar">
-      <button class="oauth-btn" type="button">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20"> Continue with Google
-      </button>
-      <h2>Sign In to Continue</h2>
-      <input type="email" name="email" placeholder="Email address" required autocomplete="email" autofocus />
-      <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
-      <div class="show-password">
-        <label><input type="checkbox" onclick="togglePassword()"> Show Password</label>
-      </div>
-      <button type="submit">Log In</button>
-      <div class="theme-switch">
-        <label><input type="checkbox" id="modeToggle" /> Enable Dark Mode</label>
-      </div>
-      <div class="footer-text">© 2025 SkillWale. All rights reserved.</div>
-    </form>
   </div>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 <strong>SkillWale</strong>. All rights reserved.
+    <div style="margin-top: 10px;">
+      <a href="/privacy">Privacy</a>|
+      <a href="/terms">Terms</a>|
+      <a href="/contact">Contact</a>
+    </div>
+  </footer>
   <script>
-    const canvas = document.getElementById('bubbles');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-    const bubbles = [];
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-    for (let i = 0; i < 40; i++) {
-      bubbles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: Math.random() * 6 + 2,
-        d: Math.random() * 1 + 0.5
-      });
-    }
-    function draw() {
-      ctx.clearRect(0, 0, w, h);
-      for (let b of bubbles) {
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.08)';
-        ctx.fill();
+    // Show/hide password logic
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeOpen = document.getElementById('eyeOpen');
+    const eyeClosed = document.getElementById('eyeClosed');
+    togglePassword.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeOpen.style.display = 'none';
+        eyeClosed.style.display = 'inline';
+      } else {
+        passwordInput.type = 'password';
+        eyeOpen.style.display = 'inline';
+        eyeClosed.style.display = 'none';
       }
-      move();
-    }
-    function move() {
-      for (let b of bubbles) {
-        b.y -= b.d;
-        if (b.y < -10) {
-          b.y = h + 10;
-          b.x = Math.random() * w;
-        }
-      }
-    }
-    function animate() {
-      draw();
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    const toggle = document.getElementById('modeToggle');
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
-    toggle.addEventListener('change', () => {
-      const current = document.documentElement.getAttribute('data-theme');
-      const newTheme = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
     });
 
-    const messages = [
-      "\u2728 Ready to boost your career?",
-      "\ud83d\ude80 Get AI-powered job matches instantly!",
-      "\ud83d\udca1 SkillWale helps you shine."
+    // Toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast show ${type}`;
+      setTimeout(() => {
+        toast.className = 'toast';
+      }, 2600);
+    }
+
+    // Login form logic (demo)
+    const form = document.querySelector('.login-form');
+    const loginBtnText = document.getElementById('loginBtnText');
+    const loginSpinner = document.getElementById('loginSpinner');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      loginBtnText.style.display = 'none';
+      loginSpinner.style.display = 'inline-block';
+      showToast('Logging in...', 'success');
+      setTimeout(() => {
+        loginBtnText.style.display = 'inline';
+        loginSpinner.style.display = 'none';
+        showToast('Login successful!', 'success');
+        // window.location.href = '/home';
+      }, 1800);
+    });
+    document.querySelector('.forgot').addEventListener('click', function() {
+      showToast('Password reset link sent (demo).', 'success');
+    });
+
+    // Testimonials Carousel
+    const testimonials = [
+      { quote: '"SkillWale helped me land my dream job! The feedback was spot on."', author: '– Aarav, Developer' },
+      { quote: '"The AI resume analysis is next-level. I love the course suggestions!"', author: '– Meera, Data Analyst' },
+      { quote: '"As a recruiter, I use it to match candidates quickly. The UI and AI are both amazing!"', author: '– Rishi, HR Manager' },
+      { quote: '"The login page is so beautiful! I feel like I’m using a premium product."', author: '– Priya, Designer' },
+      { quote: '"I got interview questions tailored to my dream company. Super helpful!"', author: '– Rahul, Student' }
     ];
-    let msgIndex = 0;
-    const typing = document.getElementById("welcomeText");
-    function typeMsg() {
-      typing.textContent = messages[msgIndex];
-      msgIndex = (msgIndex + 1) % messages.length;
-      setTimeout(typeMsg, 4000);
-    }
-    typeMsg();
-
-    function togglePassword() {
-      const pwd = document.querySelector('input[name="password"]');
-      pwd.type = pwd.type === "password" ? "text" : "password";
-    }
-
-    document.querySelector('form').addEventListener('submit', e => {
-      const btn = document.querySelector('button[type=submit]');
-      btn.disabled = true;
-      btn.innerHTML = 'Logging in... ⏳';
-      document.body.style.transition = 'opacity 0.5s ease';
-      document.body.style.opacity = '0.8';
+    let testimonialIndex = 0;
+    const testimonialQuote = document.getElementById('testimonialQuote');
+    const testimonialAuthor = document.getElementById('testimonialAuthor');
+    const testimonialNav = document.getElementById('testimonialNav');
+    function renderTestimonial(idx) {
+      testimonialQuote.textContent = testimonials[idx].quote;
+      testimonialAuthor.textContent = testimonials[idx].author;
+      Array.from(testimonialNav.children).forEach((dot, i) => {
+        dot.className = 'testimonial-dot' + (i === idx ? ' active' : '');
     });
+    }
+    function createTestimonialNav() {
+      testimonialNav.innerHTML = '';
+      for (let i = 0; i < testimonials.length; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'testimonial-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => {
+          testimonialIndex = i;
+          renderTestimonial(i);
+        });
+        testimonialNav.appendChild(dot);
+      }
+    }
+    createTestimonialNav();
+    renderTestimonial(0);
+    setInterval(() => {
+      testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+      renderTestimonial(testimonialIndex);
+    }, 5000);
   </script>
 </body>
 </html>
