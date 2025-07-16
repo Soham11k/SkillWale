@@ -2,434 +2,548 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recommended Courses | SkillWale</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SkillWale Courses – Level Up Your Skills</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <style>
     :root {
-      --dark-bg: #1e1b2e;
-      --light-bg: #f9fafb;
-      --glass: rgba(255, 255, 255, 0.06);
-      --highlight: #fcd34d;
-      --accent: #d06aff;
-      --text-light: #f5f5f5;
-      --muted: #a0a0a0;
-      --card-bg: rgba(255, 255, 255, 0.04);
-      --border-color: rgba(255, 255, 255, 0.1);
-      --transition: 0.3s ease;
+      --bg: #f8fafc;
+      --card: rgba(255,255,255,0.85);
+      --card-dark: rgba(30,32,38,0.85);
+      --text: #23272f;
+      --text-dark: #f8fafc;
+      --subtle: #888fa1;
+      --accent: #4ade80;
+      --accent2: #00E0FF;
+      --yellow: #FFB300;
+      --shadow: 0 8px 32px 0 rgba(30,32,38,0.10);
+      --shadow-dark: 0 8px 32px 0 rgba(0,0,0,0.32);
+      --radius: 22px;
+      --chip-bg: #f4f8fb;
+      --chip-bg-active: #4ade80;
+      --chip-text: #23272f;
+      --chip-text-active: #fff;
+      --progress-bg: #e0e3ea;
+      --progress-fg: linear-gradient(90deg, #4ade80, #00E0FF);
+      --favorite: #ff3860;
+      --favorite-inactive: #00E0FF;
     }
-
-    * {
+    [data-theme="dark"] {
+      --bg: #23272f;
+      --card: var(--card-dark);
+      --text: var(--text-dark);
+      --subtle: #b0b8c9;
+      --chip-bg: #23272f;
+      --chip-bg-active: #4ade80;
+      --chip-text: #f8fafc;
+      --chip-text-active: #23272f;
+      --progress-bg: #353945;
+      --progress-fg: linear-gradient(90deg, #4ade80, #00E0FF);
+    }
+    html, body {
+      min-height: 100vh;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.5s, color 0.5s;
     }
-
-    html, body {
-      background-color: var(--dark-bg);
-      color: var(--text-light);
-      scroll-behavior: smooth;
-    }
-
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 40px;
-      background: var(--glass);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border-color);
+      padding: 24px 48px;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
-      z-index: 999;
+      z-index: 99;
+      box-shadow: 0 2px 12px rgba(30,32,38,0.04);
     }
-
-    header h1 {
-      font-size: 1.7rem;
-      color: var(--highlight);
-      letter-spacing: 1px;
+    .logo {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: 1.2px;
     }
-
+    .logo span {
+      color: var(--accent);
+    }
     nav a {
-      color: var(--text-light);
+      color: var(--subtle);
       text-decoration: none;
-      margin-left: 25px;
+      margin-left: 32px;
+      font-weight: 500;
+      font-size: 1.08rem;
+      transition: color 0.3s;
       position: relative;
+    }
+    nav a.active, nav a:hover {
+      color: var(--accent2);
+    }
+    .hero {
+      text-align: center;
+      padding: 80px 24px 20px;
+      background: none;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      color: var(--accent2);
+      letter-spacing: 1.2px;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--subtle);
+      max-width: 720px;
+      margin: 0 auto;
       font-weight: 500;
     }
-
-    nav a::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: var(--accent);
-      transition: var(--transition);
+    .hero lottie-player {
+      margin-top: 30px;
+      width: 240px;
+      height: 240px;
     }
-
-    nav a:hover::after {
+    .search-bar {
+      margin: 30px auto 0 auto;
+      max-width: 600px;
+      text-align: center;
+    }
+    .search-bar input {
       width: 100%;
-    }
-
-    .logout-btn {
-      margin-left: 25px;
-      background: none;
-      border: 2px solid var(--accent);
-      color: var(--accent);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .logout-btn:hover {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .toggle-theme {
-      margin-left: 25px;
-      background: none;
+      padding: 16px 24px;
+      border-radius: 40px;
       border: none;
-      color: var(--highlight);
-      font-size: 1.1rem;
+      font-size: 1.08rem;
+      background: var(--card);
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s;
+    }
+    .search-bar input:focus {
+      box-shadow: 0 0 0 2px var(--accent2);
+    }
+    .category-filters {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 32px 0 40px;
+      flex-wrap: wrap;
+    }
+    .category-filters button {
+      padding: 10px 22px;
+      border-radius: 22px;
+      border: none;
+      background: var(--chip-bg);
+      color: var(--chip-text);
+      font-weight: 600;
+      font-size: 1.02rem;
       cursor: pointer;
+      transition: all 0.3s;
+      border: 1.5px solid transparent;
+      box-shadow: 0 2px 8px rgba(30,32,38,0.04);
+      outline: none;
+      position: relative;
     }
-
-    .stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      z-index: -1;
-      overflow: hidden;
-      pointer-events: none;
+    .category-filters button.active, .category-filters button:focus {
+      background: var(--chip-bg-active);
+      color: var(--chip-text-active);
+      border: 1.5px solid var(--accent2);
+      box-shadow: 0 4px 16px rgba(0,224,255,0.08);
     }
-
-    .stars::before, .stars::after {
-      content: "";
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-      animation: twinkle 18s linear infinite;
-      opacity: 0.2;
-    }
-
-    .stars::after {
-      animation-delay: 5s;
-    }
-
-    @keyframes twinkle {
-      from { transform: translate(0, 0); }
-      to { transform: translate(-400px, -400px); }
-    }
-
-    #glow-cursor {
-      position: fixed;
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      mix-blend-mode: screen;
-      z-index: 998;
-    }
-
-    .courses-container {
-      max-width: 1200px;
-      margin: 60px auto;
-      padding: 0 20px;
-    }
-
-    .courses-container h2 {
-      text-align: center;
-      font-size: 2.6rem;
-      color: var(--highlight);
-      margin-bottom: 30px;
-      animation: fadeIn 1s ease;
-    }
-
-    .filter-chips {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .chip {
-      display: inline-block;
-      background: none;
-      border: 1.8px solid var(--accent);
-      color: var(--accent);
-      padding: 8px 18px;
-      margin: 6px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 0.9rem;
-    }
-
-    .chip:hover, .chip.active {
-      background: var(--accent);
+    .category-filters button:hover {
+      background: var(--accent2);
       color: #fff;
     }
-
-    .course-grid {
+    .courses-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 40px;
+      padding: 0 60px 80px;
+      margin: 0 auto;
+      max-width: 1400px;
     }
-
     .course-card {
-      background: var(--card-bg);
-      border-radius: 16px;
+      background: var(--card);
+      border-radius: 20px;
       overflow: hidden;
-      border: 1px solid var(--border-color);
-      transition: var(--transition);
-      transform: perspective(1px) translateZ(0);
-      animation: fadeInCard 0.5s ease forwards;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+      transition: transform 0.4s, box-shadow 0.3s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      outline: none;
     }
-
+    .course-card:focus {
+      box-shadow: 0 0 0 3px var(--accent2);
+    }
     .course-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 12px 30px rgba(0, 224, 255, 0.13);
     }
-
     .course-card img {
       width: 100%;
-      height: 160px;
+      height: 180px;
       object-fit: cover;
-      display: block;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      background: #e0e3ea;
     }
-
-    .course-content {
-      padding: 20px;
+    .course-info {
+      padding: 24px 20px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
     }
-
-    .course-content h3 {
-      font-size: 1.1rem;
+    .course-info h3 {
+      font-size: 1.22rem;
       color: var(--accent);
-      margin-bottom: 8px;
+      font-weight: 700;
+      margin-bottom: 2px;
     }
-
-    .course-content p {
-      font-size: 0.92rem;
-      color: var(--muted);
-      line-height: 1.5;
+    .course-info .category {
+      font-size: 0.98rem;
+      color: var(--subtle);
+      font-weight: 500;
     }
-
-    .course-content .tags {
-      margin-top: 12px;
-    }
-
-    .course-content .tag {
-      display: inline-block;
-      background: rgba(255,255,255,0.08);
-      padding: 4px 10px;
-      border-radius: 14px;
-      font-size: 0.75rem;
-      margin-right: 6px;
-      margin-top: 6px;
-    }
-
-    .course-content a {
-      display: inline-block;
-      margin-top: 14px;
-      background: var(--highlight);
-      color: #1e1b2e;
-      text-decoration: none;
-      padding: 8px 16px;
-      border-radius: 8px;
+    .rating {
+      font-size: 0.98rem;
+      color: var(--accent2);
       font-weight: 600;
-      transition: var(--transition);
     }
-
-    .course-content a:hover {
-      background: #ffe580;
+    .progress-bar {
+      background: var(--progress-bg);
+      height: 9px;
+      border-radius: 20px;
+      margin: 8px 0 0 0;
+      width: 100%;
+      overflow: hidden;
     }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(30px);}
-      to {opacity: 1; transform: translateY(0);}
+    .progress-bar div {
+      background: var(--progress-fg);
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.6s cubic-bezier(.68,-0.55,.27,1.55);
     }
-
-    @keyframes fadeInCard {
-      from {opacity: 0; transform: scale(0.95);}
-      to {opacity: 1; transform: scale(1);}
+    .enroll-btn {
+      margin-top: 12px;
+      padding: 12px 0;
+      border-radius: 14px;
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(77,222,128,0.08);
+      outline: none;
     }
-
-    @media(max-width: 600px) {
-      header { flex-direction: column; align-items: flex-start; }
-      nav { margin-top: 10px; }
-      .courses-container h2 { font-size: 2rem; }
+    .enroll-btn:hover, .enroll-btn:focus {
+      background: #43c97a;
+      box-shadow: 0 6px 18px rgba(77,222,128,0.13);
+    }
+    .favorite {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--favorite-inactive);
+      transition: transform 0.3s, color 0.3s;
+      user-select: none;
+    }
+    .favorite.active {
+      color: var(--favorite);
+      transform: scale(1.2);
+    }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .courses-grid { padding: 0 10vw 80px; }
+      header { padding: 18px 6vw; }
+    }
+    @media (max-width: 600px) {
+      .courses-grid { grid-template-columns: 1fr; padding: 0 2vw 60px; gap: 24px; }
+      .hero { padding: 48px 8px 10px; }
+      .search-bar { margin: 18px auto 0 auto; }
+      .category-filters { gap: 8px; margin: 18px 0 24px; }
+      .course-card img { height: 140px; }
+      .course-card { min-height: 340px; }
+    }
+    /* Visually hidden for a11y */
+    .visually-hidden {
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+      border: 0;
+      padding: 0;
+      margin: -1px;
     }
   </style>
 </head>
-<body>
-  <div class="stars"></div>
-  <div id="glow-cursor"></div>
-
+<body data-theme="light">
   <header>
-    <h1>SkillWale</h1>
+    <div class="logo">Skill<span>Wale</span></div>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="upload.html">Upload</a>
-      <a href="courses.html">Courses</a>
-      <button class="toggle-theme" onclick="toggleTheme()">🌓</button>
-      <button class="logout-btn" onclick="location.href='/logout'">Logout</button>
+      <a href="/">Home</a>
+      <a href="/upload">Upload</a>
+      <a href="/courses" class="active">Courses</a>
+      <a href="/login">Login</a>
     </nav>
   </header>
-
-  <section class="courses-container">
-    <h2>🚀 Explore Premium Skill-Building Courses</h2>
-    <div class="filter-chips">
-      <span class="chip active" data-category="all">All</span>
-      <span class="chip" data-category="tech">Tech</span>
-      <span class="chip" data-category="design">Design</span>
-      <span class="chip" data-category="leadership">Leadership</span>
-      <span class="chip" data-category="marketing">Marketing</span>
-    </div>
-
-    <div class="course-grid">
-      <div class="course-card" data-category="tech">
-        <img src="https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg" alt="Python">
-        <div class="course-content">
-          <h3>Python for Everybody</h3>
-          <p>Learn to automate tasks, process data, and build foundations for AI.</p>
-          <div class="tags">
-            <span class="tag">Beginner</span>
-            <span class="tag">Free</span>
-            <span class="tag">Self-paced</span>
-          </div>
-          <a href="https://www.coursera.org/specializations/python" target="_blank">Visit Course</a>
-        </div>
-      </div>
-          <div class="course-card" data-category="design">
-        <img src="https://img-c.udemycdn.com/course/240x135/1565838_e54e_12.jpg" alt="UI/UX">
-        <div class="course-content">
-          <h3>UI/UX Design Masterclass</h3>
-          <p>Figma, wireframes, and real-world UX case studies in one place.</p>
-          <div class="tags">
-            <span class="tag">Intermediate</span>
-            <span class="tag">Project-based</span>
-          </div>
-          <a href="https://www.udemy.com/course/ui-ux-web-design-using-adobe-xd/" target="_blank">Visit Course</a>
-        </div>
-      </div>
-
-      <div class="course-card" data-category="marketing">
-        <img src="https://img-c.udemycdn.com/course/240x135/1460384_52a4_2.jpg" alt="Marketing">
-        <div class="course-content">
-          <h3>Digital Marketing 101</h3>
-          <p>SEO, ads, email — learn what it takes to build a brand online.</p>
-          <div class="tags">
-            <span class="tag">Beginner</span>
-            <span class="tag">Certification</span>
-          </div>
-          <a href="https://www.udemy.com/course/learn-digital-marketing-course/" target="_blank">Visit Course</a>
-        </div>
-      </div>
-
-      <div class="course-card" data-category="leadership">
-        <img src="https://img-c.udemycdn.com/course/240x135/851712_fc61_6.jpg" alt="Leadership">
-        <div class="course-content">
-          <h3>Leadership & Management</h3>
-          <p>Lead teams with clarity, empathy and productivity frameworks.</p>
-          <div class="tags">
-            <span class="tag">Advanced</span>
-            <span class="tag">Free</span>
-          </div>
-          <a href="https://www.coursera.org/learn/leading-people-teams" target="_blank">Visit Course</a>
-        </div>
-      </div>
-
-      <div class="course-card" data-category="tech">
-        <img src="https://img-c.udemycdn.com/course/240x135/2196488_8fc7.jpg" alt="Web Dev">
-        <div class="course-content">
-          <h3>Full Stack Web Dev</h3>
-          <p>HTML, CSS, JS, Node, Mongo — Build real production apps.</p>
-          <div class="tags">
-            <span class="tag">Advanced</span>
-            <span class="tag">Paid</span>
-          </div>
-          <a href="https://www.udemy.com/course/the-complete-web-developer-zero-to-mastery/" target="_blank">Visit Course</a>
-        </div>
-      </div>
-
-      <div class="course-card" data-category="design">
-        <img src="https://img-c.udemycdn.com/course/240x135/1936002_c0c5.jpg" alt="Graphic Design">
-        <div class="course-content">
-          <h3>Graphic Design Bootcamp</h3>
-          <p>Master Photoshop, Illustrator, InDesign & portfolio projects.</p>
-          <div class="tags">
-            <span class="tag">Creative</span>
-            <span class="tag">Lifetime Access</span>
-          </div>
-          <a href="https://www.udemy.com/course/graphic-design-masterclass-everything-you-need-to-know/" target="_blank">Visit Course</a>
-        </div>
-      </div>
-    </div>
+  <a href="#main-content" class="visually-hidden" tabindex="0">Skip to main content</a>
+  <section class="hero animate__animated animate__fadeInDown">
+    <h1>Discover the Right Skills 🎓</h1>
+    <p>Get course suggestions based on your AI resume analysis. Learn what recruiters love to see.</p>
+    <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_jtbfg2nb.json" background="transparent" speed="1" loop autoplay></lottie-player>
   </section>
-
-  <footer>
-    Crafted with ❤️ by SkillWale · © 2025. Let your skills shine.
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search courses e.g. AI, Web, Data..." aria-label="Search courses" />
+  </div>
+  <div class="category-filters" role="tablist" aria-label="Course categories">
+    <button class="active" data-category="all" role="tab" aria-selected="true">All</button>
+    <button data-category="ai" role="tab" aria-selected="false">AI</button>
+    <button data-category="web" role="tab" aria-selected="false">Web</button>
+    <button data-category="data" role="tab" aria-selected="false">Data</button>
+    <button data-category="design" role="tab" aria-selected="false">Design</button>
+  </div>
+  <section class="courses-grid" id="courseContainer" aria-label="Course list">
+    <!-- Example course cards (to be dynamically rendered) -->
+    <div class="course-card reveal" data-category="ai" tabindex="0" aria-label="AI Fundamentals, Category: AI, 4.7 stars, 1.2k reviews">
+      <div class="badge top-pick">Top Pick</div>
+      <img src="https://img.freepik.com/free-vector/artificial-intelligence-brain-background_23-2148898445.jpg" alt="AI Course" />
+      <div class="course-info">
+        <div class="course-header">
+          <img class="avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Instructor avatar" />
+          <h3>AI Fundamentals</h3>
+          <span class="category-icon">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+          </span>
+        </div>
+        <p class="category">Category: AI</p>
+        <div class="rating">⭐ 4.7 (1.2k reviews)</div>
+        <div class="progress-bar" aria-label="Course progress"><div style="width: 80%"></div></div>
+        <button class="enroll-btn">
+          <span>Enroll</span>
+          <span class="enroll-anim">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
+          </span>
+        </button>
+        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
+          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+    </div>
+    <div class="course-card reveal" data-category="web" tabindex="0" aria-label="Frontend Mastery, Category: Web, 4.8 stars, 2.3k reviews">
+      <img src="https://img.freepik.com/premium-photo/front-end-development-concept_963843-3362.jpg" alt="Web Dev" />
+      <div class="course-info">
+        <div class="course-header">
+          <img class="avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Instructor avatar" />
+          <h3>Frontend Mastery</h3>
+          <span class="category-icon">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+          </span>
+        </div>
+        <p class="category">Category: Web</p>
+        <div class="rating">⭐ 4.8 (2.3k reviews)</div>
+        <div class="progress-bar" aria-label="Course progress"><div style="width: 65%"></div></div>
+        <button class="enroll-btn">
+          <span>Enroll</span>
+          <span class="enroll-anim">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
+          </span>
+        </button>
+        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
+          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+    </div>
+    <div class="course-card reveal" data-category="data" tabindex="0" aria-label="Data Science Pro, Category: Data, 4.9 stars, 3.1k reviews">
+      <div class="badge">Top Pick</div>
+      <img src="https://img.freepik.com/free-vector/data-analysis-concept-illustration_114360-717.jpg" alt="Data Science" />
+      <div class="course-info">
+        <div class="course-header">
+          <img class="avatar" src="https://randomuser.me/api/portraits/men/45.jpg" alt="Instructor avatar" />
+          <h3>Data Science Pro</h3>
+          <span class="category-icon">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+          </span>
+        </div>
+        <p class="category">Category: Data</p>
+        <div class="rating">⭐ 4.9 (3.1k reviews)</div>
+        <div class="progress-bar" aria-label="Course progress"><div style="width: 90%"></div></div>
+        <button class="enroll-btn">
+          <span>Enroll</span>
+          <span class="enroll-anim">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
+          </span>
+        </button>
+        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
+          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+    </div>
+    <div class="course-card reveal" data-category="design" tabindex="0" aria-label="Design Thinking, Category: Design, 4.6 stars, 1.1k reviews">
+      <img src="https://img.freepik.com/free-vector/ui-ux-design-concept_23-2148818819.jpg" alt="Design Thinking" />
+      <div class="course-info">
+        <div class="course-header">
+          <img class="avatar" src="https://randomuser.me/api/portraits/women/65.jpg" alt="Instructor avatar" />
+          <h3>Design Thinking</h3>
+          <span class="category-icon">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+          </span>
+        </div>
+        <p class="category">Category: Design</p>
+        <div class="rating">⭐ 4.6 (1.1k reviews)</div>
+        <div class="progress-bar" aria-label="Course progress"><div style="width: 50%"></div></div>
+        <button class="enroll-btn">
+          <span>Enroll</span>
+          <span class="enroll-anim">
+            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
+          </span>
+        </button>
+        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
+          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+    </div>
+    <!-- Visually hidden extensibility: empty state, loading, error, etc. -->
+    <div class="visually-hidden" id="emptyState" aria-hidden="true">No courses found.</div>
+    <div class="visually-hidden" id="loadingState" aria-hidden="true">Loading courses...</div>
+    <div class="visually-hidden" id="errorState" aria-hidden="true">Error loading courses.</div>
+  </section>
+  <!-- Floating Action Button (FAB) -->
+  <button class="fab" id="fab" title="Suggest a Course" aria-label="Suggest a Course">
+    <svg viewBox="0 0 56 56" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="28" fill="#4ade80"/>
+      <path d="M28 18v20M18 28h20" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <footer style="text-align:center; padding: 40px 0; color: var(--subtle); font-size: 0.9rem;">
+    <p>Made with 💙 by SkillWale Team | &copy; 2025</p>
+    <p>Ready to skill up? Upload your resume now to see your top matches.</p>
   </footer>
-
   <script>
-    const glowCursor = document.getElementById('glow-cursor');
-    document.addEventListener('mousemove', e => {
-      glowCursor.style.left = e.pageX + 'px';
-      glowCursor.style.top = e.pageY + 'px';
+    // Accessibility: skip to main content
+    document.querySelector('.visually-hidden[tabindex="0"]').addEventListener('focus', function() {
+      this.style.position = 'static';
+      this.style.height = 'auto';
+      this.style.width = 'auto';
+      this.style.background = '#fff';
+      this.style.color = '#23272f';
+      this.style.padding = '8px 16px';
+      this.style.borderRadius = '8px';
+      this.style.zIndex = '1000';
     });
-
-    const chips = document.querySelectorAll('.chip');
-    const cards = document.querySelectorAll('.course-card');
-
-    chips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        chips.forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-
-        const category = chip.getAttribute('data-category');
-
-        cards.forEach(card => {
-          if (category === 'all' || card.dataset.category === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
+    document.querySelector('.visually-hidden[tabindex="0"]').addEventListener('blur', function() {
+      this.style.position = 'absolute';
+      this.style.height = '1px';
+      this.style.width = '1px';
+      this.style.background = 'none';
+      this.style.color = 'inherit';
+      this.style.padding = '0';
+      this.style.borderRadius = '0';
+      this.style.zIndex = 'auto';
+    });
+    // Card reveal on scroll (Intersection Observer)
+    const revealCards = document.querySelectorAll('.course-card.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealCards.forEach(card => observer.observe(card));
+    // Filtering logic
+    const courseCards = document.querySelectorAll(".course-card");
+    const searchInput = document.getElementById("search");
+    const filterButtons = document.querySelectorAll(".category-filters button");
+    // Filter by category
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        filterButtons.forEach(b => b.setAttribute('aria-selected', 'false'));
+        btn.setAttribute('aria-selected', 'true');
+        const cat = btn.dataset.category;
+        let anyVisible = false;
+        courseCards.forEach(card => {
+          const show = (cat === "all" || card.dataset.category === cat);
+          card.style.display = show ? "flex" : "none";
+          if (show) anyVisible = true;
         });
+        document.getElementById('emptyState').style.display = anyVisible ? 'none' : 'block';
       });
     });
-
-    function toggleTheme() {
-      const root = document.documentElement;
-      const isDark = root.style.getPropertyValue('--dark-bg') === '#1e1b2e';
-
-      if (isDark) {
-        // switch to light mode
-        root.style.setProperty('--dark-bg', '#f9fafb');
-        root.style.setProperty('--text-light', '#1e1b2e');
-        root.style.setProperty('--card-bg', '#ffffff');
-        root.style.setProperty('--glass', 'rgba(0,0,0,0.06)');
-        root.style.setProperty('--border-color', '#e2e2e2');
+    // Filter by search input
+    searchInput.addEventListener("input", () => {
+      const term = searchInput.value.toLowerCase();
+      let anyVisible = false;
+      courseCards.forEach(card => {
+        const title = card.querySelector("h3").textContent.toLowerCase();
+        const show = title.includes(term);
+        card.style.display = show ? "flex" : "none";
+        if (show) anyVisible = true;
+      });
+      document.getElementById('emptyState').style.display = anyVisible ? 'none' : 'block';
+    });
+    // Favorite save using localStorage
+    function toggleFavorite(el) {
+      const title = el.parentElement.querySelector("h3").textContent;
+      let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      if (el.classList.contains("active")) {
+        el.classList.remove("active");
+        favorites = favorites.filter(item => item !== title);
       } else {
-        // back to dark
-        root.style.setProperty('--dark-bg', '#1e1b2e');
-        root.style.setProperty('--text-light', '#f5f5f5');
-        root.style.setProperty('--card-bg', 'rgba(255,255,255,0.04)');
-        root.style.setProperty('--glass', 'rgba(255,255,255,0.06)');
-        root.style.setProperty('--border-color', 'rgba(255,255,255,0.1)');
+        el.classList.add("active");
+        favorites.push(title);
       }
+      localStorage.setItem("favorites", JSON.stringify(favorites));
     }
+    // Auto-load favorites on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+      courseCards.forEach(card => {
+        const fav = card.querySelector(".favorite");
+        const title = card.querySelector("h3").textContent;
+        if (favorites.includes(title)) {
+          fav.classList.add("active");
+        }
+      });
+    });
+    // Floating Action Button (FAB) click
+    document.getElementById('fab').addEventListener('click', function() {
+      alert('Suggest a Course feature coming soon!');
+    });
   </script>
+  <style>
+    /* Animated card reveal */
+    .course-card.reveal { opacity: 0; transform: translateY(40px) scale(0.98); transition: opacity 0.7s cubic-bezier(.68,-0.55,.27,1.55), transform 0.7s cubic-bezier(.68,-0.55,.27,1.55); }
+    .course-card.reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
+    /* Lottie favorite heart and enroll animation */
+    .favorite .fav-lottie { pointer-events: none; }
+    .enroll-btn { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .enroll-anim { display: inline-flex; align-items: center; }
+    /* User avatar and badge */
+    .course-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 2px 8px rgba(77,222,128,0.10); }
+    .badge { display: inline-block; position: absolute; left: 18px; top: 18px; background: var(--accent2); color: #fff; font-size: 0.92rem; font-weight: 700; padding: 4px 14px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,224,255,0.10); letter-spacing: 0.5px; z-index: 2; animation: badgePop 0.7s cubic-bezier(.68,-0.55,.27,1.55); }
+    @keyframes badgePop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    /* Floating Action Button (FAB) */
+    .fab { position: fixed; bottom: 36px; right: 36px; background: #4ade80; border: none; border-radius: 50%; width: 64px; height: 64px; box-shadow: 0 8px 32px rgba(77,222,128,0.18); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 200; transition: background 0.2s, box-shadow 0.2s, transform 0.18s; animation: fabIn 0.7s cubic-bezier(.68,-0.55,.27,1.55); }
+    .fab:hover, .fab:focus { background: #43c97a; box-shadow: 0 12px 40px rgba(77,222,128,0.22); transform: scale(1.08); }
+    @keyframes fabIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  </style>
 </body>
 </html>
-
-     
