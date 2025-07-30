@@ -3,325 +3,1649 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="SkillWale helps you find your dream job path with AI resume analysis, role matching, and personalized course suggestions." />
-  <link rel="icon" type="image/png" href="/static/favicon.png" />
-  <title>SkillWale – Find Your Dream Role ✨</title>
-  <!-- Fonts + Animation Libraries -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
+  <meta name="description" content="SkillWale - The world's most advanced AI-powered career platform. Transform your career with intelligent resume analysis, personalized job matching, and expert-curated learning paths." />
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
+  <title>SkillWale – Transform Your Career with AI ✨</title>
+  
+  <!-- Fonts + Libraries -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+  
   <style>
     :root {
-      --primary: #4ade80;
-      --secondary: #FFB300;
-      --surface: #f8fafc;
-      --text: #23272f;
-      --subtle: #888fa1;
-      --accent: #00E0FF;
-      --border: #e0e3ea;
-      --glass: rgba(255,255,255,0.85);
-      --shadow: 0 8px 32px 0 rgba(30,32,38,0.10);
-      --radius: 22px;
+      /* Premium Color Palette */
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-dark: #4f46e5;
+      --secondary: #f59e0b;
+      --accent: #06b6d4;
+      --accent-light: #67e8f9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --purple: #8b5cf6;
+      --pink: #ec4899;
+      --orange: #f97316;
+      
+      /* Premium Surfaces */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #111827;
+      --bg-tertiary: #1f2937;
+      --surface: rgba(255, 255, 255, 0.03);
+      --surface-hover: rgba(255, 255, 255, 0.08);
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-strong: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      
+      /* Premium Text */
+      --text-primary: #ffffff;
+      --text-secondary: #e5e7eb;
+      --text-muted: #9ca3af;
+      --text-subtle: #6b7280;
+      
+      /* Premium Effects */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.4);
+      --shadow-glow-strong: 0 0 60px rgba(99, 102, 241, 0.6);
+      --blur: blur(20px);
+      --blur-strong: blur(40px);
+      --radius: 20px;
+      --radius-lg: 28px;
+      --radius-xl: 36px;
+      --radius-2xl: 48px;
+      
+      /* Premium Animations */
+      --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-    body {
-      background: var(--surface);
-      color: var(--text);
-      font-family: 'Montserrat', Arial, sans-serif;
+
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.6;
-      font-size: 1.05rem;
       overflow-x: hidden;
+      scroll-behavior: smooth;
+      cursor: none;
     }
-    /* Animated SVG Background */
-    .svg-bg {
-      position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;
-      pointer-events:none;
+
+    /* Custom Cursor */
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease;
     }
-    .svg-bg circle, .svg-bg rect, .svg-bg polygon {
-      animation-fill-mode: forwards;
+
+    .cursor-follower {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(99, 102, 241, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: all 0.3s ease;
     }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    /* Glassy Navbar */
+
+    /* Premium Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, var(--bg-primary) 0%, #0f172a 50%, var(--bg-primary) 100%);
+      animation: backgroundShift 30s ease-in-out infinite;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { transform: scale(1) rotate(0deg); filter: hue-rotate(0deg); }
+      33% { transform: scale(1.05) rotate(1deg); filter: hue-rotate(60deg); }
+      66% { transform: scale(0.95) rotate(-1deg); filter: hue-rotate(120deg); }
+    }
+
+    /* 3D Floating Elements */
+    .floating-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .floating-element {
+      position: absolute;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      33% { transform: translateY(-30px) rotate(120deg) scale(1.1); }
+      66% { transform: translateY(15px) rotate(240deg) scale(0.9); }
+    }
+
+    /* Premium Navigation */
     .navbar {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 40px;
-      background: rgba(255,255,255,0.85);
-      border-bottom: 1.5px solid #e0e3ea;
-      box-shadow: 0 2px 12px rgba(30,32,38,0.04);
-      backdrop-filter: blur(10px);
-      animation: fadeInDown 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1.5rem 3rem;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--glass-border);
+      transition: var(--transition);
     }
-    .navbar-logo { display: flex; align-items: center; gap: 12px; }
-    .navbar-logo-img { width: 38px; height: 38px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px #0001; }
-    .navbar-logo-text { font-size: 1.5rem; font-weight: 900; color: #4ade80; letter-spacing: 1.1px; }
-    .navbar-links { display: flex; gap: 28px; }
-    .nav-link { color: #888fa1; text-decoration: none; font-weight: 600; font-size: 1.08rem; padding-bottom: 2px; border-bottom: 2px solid transparent; transition: color .2s, border .2s; position: relative; }
-    .nav-link:hover, .nav-link.active { color: #00E0FF; border-bottom: 2px solid #4ade80; }
-    .nav-cta { color: #fff; background: linear-gradient(90deg, #4ade80, #00E0FF); border-radius: 18px; padding: 8px 22px; margin-left: 12px; box-shadow: 0 2px 8px #4ade8033; border: none; transition: background 0.2s, color 0.2s; }
-    .nav-cta:hover { background: linear-gradient(90deg, #00E0FF, #4ade80); color: #fff; }
-    @media (max-width: 700px) { .navbar { flex-direction: column; padding: 10px 8vw; } .navbar-links { gap: 12px; flex-wrap: wrap; } .navbar-logo-text { font-size: 1.1rem; } }
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      padding: 120px 24px 40px;
-      background: none;
-      position: relative;
-      z-index: 2;
-      max-width: 700px;
+
+    .navbar.scrolled {
+      background: rgba(10, 10, 15, 0.95);
+      box-shadow: var(--shadow-2xl);
+      padding: 1rem 3rem;
+    }
+
+    .nav-container {
+      max-width: 1400px;
       margin: 0 auto;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      background: var(--glass);
-      backdrop-filter: blur(8px);
-      animation: fadeInUp 1.2s cubic-bezier(.68,-0.55,.27,1.55);
-    }
-    .hero lottie-player { margin: 0 auto 24px auto; width: 180px; height: 180px; display: block; }
-    .hero h1 {
-      font-size:2.8rem;
-      font-weight:900;
-      color:#4ade80;
-      letter-spacing:1.2px;
-      margin-bottom: 0.5rem;
       display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
     }
-    .hero .word {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: wordIn 0.7s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.75rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: var(--transition-bounce);
+      font-family: 'Playfair Display', serif;
     }
-    .hero .word:nth-child(1) { animation-delay: 0.1s; }
-    .hero .word:nth-child(2) { animation-delay: 0.3s; }
-    .hero .word:nth-child(3) { animation-delay: 0.5s; }
-    .hero .word:nth-child(4) { animation-delay: 0.7s; }
-    @keyframes wordIn {
-      to { opacity: 1; transform: translateY(0);}
+
+    .logo:hover {
+      transform: scale(1.05) rotate(-2deg);
     }
-    .typewriter {
-      font-size:1.2rem;
-      color:#888fa1;
-      max-width:720px;
-      margin:0 auto 24px auto;
-      font-weight:500;
-      min-height: 1.5em;
-      border-right: 2px solid #4ade80;
-      white-space: nowrap;
-      overflow: hidden;
-      animation: typing 2.5s steps(40, end), blink-caret .75s step-end infinite;
-    }
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-    @keyframes blink-caret {
-      from, to { border-color: transparent }
-      50% { border-color: #4ade80; }
-    }
-    .cta {
-      padding: 14px 40px;
-      border: none;
-      border-radius: 24px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #4ade80, #00E0FF);
-      color: #fff;
-      box-shadow: 0 2px 8px #4ade8033;
-      transition: background .2s, box-shadow .2s, transform .2s;
-      cursor: pointer;
-      display: inline-flex;
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--purple));
+      border-radius: var(--radius);
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      font-size: 1.5rem;
+      box-shadow: var(--shadow-glow);
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-lg);
+      transition: var(--transition);
       position: relative;
       overflow: hidden;
     }
-    .cta:after {
+
+    .nav-link::before {
       content: '';
       position: absolute;
-      left: 50%; top: 50%;
-      width: 0; height: 0;
-      background: rgba(0,224,255,0.15);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.4s, height 0.4s;
-      z-index: 0;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.6s;
     }
-    .cta:active:after {
-      width: 200px; height: 200px;
-      transition: width 0.2s, height 0.2s;
+
+    .nav-link:hover::before {
+      left: 100%;
     }
-    .cta:hover { background: linear-gradient(90deg, #00E0FF, #4ade80); box-shadow: 0 4px 16px #00E0FF22; transform: translateY(-2px) scale(1.03); }
-    @media (max-width: 700px) { .hero { padding: 60px 8px 20px; } .cta { padding: 10px 20px; font-size: 1rem; } }
-    /* Features Section */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 32px;
-      padding: 48px 24px;
-      background: var(--glass);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin: 40px 0;
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text-primary);
+      background: var(--glass-strong);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
     }
-    .feature-card {
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 32px 24px;
-      border: 1px solid var(--border);
-      box-shadow: 0 1px 4px rgba(77,222,128,0.03);
-      transition: box-shadow .2s, transform .2s;
-      opacity: 0; transform: translateY(40px) scale(0.98); transition: opacity 0.7s cubic-bezier(.68,-0.55,.27,1.55), transform 0.7s cubic-bezier(.68,-0.55,.27,1.55);
-      display: flex; flex-direction: column; align-items: center;
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--primary), var(--purple), var(--pink));
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: var(--radius-xl);
+      font-weight: 700;
+      text-decoration: none;
+      transition: var(--transition-bounce);
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--purple), var(--pink), var(--orange));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .nav-cta:hover::before {
+      opacity: 1;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: var(--shadow-glow-strong);
+    }
+
+    /* Premium Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 30% 70%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(6, 182, 212, 0.2) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .hero-content {
+      max-width: 1000px;
+      z-index: 2;
       position: relative;
     }
-    .feature-card.visible {
-      opacity: 1; transform: translateY(0) scale(1);
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--glass-strong);
+      border: 1px solid var(--glass-border);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-2xl);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      backdrop-filter: var(--blur);
+      animation: fadeInUp 1s ease-out;
+      box-shadow: var(--shadow-xl);
     }
+
+    .hero-title {
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-light), var(--accent-light), var(--purple));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fadeInUp 1s ease-out 0.2s both;
+      font-family: 'Playfair Display', serif;
+      text-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 1s ease-out 0.4s both;
+      line-height: 1.7;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-direction: column;
+      sm:flex-direction: row;
+      gap: 1.5rem;
+      justify-content: center;
+      align-items: center;
+      animation: fadeInUp 1s ease-out 0.6s both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.25rem 2.5rem;
+      border-radius: var(--radius-xl);
+      font-weight: 700;
+      text-decoration: none;
+      transition: var(--transition-bounce);
+      cursor: pointer;
+      border: none;
+      font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--purple), var(--pink));
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--purple), var(--pink), var(--orange));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .btn-primary:hover::before {
+      opacity: 1;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: var(--shadow-glow-strong);
+    }
+
+    .btn-secondary {
+      background: var(--glass-strong);
+      color: var(--text-primary);
+      border: 2px solid var(--glass-border);
+      backdrop-filter: var(--blur);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-hover);
+      transform: translateY(-4px) scale(1.05);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-xl);
+    }
+
+    /* Premium Features Section */
+    .features {
+      padding: 10rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 6rem;
+    }
+
+    .section-badge {
+      display: inline-block;
+      background: var(--glass-strong);
+      border: 1px solid var(--glass-border);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-2xl);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      backdrop-filter: var(--blur);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .section-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-light), var(--accent));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .section-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 3rem;
+      margin-top: 6rem;
+    }
+
+    .feature-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      backdrop-filter: var(--blur);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(6, 182, 212, 0.05));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
     .feature-card:hover {
-      box-shadow: 0 4px 16px rgba(77,222,128,0.08);
-      transform: translateY(-4px) scale(1.01);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-2xl);
       border-color: var(--primary);
     }
-    .feature-card h3 {
-      font-size: 1.2rem;
-      color: var(--primary);
-      margin-bottom: 10px;
-      font-weight: 700;
-      display: flex; align-items: center; gap: 8px;
+
+    .feature-card:hover::before,
+    .feature-card:hover::after {
+      opacity: 1;
     }
-    .feature-card p {
-      color: var(--subtle);
-      font-size: 1rem;
-      font-weight: 500;
-      text-align: center;
-    }
+
     .feature-icon {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 48px; height: 48px;
-      margin-bottom: 10px;
-      animation: floatHero 3s ease-in-out infinite alternate;
-    }
-    @keyframes floatHero {
-      0% { transform: translateY(0);}
-      100% { transform: translateY(-12px);}
-    }
-    h2 {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--purple));
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 2rem;
-      color: var(--primary);
-      font-weight: 900;
-      margin-bottom: 32px;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-glow);
+      animation: iconFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .feature-description {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
+
+    /* Premium Stats Section */
+    .stats {
+      padding: 8rem 3rem;
+      background: var(--glass);
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+      backdrop-filter: var(--blur-strong);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .stats-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 4rem;
       text-align: center;
     }
-    /* ... (other sections as in your original, but with similar animation and graphical upgrades) ... */
-    /* Responsive tweaks */
-    @media (max-width: 900px) {
-      .container { padding: 0 10px; }
-      .features { padding: 32px 4px; }
+
+    .stat-item {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: var(--transition-slow);
+      padding: 2rem;
+      border-radius: var(--radius-xl);
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: var(--blur);
     }
-    @media (max-width: 600px) {
-      .features { grid-template-columns: 1fr; gap: 18px; }
-      .feature-card { padding: 18px 10px; }
+
+    .stat-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stat-number {
+      font-size: 4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--purple));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .stat-label {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Premium Testimonials */
+    .testimonials {
+      padding: 10rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 3rem;
+      margin-top: 6rem;
+    }
+
+    .testimonial-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      backdrop-filter: var(--blur);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 1rem;
+      left: 2rem;
+      font-size: 6rem;
+      color: var(--primary);
+      opacity: 0.2;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-2xl);
+      border-color: var(--primary);
+    }
+
+    .testimonial-content {
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      font-style: italic;
+      position: relative;
+      z-index: 2;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .author-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .author-info h4 {
+      color: var(--text-primary);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .author-info p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Premium CTA Section */
+    .cta-section {
+      padding: 10rem 3rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary), var(--purple), var(--pink));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+      animation: ctaShift 20s ease-in-out infinite;
+    }
+
+    @keyframes ctaShift {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(2deg); }
+    }
+
+    .cta-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      color: white;
+      margin-bottom: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+
+    .cta-subtitle {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+
+    /* Premium Footer */
+    .footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--glass-border);
+      padding: 6rem 3rem 3rem;
+      position: relative;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 4rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-section h3 {
+      color: var(--text-primary);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+      transform: translateX(5px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--glass-border);
+      padding-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Premium Scroll Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(80px);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Premium Loading Animation */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 1s ease-out;
+    }
+
+    .loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-content {
+      text-align: center;
+    }
+
+    .loading-spinner {
+      width: 80px;
+      height: 80px;
+      border: 4px solid var(--surface);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 2rem;
+    }
+
+    .loading-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .loading-subtext {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 1rem;
+        min-height: 90vh;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+      }
+
+      .features,
+      .testimonials {
+        padding: 6rem 1.5rem;
+      }
+
+      .features-grid,
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .stats {
+        padding: 6rem 1.5rem;
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+      }
+
+      .cta-section {
+        padding: 6rem 1.5rem;
+      }
+
+      .footer {
+        padding: 4rem 1.5rem 2rem;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+
+    /* Premium Micro-interactions */
+    .interactive {
+      transition: var(--transition-bounce);
+    }
+
+    .interactive:hover {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .glow-on-hover {
+      transition: var(--transition);
+    }
+
+    .glow-on-hover:hover {
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Premium Particle System */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: particleFloat 8s ease-in-out infinite;
+    }
+
+    @keyframes particleFloat {
+      0%, 100% { 
+        transform: translateY(0px) translateX(0px) rotate(0deg); 
+        opacity: 0.3; 
+      }
+      33% { 
+        transform: translateY(-40px) translateX(20px) rotate(120deg); 
+        opacity: 0.6; 
+      }
+      66% { 
+        transform: translateY(20px) translateX(-20px) rotate(240deg); 
+        opacity: 0.4; 
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Animated SVG Background -->
-  <svg class="svg-bg" width="100vw" height="100vh">
-    <circle cx="15%" cy="20%" r="80" fill="#4ade80" opacity="0.09">
-      <animate attributeName="cy" values="20%;30%;20%" dur="8s" repeatCount="indefinite"/>
-    </circle>
-    <rect x="80%" y="70%" width="120" height="120" fill="#00E0FF" opacity="0.07">
-      <animate attributeName="x" values="80%;85%;80%" dur="10s" repeatCount="indefinite"/>
-    </rect>
-    <polygon points="190,250 220,280 160,280" fill="#FFB300" opacity="0.07">
-      <animateTransform attributeName="transform" type="rotate" from="0 190 250" to="360 190 250" dur="12s" repeatCount="indefinite"/>
-    </polygon>
-  </svg>
-  <!-- Glassy Navbar -->
-  <header class="navbar">
-    <div class="navbar-logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="SkillWale Logo" class="navbar-logo-img"/>
-      <span class="navbar-logo-text">Skill<span style="color:#00E0FF;">Wale</span></span>
+  <!-- Premium Loading Screen -->
+  <div class="loading" id="loading">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">SkillWale</div>
+      <div class="loading-subtext">Preparing your premium experience...</div>
     </div>
-    <nav class="navbar-links">
-      <a href="#features" class="nav-link">Features</a>
-      <a href="#how" class="nav-link">How it Works</a>
-      <a href="#testimonials" class="nav-link">Testimonials</a>
-      <a href="#faq" class="nav-link">FAQ</a>
-      <a href="#contact" class="nav-link">Contact</a>
-      <a href="/login" class="nav-link nav-cta">Login</a>
-    </nav>
-  </header>
-  <!-- Hero Section -->
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- Premium Background Animation -->
+  <div class="bg-animation"></div>
+  
+  <!-- 3D Floating Elements -->
+  <div class="floating-elements" id="floatingElements"></div>
+  
+  <!-- Premium Particle System -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Premium Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">🚀</div>
+        <span>SkillWale</span>
+      </a>
+      
+      <ul class="nav-links">
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#how-it-works" class="nav-link">How it Works</a></li>
+        <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+        <li><a href="#pricing" class="nav-link">Pricing</a></li>
+        <li><a href="/upload" class="nav-cta">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Premium Hero Section -->
   <section class="hero">
-    <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_8wREpI.json"
-      background="transparent" speed="1.2" style="width: 180px; height: 180px; margin: 0 auto 24px auto;" loop autoplay></lottie-player>
-    <h1>
-      <span class="word">Discover</span>
-      <span class="word">Your</span>
-      <span class="word">Career</span>
-      <span class="word">Path</span>
-    </h1>
-    <p class="typewriter">AI-powered resume analysis, role matching, and personalized course suggestions.</p>
-    <button class="cta" onclick="window.location.href='/upload'">Get Started</button>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>✨</span>
+        <span>AI-Powered Career Transformation Platform</span>
+      </div>
+      
+      <h1 class="hero-title">
+        Transform Your Career with Intelligent AI
+      </h1>
+      
+      <p class="hero-subtitle">
+        Discover your perfect career path with advanced AI resume analysis, personalized job matching, and expert-curated learning recommendations that accelerate your professional growth.
+      </p>
+      
+      <div class="hero-cta">
+        <a href="/upload" class="btn btn-primary interactive">
+          <span>Start Your Journey</span>
+          <span>→</span>
+        </a>
+        <a href="#features" class="btn btn-secondary interactive">
+          <span>Explore Features</span>
+        </a>
+      </div>
+    </div>
   </section>
-  <!-- Features Section -->
+
+  <!-- Premium Stats Section -->
+  <section class="stats">
+    <div class="stats-container">
+      <div class="stat-item scroll-reveal">
+        <div class="stat-number" data-count="100000">0</div>
+        <div class="stat-label">Careers Transformed</div>
+      </div>
+      <div class="stat-item scroll-reveal">
+        <div class="stat-number" data-count="98">0</div>
+        <div class="stat-label">% Success Rate</div>
+      </div>
+      <div class="stat-item scroll-reveal">
+        <div class="stat-number" data-count="2500">0</div>
+        <div class="stat-label">Partner Companies</div>
+      </div>
+      <div class="stat-item scroll-reveal">
+        <div class="stat-number" data-count="12">0</div>
+        <div class="stat-label">Hours Average Job Hunt</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Premium Features Section -->
   <section class="features" id="features">
-    <div class="feature-card">
-      <div class="feature-icon">
-        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_4kx2q32n.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
-      </div>
-      <h3>AI Matching</h3>
-      <p>Match your resume with top global job roles using advanced AI analysis.</p>
+    <div class="section-header scroll-reveal">
+      <div class="section-badge">Premium Features</div>
+      <h2 class="section-title">Revolutionary AI-Driven Tools</h2>
+      <p class="section-subtitle">
+        Experience the future of career development with our cutting-edge AI technology designed to accelerate your professional success.
+      </p>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+    
+    <div class="features-grid">
+      <div class="feature-card scroll-reveal interactive glow-on-hover">
+        <div class="feature-icon">🧠</div>
+        <h3 class="feature-title">Advanced AI Resume Analysis</h3>
+        <p class="feature-description">
+          Our sophisticated AI analyzes your resume against industry standards, ATS requirements, and market trends to provide actionable insights that dramatically improve your chances of landing interviews.
+        </p>
       </div>
-      <h3>Interactive Scoreboards</h3>
-      <p>Visualize your match percentage, missing skills, and feedback in clear dashboards.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+      
+      <div class="feature-card scroll-reveal interactive glow-on-hover">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">Intelligent Job Matching</h3>
+        <p class="feature-description">
+          Get matched with highly relevant job opportunities using our proprietary algorithm that considers your skills, experience, career aspirations, and personality traits for perfect alignment.
+        </p>
       </div>
-      <h3>Tailored Courses</h3>
-      <p>Get top-rated course recommendations to close your skill gaps.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">
-        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_3vbOcw.json" background="transparent" speed="1" style="width: 48px; height: 48px;" loop autoplay></lottie-player>
+      
+      <div class="feature-card scroll-reveal interactive glow-on-hover">
+        <div class="feature-icon">📚</div>
+        <h3 class="feature-title">Personalized Learning Paths</h3>
+        <p class="feature-description">
+          Receive expertly curated course recommendations from top platforms, tailored to bridge your specific skill gaps and accelerate your career progression in your chosen field.
+        </p>
       </div>
-      <h3>Real Job Descriptions</h3>
-      <p>Resume matches are compared against actual job descriptions from real companies.</p>
+      
+      <div class="feature-card scroll-reveal interactive glow-on-hover">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Deep Career Insights</h3>
+        <p class="feature-description">
+          Access comprehensive analytics about your career trajectory, market positioning, salary benchmarks, and growth opportunities with detailed visualizations and actionable recommendations.
+        </p>
+      </div>
+      
+      <div class="feature-card scroll-reveal interactive glow-on-hover">
+        <div class="feature-icon">🤝</div>
+        <h3 class="feature-title">AI Interview Preparation</h3>
+        <p class="feature-description">
+          Master your interviews with AI-generated questions, personalized coaching tips, and mock interview sessions tailored to your target roles and specific companies.
+        </p>
+      </div>
+      
+      <div class="feature-card scroll-reveal interactive glow-on-hover">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Real-time Market Intelligence</h3>
+        <p class="feature-description">
+          Stay ahead with live updates on job market trends, emerging skills demand, salary fluctuations, and industry insights that keep you competitive in your field.
+        </p>
+      </div>
     </div>
   </section>
-  <!-- (Continue with animated How it Works, Testimonials, Partners, Newsletter, Footer, FAB, etc. as described above) -->
+
+  <!-- Premium Testimonials Section -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-header scroll-reveal">
+      <div class="section-badge">Success Stories</div>
+      <h2 class="section-title">Loved by Industry Leaders</h2>
+      <p class="section-subtitle">
+        Join thousands of professionals who have transformed their careers and achieved remarkable success with SkillWale's AI-powered platform.
+      </p>
+    </div>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card scroll-reveal interactive">
+        <div class="testimonial-content">
+          SkillWale's AI analysis revealed critical gaps I never knew existed. The personalized learning path was spot-on, and within 6 weeks, I landed my dream role at Google with a 40% salary increase!
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">SC</div>
+          <div class="author-info">
+            <h4>Sarah Chen</h4>
+            <p>Senior Software Engineer at Google</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card scroll-reveal interactive">
+        <div class="testimonial-content">
+          The career insights were game-changing. SkillWale helped me transition from marketing to data science seamlessly. The AI recommendations were incredibly accurate and the results speak for themselves.
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">MR</div>
+          <div class="author-info">
+            <h4>Michael Rodriguez</h4>
+            <p>Lead Data Scientist at Netflix</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card scroll-reveal interactive">
+        <div class="testimonial-content">
+          As a career changer, SkillWale gave me the confidence and roadmap I desperately needed. The platform's intelligence is unmatched - now I'm thriving as a Product Manager at a unicorn startup!
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">AP</div>
+          <div class="author-info">
+            <h4>Aisha Patel</h4>
+            <p>Senior Product Manager at Stripe</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Premium CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content scroll-reveal">
+      <h2 class="cta-title">Ready to Transform Your Career?</h2>
+      <p class="cta-subtitle">
+        Join over 100,000 professionals who have accelerated their careers and achieved remarkable success with SkillWale's revolutionary AI platform.
+      </p>
+      <a href="/upload" class="btn btn-secondary interactive" style="background: rgba(255, 255, 255, 0.2); color: white; border-color: rgba(255, 255, 255, 0.3);">
+        <span>Start Free Analysis</span>
+        <span>→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Premium Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h3>SkillWale</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7;">
+            Empowering careers through revolutionary AI-driven insights, personalized recommendations, and cutting-edge technology that transforms professional journeys.
+          </p>
+          <div style="display: flex; gap: 1.5rem;">
+            <a href="#" style="color: var(--text-secondary); font-size: 1.5rem; transition: var(--transition);">📧</a>
+            <a href="#" style="color: var(--text-secondary); font-size: 1.5rem; transition: var(--transition);">🐦</a>
+            <a href="#" style="color: var(--text-secondary); font-size: 1.5rem; transition: var(--transition);">💼</a>
+            <a href="#" style="color: var(--text-secondary); font-size: 1.5rem; transition: var(--transition);">📱</a>
+          </div>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Premium Features</h3>
+          <ul class="footer-links">
+            <li><a href="/upload">AI Resume Analysis</a></li>
+            <li><a href="/courses">Learning Paths</a></li>
+            <li><a href="#features">Career Insights</a></li>
+            <li><a href="#pricing">Interview Prep</a></li>
+            <li><a href="#api">API Access</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/about">About SkillWale</a></li>
+            <li><a href="#careers">Join Our Team</a></li>
+            <li><a href="#blog">Success Stories</a></li>
+            <li><a href="#press">Press & Media</a></li>
+            <li><a href="#investors">Investors</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Support & Legal</h3>
+          <ul class="footer-links">
+            <li><a href="#help">Help Center</a></li>
+            <li><a href="#privacy">Privacy Policy</a></li>
+            <li><a href="#terms">Terms of Service</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#accessibility">Accessibility</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2025 SkillWale Technologies Inc. All rights reserved. Built with ❤️ and cutting-edge AI for career transformation.</p>
+      </div>
+    </div>
+  </footer>
+
   <script>
-    // Feature card entrance animation
-    window.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.feature-card').forEach((card, i) => {
-        setTimeout(() => card.classList.add('visible'), 200 + i * 120);
-      });
-      // Animate headline words
-      document.querySelectorAll('.hero .word').forEach((el, i) => {
-        setTimeout(() => el.style.opacity = 1, 200 + i * 200);
-      });
+    // Premium Loading Screen with Enhanced Animation
+    window.addEventListener('load', () => {
+      const loading = document.getElementById('loading');
+      setTimeout(() => {
+        loading.classList.add('hidden');
+        initializePremiumFeatures();
+      }, 2000);
     });
-    // Parallax effect for hero SVG background
-    const svgBg = document.querySelector('.svg-bg');
-    if (svgBg) {
-      window.addEventListener('mousemove', e => {
-        const x = e.clientX / window.innerWidth - 0.5;
-        const y = e.clientY / window.innerHeight - 0.5;
-        svgBg.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+
+    // Custom Cursor System
+    function initCustomCursor() {
+      const cursor = document.getElementById('cursor');
+      const cursorFollower = document.getElementById('cursorFollower');
+      
+      let mouseX = 0, mouseY = 0;
+      let followerX = 0, followerY = 0;
+      
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+      });
+      
+      // Smooth follower animation
+      function animateFollower() {
+        followerX += (mouseX - followerX) * 0.1;
+        followerY += (mouseY - followerY) * 0.1;
+        
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+        
+        requestAnimationFrame(animateFollower);
+      }
+      animateFollower();
+      
+      // Interactive elements
+      document.querySelectorAll('a, button, .interactive').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.style.transform = 'scale(1.5)';
+          cursorFollower.style.transform = 'scale(1.5)';
+        });
+        
+        el.addEventListener('mouseleave', () => {
+          cursor.style.transform = 'scale(1)';
+          cursorFollower.style.transform = 'scale(1)';
+        });
       });
     }
+
+    // Premium Floating Elements
+    function createFloatingElements() {
+      const container = document.getElementById('floatingElements');
+      const elementCount = 15;
+      
+      for (let i = 0; i < elementCount; i++) {
+        const element = document.createElement('div');
+        element.className = 'floating-element';
+        
+        const size = Math.random() * 60 + 20;
+        element.style.width = size + 'px';
+        element.style.height = size + 'px';
+        element.style.left = Math.random() * 100 + '%';
+        element.style.top = Math.random() * 100 + '%';
+        element.style.animationDelay = Math.random() * 6 + 's';
+        element.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        
+        container.appendChild(element);
+      }
+    }
+
+    // Premium Particle System
+    function createParticleSystem() {
+      const particles = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 4 + 2;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 8 + 's';
+        particle.style.animationDuration = (Math.random() * 6 + 6) + 's';
+        
+        particles.appendChild(particle);
+      }
+    }
+
+    // Premium Navbar Scroll Effect
+    function handleNavbarScroll() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }
+
+    // Premium Scroll Reveal Animation with GSAP
+    function initScrollAnimations() {
+      gsap.registerPlugin(ScrollTrigger);
+      
+      // Animate sections
+      gsap.utils.toArray('.scroll-reveal').forEach((element) => {
+        gsap.fromTo(element, 
+          {
+            opacity: 0,
+            y: 100,
+            scale: 0.9
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: element,
+              start: "top 80%",
+              end: "bottom 20%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      });
+      
+      // Animate feature cards with stagger
+      gsap.fromTo('.feature-card', 
+        {
+          opacity: 0,
+          y: 80,
+          rotationX: 45
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationX: 0,
+          duration: 1,
+          stagger: 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: '.features-grid',
+            start: "top 70%"
+          }
+        }
+      );
+    }
+
+    // Premium Counter Animation
+    function animateCounters() {
+      const counters = document.querySelectorAll('[data-count]');
+      
+      counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-count'));
+        
+        gsap.fromTo(counter, 
+          { textContent: 0 },
+          {
+            textContent: target,
+            duration: 2.5,
+            ease: "power2.out",
+            snap: { textContent: 1 },
+            scrollTrigger: {
+              trigger: counter,
+              start: "top 80%",
+              toggleActions: "play none none none"
+            },
+            onUpdate: function() {
+              counter.textContent = Math.ceil(counter.textContent);
+            }
+          }
+        );
+      });
+    }
+
+    // Premium Smooth Scrolling
+    function initSmoothScrolling() {
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            gsap.to(window, {
+              duration: 1.5,
+              scrollTo: target,
+              ease: "power3.inOut"
+            });
+          }
+        });
+      });
+    }
+
+    // Premium Confetti Effects
+    function triggerPremiumConfetti() {
+      const colors = ['#6366f1', '#06b6d4', '#f59e0b', '#8b5cf6', '#ec4899'];
+      
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: colors,
+        shapes: ['star', 'circle'],
+        gravity: 0.8,
+        drift: 0.1
+      });
+      
+      // Secondary burst
+      setTimeout(() => {
+        confetti({
+          particleCount: 100,
+          spread: 60,
+          origin: { y: 0.7 },
+          colors: colors,
+          startVelocity: 45
+        });
+      }, 300);
+    }
+
+    // Premium Parallax Effects
+    function initParallaxEffects() {
+      gsap.utils.toArray('.feature-icon').forEach((icon) => {
+        gsap.to(icon, {
+          y: -50,
+          scrollTrigger: {
+            trigger: icon,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+          }
+        });
+      });
+    }
+
+    // Premium Interactive Hover Effects
+    function initInteractiveEffects() {
+      document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          gsap.to(card, {
+            y: -12,
+            scale: 1.03,
+            rotationY: 5,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, {
+            y: 0,
+            scale: 1,
+            rotationY: 0,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        });
+      });
+    }
+
+    // Initialize All Premium Features
+    function initializePremiumFeatures() {
+      initCustomCursor();
+      createFloatingElements();
+      createParticleSystem();
+      initScrollAnimations();
+      animateCounters();
+      initSmoothScrolling();
+      initParallaxEffects();
+      initInteractiveEffects();
+      
+      // Add scroll event listeners
+      window.addEventListener('scroll', handleNavbarScroll);
+      
+      // Add click effects to CTA buttons
+      document.querySelectorAll('.btn-primary').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          if (!btn.href || btn.href.includes('#')) {
+            e.preventDefault();
+          }
+          triggerPremiumConfetti();
+        });
+      });
+      
+      // Add premium loading states
+      document.querySelectorAll('a[href="/upload"]').forEach(link => {
+        link.addEventListener('click', () => {
+          triggerPremiumConfetti();
+        });
+      });
+    }
+
+    // Premium Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        // Close any modals or overlays
+      }
+      if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        // Open search or command palette
+      }
+    });
+
+    // Premium Performance Monitoring
+    function monitorPerformance() {
+      if ('performance' in window) {
+        window.addEventListener('load', () => {
+          const perfData = performance.getEntriesByType('navigation')[0];
+          console.log('Premium SkillWale loaded in:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+        });
+      }
+    }
+
+    // Initialize everything when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      monitorPerformance();
+      
+      // Add premium class to body for enhanced styling
+      document.body.classList.add('premium-experience');
+      
+      // Initialize scroll reveal for initial elements
+      setTimeout(() => {
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+          if (el.getBoundingClientRect().top < window.innerHeight) {
+            el.classList.add('revealed');
+          }
+        });
+      }, 500);
+    });
+
+    // Premium Error Handling
+    window.addEventListener('error', (e) => {
+      console.error('Premium SkillWale Error:', e.error);
+      // Could send to analytics service
+    });
+
+    // Premium Analytics (placeholder)
+    function trackPremiumEvent(eventName, properties = {}) {
+      console.log('Premium Event:', eventName, properties);
+      // Integration with analytics service would go here
+    }
+
+    // Track premium interactions
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('.btn-primary')) {
+        trackPremiumEvent('cta_clicked', { button: e.target.textContent });
+      }
+    });
   </script>
 </body>
 </html>

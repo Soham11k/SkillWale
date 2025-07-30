@@ -3,547 +3,1072 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SkillWale Courses – Level Up Your Skills</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet" />
+  <title>Courses | SkillWale - AI-Powered Learning Paths</title>
+  
+  <!-- Fonts & Libraries -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
   <style>
     :root {
-      --bg: #f8fafc;
-      --card: rgba(255,255,255,0.85);
-      --card-dark: rgba(30,32,38,0.85);
-      --text: #23272f;
-      --text-dark: #f8fafc;
-      --subtle: #888fa1;
-      --accent: #4ade80;
-      --accent2: #00E0FF;
-      --yellow: #FFB300;
-      --shadow: 0 8px 32px 0 rgba(30,32,38,0.10);
-      --shadow-dark: 0 8px 32px 0 rgba(0,0,0,0.32);
-      --radius: 22px;
-      --chip-bg: #f4f8fb;
-      --chip-bg-active: #4ade80;
-      --chip-text: #23272f;
-      --chip-text-active: #fff;
-      --progress-bg: #e0e3ea;
-      --progress-fg: linear-gradient(90deg, #4ade80, #00E0FF);
-      --favorite: #ff3860;
-      --favorite-inactive: #00E0FF;
+      /* Modern Color Palette */
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-dark: #4f46e5;
+      --secondary: #f59e0b;
+      --accent: #06b6d4;
+      --accent-light: #67e8f9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      
+      /* Surfaces */
+      --bg-primary: #0f0f23;
+      --bg-secondary: #1a1a2e;
+      --bg-tertiary: #16213e;
+      --surface: rgba(255, 255, 255, 0.05);
+      --surface-hover: rgba(255, 255, 255, 0.1);
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      
+      /* Text */
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      
+      /* Effects */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+      --blur: blur(16px);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+      
+      /* Animations */
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    [data-theme="dark"] {
-      --bg: #23272f;
-      --card: var(--card-dark);
-      --text: var(--text-dark);
-      --subtle: #b0b8c9;
-      --chip-bg: #23272f;
-      --chip-bg-active: #4ade80;
-      --chip-text: #f8fafc;
-      --chip-text-active: #23272f;
-      --progress-bg: #353945;
-      --progress-fg: linear-gradient(90deg, #4ade80, #00E0FF);
-    }
-    html, body {
-      min-height: 100vh;
+
+    * {
       margin: 0;
       padding: 0;
-      font-family: 'Montserrat', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      transition: background 0.5s, color 0.5s;
+      box-sizing: border-box;
     }
-    header {
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+    }
+
+    .bg-animation::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+      animation: backgroundShift 20s ease-in-out infinite;
+    }
+
+    @keyframes backgroundShift {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(1deg); }
+    }
+
+    /* Navigation */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      background: rgba(15, 15, 35, 0.8);
+      backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--glass-border);
+      transition: var(--transition);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text-primary);
+      background: var(--surface);
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl), var(--shadow-glow);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 120px 2rem 80px;
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-light), var(--accent-light));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .hero-lottie {
+      width: 200px;
+      height: 200px;
+      margin: 2rem auto;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    /* Search and Filters */
+    .search-section {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+      padding: 0 2rem;
+    }
+
+    .search-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .search-bar {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem 1rem 3rem;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      color: var(--text-primary);
+      font-size: 1rem;
+      backdrop-filter: var(--blur);
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.2rem;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .filter-tab {
+      padding: 0.75rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      color: var(--text-secondary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      backdrop-filter: var(--blur);
+    }
+
+    .filter-tab:hover,
+    .filter-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* Courses Grid */
+    .courses-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .course-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      backdrop-filter: var(--blur);
+      transition: var(--transition);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .course-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary);
+    }
+
+    .course-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .course-image::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      opacity: 0.1;
+    }
+
+    .course-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--success);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .course-content {
+      padding: 1.5rem;
+    }
+
+    .course-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .instructor-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--warning));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .course-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .course-category {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .course-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .stars {
+      color: var(--secondary);
+      font-size: 0.875rem;
+    }
+
+    .rating-text {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .course-progress {
+      margin-bottom: 1rem;
+    }
+
+    .progress-label {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 48px;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 99;
-      box-shadow: 0 2px 12px rgba(30,32,38,0.04);
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
     }
-    .logo {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--text);
-      letter-spacing: 1.2px;
-    }
-    .logo span {
-      color: var(--accent);
-    }
-    nav a {
-      color: var(--subtle);
-      text-decoration: none;
-      margin-left: 32px;
-      font-weight: 500;
-      font-size: 1.08rem;
-      transition: color 0.3s;
-      position: relative;
-    }
-    nav a.active, nav a:hover {
-      color: var(--accent2);
-    }
-    .hero {
-      text-align: center;
-      padding: 80px 24px 20px;
-      background: none;
-    }
-    .hero h1 {
-      font-size: 2.8rem;
-      font-weight: 900;
-      margin-bottom: 12px;
-      color: var(--accent2);
-      letter-spacing: 1.2px;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      color: var(--subtle);
-      max-width: 720px;
-      margin: 0 auto;
-      font-weight: 500;
-    }
-    .hero lottie-player {
-      margin-top: 30px;
-      width: 240px;
-      height: 240px;
-    }
-    .search-bar {
-      margin: 30px auto 0 auto;
-      max-width: 600px;
-      text-align: center;
-    }
-    .search-bar input {
-      width: 100%;
-      padding: 16px 24px;
-      border-radius: 40px;
-      border: none;
-      font-size: 1.08rem;
-      background: var(--card);
-      color: var(--text);
-      outline: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: box-shadow 0.2s;
-    }
-    .search-bar input:focus {
-      box-shadow: 0 0 0 2px var(--accent2);
-    }
-    .category-filters {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin: 32px 0 40px;
-      flex-wrap: wrap;
-    }
-    .category-filters button {
-      padding: 10px 22px;
-      border-radius: 22px;
-      border: none;
-      background: var(--chip-bg);
-      color: var(--chip-text);
-      font-weight: 600;
-      font-size: 1.02rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: 1.5px solid transparent;
-      box-shadow: 0 2px 8px rgba(30,32,38,0.04);
-      outline: none;
-      position: relative;
-    }
-    .category-filters button.active, .category-filters button:focus {
-      background: var(--chip-bg-active);
-      color: var(--chip-text-active);
-      border: 1.5px solid var(--accent2);
-      box-shadow: 0 4px 16px rgba(0,224,255,0.08);
-    }
-    .category-filters button:hover {
-      background: var(--accent2);
-      color: #fff;
-    }
-    .courses-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 40px;
-      padding: 0 60px 80px;
-      margin: 0 auto;
-      max-width: 1400px;
-    }
-    .course-card {
-      background: var(--card);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.10);
-      transition: transform 0.4s, box-shadow 0.3s;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      min-height: 420px;
-      outline: none;
-    }
-    .course-card:focus {
-      box-shadow: 0 0 0 3px var(--accent2);
-    }
-    .course-card:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 12px 30px rgba(0, 224, 255, 0.13);
-    }
-    .course-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      background: #e0e3ea;
-    }
-    .course-info {
-      padding: 24px 20px 20px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex: 1;
-    }
-    .course-info h3 {
-      font-size: 1.22rem;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .course-info .category {
-      font-size: 0.98rem;
-      color: var(--subtle);
-      font-weight: 500;
-    }
-    .rating {
-      font-size: 0.98rem;
-      color: var(--accent2);
-      font-weight: 600;
-    }
+
     .progress-bar {
-      background: var(--progress-bg);
-      height: 9px;
-      border-radius: 20px;
-      margin: 8px 0 0 0;
       width: 100%;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 3px;
       overflow: hidden;
     }
-    .progress-bar div {
-      background: var(--progress-fg);
+
+    .progress-fill {
       height: 100%;
-      border-radius: 20px;
-      transition: width 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 3px;
+      transition: width 0.8s ease;
     }
+
+    .course-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
     .enroll-btn {
-      margin-top: 12px;
-      padding: 12px 0;
-      border-radius: 14px;
-      background: var(--accent);
+      flex: 1;
+      padding: 0.75rem 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
       border: none;
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.05rem;
+      border-radius: var(--radius);
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s, box-shadow 0.2s;
-      box-shadow: 0 2px 8px rgba(77,222,128,0.08);
-      outline: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
-    .enroll-btn:hover, .enroll-btn:focus {
-      background: #43c97a;
-      box-shadow: 0 6px 18px rgba(77,222,128,0.13);
+
+    .enroll-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
     }
-    .favorite {
-      position: absolute;
-      top: 16px;
-      right: 20px;
+
+    .favorite-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .favorite-btn:hover,
+    .favorite-btn.active {
+      background: var(--error);
+      color: white;
+      border-color: var(--error);
+    }
+
+    /* Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none;
+      border-radius: 50%;
+      color: white;
       font-size: 1.5rem;
       cursor: pointer;
-      color: var(--favorite-inactive);
-      transition: transform 0.3s, color 0.3s;
-      user-select: none;
+      box-shadow: var(--shadow-xl);
+      transition: var(--transition);
+      z-index: 999;
     }
-    .favorite.active {
-      color: var(--favorite);
-      transform: scale(1.2);
+
+    .fab:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-xl), var(--shadow-glow);
     }
-    /* Responsive */
-    @media (max-width: 900px) {
-      .courses-grid { padding: 0 10vw 80px; }
-      header { padding: 18px 6vw; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    @media (max-width: 600px) {
-      .courses-grid { grid-template-columns: 1fr; padding: 0 2vw 60px; gap: 24px; }
-      .hero { padding: 48px 8px 10px; }
-      .search-bar { margin: 18px auto 0 auto; }
-      .category-filters { gap: 8px; margin: 18px 0 24px; }
-      .course-card img { height: 140px; }
-      .course-card { min-height: 340px; }
+
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: var(--transition-slow);
     }
-    /* Visually hidden for a11y */
-    .visually-hidden {
-      position: absolute !important;
-      height: 1px; width: 1px;
-      overflow: hidden;
-      clip: rect(1px, 1px, 1px, 1px);
-      white-space: nowrap;
-      border: 0;
-      padding: 0;
-      margin: -1px;
+
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 100px 1rem 60px;
+      }
+
+      .search-section,
+      .courses-section {
+        padding: 0 1rem 2rem;
+      }
+
+      .courses-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .filter-tabs {
+        gap: 0.5rem;
+      }
+
+      .filter-tab {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      .fab {
+        bottom: 1rem;
+        right: 1rem;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
-<body data-theme="light">
-  <header>
-    <div class="logo">Skill<span>Wale</span></div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/upload">Upload</a>
-      <a href="/courses" class="active">Courses</a>
-      <a href="/login">Login</a>
-    </nav>
-  </header>
-  <a href="#main-content" class="visually-hidden" tabindex="0">Skip to main content</a>
-  <section class="hero animate__animated animate__fadeInDown">
-    <h1>Discover the Right Skills 🎓</h1>
-    <p>Get course suggestions based on your AI resume analysis. Learn what recruiters love to see.</p>
-    <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_jtbfg2nb.json" background="transparent" speed="1" loop autoplay></lottie-player>
+<body>
+  <!-- Background Animation -->
+  <div class="bg-animation"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">🚀</div>
+        <span>SkillWale</span>
+      </a>
+      
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="/courses" class="nav-link active">Courses</a></li>
+        <li><a href="/upload" class="nav-link">Upload</a></li>
+        <li><a href="/login" class="nav-cta">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1 class="hero-title">Master New Skills</h1>
+    <p class="hero-subtitle">
+      Discover AI-curated learning paths tailored to your career goals and skill gaps. Learn from industry experts and accelerate your professional growth.
+    </p>
+    <lottie-player 
+      class="hero-lottie"
+      src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" 
+      background="transparent" 
+      speed="1" 
+      loop 
+      autoplay>
+    </lottie-player>
   </section>
-  <div class="search-bar">
-    <input type="text" id="search" placeholder="Search courses e.g. AI, Web, Data..." aria-label="Search courses" />
-  </div>
-  <div class="category-filters" role="tablist" aria-label="Course categories">
-    <button class="active" data-category="all" role="tab" aria-selected="true">All</button>
-    <button data-category="ai" role="tab" aria-selected="false">AI</button>
-    <button data-category="web" role="tab" aria-selected="false">Web</button>
-    <button data-category="data" role="tab" aria-selected="false">Data</button>
-    <button data-category="design" role="tab" aria-selected="false">Design</button>
-  </div>
-  <section class="courses-grid" id="courseContainer" aria-label="Course list">
-    <!-- Example course cards (to be dynamically rendered) -->
-    <div class="course-card reveal" data-category="ai" tabindex="0" aria-label="AI Fundamentals, Category: AI, 4.7 stars, 1.2k reviews">
-      <div class="badge top-pick">Top Pick</div>
-      <img src="https://img.freepik.com/free-vector/artificial-intelligence-brain-background_23-2148898445.jpg" alt="AI Course" />
-      <div class="course-info">
-        <div class="course-header">
-          <img class="avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Instructor avatar" />
-          <h3>AI Fundamentals</h3>
-          <span class="category-icon">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-          </span>
-        </div>
-        <p class="category">Category: AI</p>
-        <div class="rating">⭐ 4.7 (1.2k reviews)</div>
-        <div class="progress-bar" aria-label="Course progress"><div style="width: 80%"></div></div>
-        <button class="enroll-btn">
-          <span>Enroll</span>
-          <span class="enroll-anim">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
-          </span>
-        </button>
-        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
-          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-        </div>
+
+  <!-- Search and Filters -->
+  <section class="search-section">
+    <div class="search-container">
+      <div class="search-bar">
+        <div class="search-icon">🔍</div>
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput"
+          placeholder="Search courses by skill, technology, or topic..."
+        />
+      </div>
+      
+      <div class="filter-tabs">
+        <div class="filter-tab active" data-category="all">All Courses</div>
+        <div class="filter-tab" data-category="ai">AI & Machine Learning</div>
+        <div class="filter-tab" data-category="web">Web Development</div>
+        <div class="filter-tab" data-category="data">Data Science</div>
+        <div class="filter-tab" data-category="design">Design</div>
+        <div class="filter-tab" data-category="business">Business</div>
       </div>
     </div>
-    <div class="course-card reveal" data-category="web" tabindex="0" aria-label="Frontend Mastery, Category: Web, 4.8 stars, 2.3k reviews">
-      <img src="https://img.freepik.com/premium-photo/front-end-development-concept_963843-3362.jpg" alt="Web Dev" />
-      <div class="course-info">
-        <div class="course-header">
-          <img class="avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Instructor avatar" />
-          <h3>Frontend Mastery</h3>
-          <span class="category-icon">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-          </span>
-        </div>
-        <p class="category">Category: Web</p>
-        <div class="rating">⭐ 4.8 (2.3k reviews)</div>
-        <div class="progress-bar" aria-label="Course progress"><div style="width: 65%"></div></div>
-        <button class="enroll-btn">
-          <span>Enroll</span>
-          <span class="enroll-anim">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
-          </span>
-        </button>
-        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
-          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-        </div>
-      </div>
-    </div>
-    <div class="course-card reveal" data-category="data" tabindex="0" aria-label="Data Science Pro, Category: Data, 4.9 stars, 3.1k reviews">
-      <div class="badge">Top Pick</div>
-      <img src="https://img.freepik.com/free-vector/data-analysis-concept-illustration_114360-717.jpg" alt="Data Science" />
-      <div class="course-info">
-        <div class="course-header">
-          <img class="avatar" src="https://randomuser.me/api/portraits/men/45.jpg" alt="Instructor avatar" />
-          <h3>Data Science Pro</h3>
-          <span class="category-icon">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-          </span>
-        </div>
-        <p class="category">Category: Data</p>
-        <div class="rating">⭐ 4.9 (3.1k reviews)</div>
-        <div class="progress-bar" aria-label="Course progress"><div style="width: 90%"></div></div>
-        <button class="enroll-btn">
-          <span>Enroll</span>
-          <span class="enroll-anim">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
-          </span>
-        </button>
-        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
-          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-        </div>
-      </div>
-    </div>
-    <div class="course-card reveal" data-category="design" tabindex="0" aria-label="Design Thinking, Category: Design, 4.6 stars, 1.1k reviews">
-      <img src="https://img.freepik.com/free-vector/ui-ux-design-concept_23-2148818819.jpg" alt="Design Thinking" />
-      <div class="course-info">
-        <div class="course-header">
-          <img class="avatar" src="https://randomuser.me/api/portraits/women/65.jpg" alt="Instructor avatar" />
-          <h3>Design Thinking</h3>
-          <span class="category-icon">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-          </span>
-        </div>
-        <p class="category">Category: Design</p>
-        <div class="rating">⭐ 4.6 (1.1k reviews)</div>
-        <div class="progress-bar" aria-label="Course progress"><div style="width: 50%"></div></div>
-        <button class="enroll-btn">
-          <span>Enroll</span>
-          <span class="enroll-anim">
-            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_2ks3pjua.json" background="transparent" speed="1" style="width:24px;height:24px;" loop autoplay></lottie-player>
-          </span>
-        </button>
-        <div class="favorite" onclick="toggleFavorite(this)" aria-label="Add to favorites" tabindex="0" role="button">
-          <lottie-player class="fav-lottie" src="https://assets2.lottiefiles.com/packages/lf20_0yfsb3a1.json" background="transparent" speed="1" style="width:28px;height:28px;" loop autoplay></lottie-player>
-        </div>
-      </div>
-    </div>
-    <!-- Visually hidden extensibility: empty state, loading, error, etc. -->
-    <div class="visually-hidden" id="emptyState" aria-hidden="true">No courses found.</div>
-    <div class="visually-hidden" id="loadingState" aria-hidden="true">Loading courses...</div>
-    <div class="visually-hidden" id="errorState" aria-hidden="true">Error loading courses.</div>
   </section>
-  <!-- Floating Action Button (FAB) -->
-  <button class="fab" id="fab" title="Suggest a Course" aria-label="Suggest a Course">
-    <svg viewBox="0 0 56 56" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="28" cy="28" r="28" fill="#4ade80"/>
-      <path d="M28 18v20M18 28h20" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
-    </svg>
+
+  <!-- Courses Grid -->
+  <section class="courses-section">
+    <div class="courses-grid" id="coursesGrid">
+      <!-- Course cards will be dynamically generated -->
+    </div>
+  </section>
+
+  <!-- Floating Action Button -->
+  <button class="fab" id="fab" title="Suggest a Course">
+    💡
   </button>
-  <footer style="text-align:center; padding: 40px 0; color: var(--subtle); font-size: 0.9rem;">
-    <p>Made with 💙 by SkillWale Team | &copy; 2025</p>
-    <p>Ready to skill up? Upload your resume now to see your top matches.</p>
+
+  <!-- Footer -->
+  <footer style="background: var(--bg-secondary); border-top: 1px solid var(--glass-border); padding: 3rem 2rem 2rem; text-align: center; color: var(--text-muted);">
+    <p>&copy; 2025 SkillWale. All rights reserved. Built with ❤️ for lifelong learners.</p>
+    <p style="margin-top: 0.5rem;">Ready to transform your career? <a href="/upload" style="color: var(--primary); text-decoration: none;">Upload your resume</a> to get personalized course recommendations.</p>
   </footer>
+
   <script>
-    // Accessibility: skip to main content
-    document.querySelector('.visually-hidden[tabindex="0"]').addEventListener('focus', function() {
-      this.style.position = 'static';
-      this.style.height = 'auto';
-      this.style.width = 'auto';
-      this.style.background = '#fff';
-      this.style.color = '#23272f';
-      this.style.padding = '8px 16px';
-      this.style.borderRadius = '8px';
-      this.style.zIndex = '1000';
-    });
-    document.querySelector('.visually-hidden[tabindex="0"]').addEventListener('blur', function() {
-      this.style.position = 'absolute';
-      this.style.height = '1px';
-      this.style.width = '1px';
-      this.style.background = 'none';
-      this.style.color = 'inherit';
-      this.style.padding = '0';
-      this.style.borderRadius = '0';
-      this.style.zIndex = 'auto';
-    });
-    // Card reveal on scroll (Intersection Observer)
-    const revealCards = document.querySelectorAll('.course-card.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealCards.forEach(card => observer.observe(card));
-    // Filtering logic
-    const courseCards = document.querySelectorAll(".course-card");
-    const searchInput = document.getElementById("search");
-    const filterButtons = document.querySelectorAll(".category-filters button");
-    // Filter by category
-    filterButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        filterButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        filterButtons.forEach(b => b.setAttribute('aria-selected', 'false'));
-        btn.setAttribute('aria-selected', 'true');
-        const cat = btn.dataset.category;
-        let anyVisible = false;
-        courseCards.forEach(card => {
-          const show = (cat === "all" || card.dataset.category === cat);
-          card.style.display = show ? "flex" : "none";
-          if (show) anyVisible = true;
-        });
-        document.getElementById('emptyState').style.display = anyVisible ? 'none' : 'block';
-      });
-    });
-    // Filter by search input
-    searchInput.addEventListener("input", () => {
-      const term = searchInput.value.toLowerCase();
-      let anyVisible = false;
-      courseCards.forEach(card => {
-        const title = card.querySelector("h3").textContent.toLowerCase();
-        const show = title.includes(term);
-        card.style.display = show ? "flex" : "none";
-        if (show) anyVisible = true;
-      });
-      document.getElementById('emptyState').style.display = anyVisible ? 'none' : 'block';
-    });
-    // Favorite save using localStorage
-    function toggleFavorite(el) {
-      const title = el.parentElement.querySelector("h3").textContent;
-      let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-      if (el.classList.contains("active")) {
-        el.classList.remove("active");
-        favorites = favorites.filter(item => item !== title);
-      } else {
-        el.classList.add("active");
-        favorites.push(title);
+    // Course data
+    const courses = [
+      {
+        id: 1,
+        title: "AI Fundamentals & Machine Learning",
+        category: "ai",
+        instructor: "Dr. Sarah Chen",
+        rating: 4.9,
+        reviews: 2847,
+        progress: 0,
+        badge: "Bestseller",
+        icon: "🤖",
+        description: "Master the fundamentals of AI and machine learning with hands-on projects."
+      },
+      {
+        id: 2,
+        title: "Full-Stack Web Development",
+        category: "web",
+        instructor: "Michael Rodriguez",
+        rating: 4.8,
+        reviews: 3521,
+        progress: 0,
+        badge: "Popular",
+        icon: "💻",
+        description: "Build modern web applications with React, Node.js, and MongoDB."
+      },
+      {
+        id: 3,
+        title: "Data Science with Python",
+        category: "data",
+        instructor: "Dr. Aisha Patel",
+        rating: 4.9,
+        reviews: 1923,
+        progress: 0,
+        badge: "Top Rated",
+        icon: "📊",
+        description: "Analyze data and build predictive models using Python and pandas."
+      },
+      {
+        id: 4,
+        title: "UI/UX Design Masterclass",
+        category: "design",
+        instructor: "Emma Thompson",
+        rating: 4.7,
+        reviews: 1456,
+        progress: 0,
+        badge: "New",
+        icon: "🎨",
+        description: "Create beautiful and user-friendly interfaces with modern design principles."
+      },
+      {
+        id: 5,
+        title: "Digital Marketing Strategy",
+        category: "business",
+        instructor: "James Wilson",
+        rating: 4.6,
+        reviews: 987,
+        progress: 0,
+        badge: "Trending",
+        icon: "📈",
+        description: "Master digital marketing channels and grow your business online."
+      },
+      {
+        id: 6,
+        title: "Advanced React Development",
+        category: "web",
+        instructor: "Lisa Chang",
+        rating: 4.8,
+        reviews: 2134,
+        progress: 0,
+        badge: "Advanced",
+        icon: "⚛️",
+        description: "Build scalable React applications with advanced patterns and hooks."
+      },
+      {
+        id: 7,
+        title: "Deep Learning with TensorFlow",
+        category: "ai",
+        instructor: "Dr. Robert Kim",
+        rating: 4.9,
+        reviews: 1678,
+        progress: 0,
+        badge: "Expert",
+        icon: "🧠",
+        description: "Build neural networks and deep learning models with TensorFlow."
+      },
+      {
+        id: 8,
+        title: "Cloud Computing with AWS",
+        category: "data",
+        instructor: "Maria Garcia",
+        rating: 4.7,
+        reviews: 2456,
+        progress: 0,
+        badge: "Certified",
+        icon: "☁️",
+        description: "Deploy and manage applications on Amazon Web Services."
+      },
+      {
+        id: 9,
+        title: "Mobile App Development",
+        category: "web",
+        instructor: "David Park",
+        rating: 4.6,
+        reviews: 1789,
+        progress: 0,
+        badge: "Popular",
+        icon: "📱",
+        description: "Build native mobile apps for iOS and Android platforms."
+      },
+      {
+        id: 10,
+        title: "Brand Identity Design",
+        category: "design",
+        instructor: "Sophie Miller",
+        rating: 4.8,
+        reviews: 1234,
+        progress: 0,
+        badge: "Creative",
+        icon: "🎯",
+        description: "Create compelling brand identities and visual communication systems."
+      },
+      {
+        id: 11,
+        title: "Product Management Essentials",
+        category: "business",
+        instructor: "Alex Johnson",
+        rating: 4.7,
+        reviews: 1567,
+        progress: 0,
+        badge: "Leadership",
+        icon: "🚀",
+        description: "Learn to build and launch successful products from ideation to market."
+      },
+      {
+        id: 12,
+        title: "Cybersecurity Fundamentals",
+        category: "data",
+        instructor: "Dr. Jennifer Lee",
+        rating: 4.8,
+        reviews: 2089,
+        progress: 0,
+        badge: "Security",
+        icon: "🔒",
+        description: "Protect systems and data with modern cybersecurity practices."
       }
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-    }
-    // Auto-load favorites on page load
-    window.addEventListener("DOMContentLoaded", () => {
-      const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-      courseCards.forEach(card => {
-        const fav = card.querySelector(".favorite");
-        const title = card.querySelector("h3").textContent;
-        if (favorites.includes(title)) {
-          fav.classList.add("active");
-        }
+    ];
+
+    // DOM Elements
+    const coursesGrid = document.getElementById('coursesGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const fab = document.getElementById('fab');
+
+    // State
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCourses();
+      setupEventListeners();
+      animateOnScroll();
+    });
+
+    // Setup Event Listeners
+    function setupEventListeners() {
+      // Search
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase();
+        renderCourses();
       });
+
+      // Filter tabs
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          filterTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentFilter = tab.dataset.category;
+          renderCourses();
+        });
+      });
+
+      // FAB
+      fab.addEventListener('click', () => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#6366f1', '#06b6d4', '#f59e0b']
+        });
+        alert('Course suggestion feature coming soon! 🚀');
+      });
+    }
+
+    // Render Courses
+    function renderCourses() {
+      const filteredCourses = courses.filter(course => {
+        const matchesCategory = currentFilter === 'all' || course.category === currentFilter;
+        const matchesSearch = course.title.toLowerCase().includes(searchQuery) ||
+                            course.instructor.toLowerCase().includes(searchQuery) ||
+                            course.description.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      coursesGrid.innerHTML = '';
+
+      if (filteredCourses.length === 0) {
+        coursesGrid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary);">No courses found</h3>
+            <p>Try adjusting your search or filter criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filteredCourses.forEach((course, index) => {
+        const courseCard = createCourseCard(course);
+        courseCard.style.animationDelay = `${index * 0.1}s`;
+        courseCard.classList.add('fade-in-up');
+        coursesGrid.appendChild(courseCard);
+      });
+
+      // Trigger animations
+      setTimeout(() => {
+        document.querySelectorAll('.course-card').forEach(card => {
+          card.classList.add('visible');
+        });
+      }, 100);
+    }
+
+    // Create Course Card
+    function createCourseCard(course) {
+      const card = document.createElement('div');
+      card.className = 'course-card';
+      card.dataset.category = course.category;
+
+      const isFavorite = favorites.includes(course.id);
+      const randomProgress = Math.floor(Math.random() * 100);
+
+      card.innerHTML = `
+        <div class="course-image">
+          <span style="font-size: 3rem; z-index: 2; position: relative;">${course.icon}</span>
+          <div class="course-badge">${course.badge}</div>
+        </div>
+        
+        <div class="course-content">
+          <div class="course-header">
+            <div class="instructor-avatar">
+              ${course.instructor.split(' ').map(n => n[0]).join('')}
+            </div>
+            <div>
+              <h3 class="course-title">${course.title}</h3>
+              <div class="course-category">by ${course.instructor}</div>
+            </div>
+          </div>
+          
+          <div class="course-rating">
+            <div class="stars">⭐ ${course.rating}</div>
+            <div class="rating-text">(${course.reviews.toLocaleString()} reviews)</div>
+          </div>
+          
+          <div class="course-progress">
+            <div class="progress-label">
+              <span style="color: var(--text-secondary);">Progress</span>
+              <span style="color: var(--primary); font-weight: 600;">${randomProgress}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${randomProgress}%"></div>
+            </div>
+          </div>
+          
+          <div class="course-actions">
+            <button class="enroll-btn" onclick="enrollCourse(${course.id})">
+              <span>Enroll Now</span>
+              <span>→</span>
+            </button>
+            <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(${course.id})">
+              ❤️
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Add hover effects
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-12px) scale(1.02)';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(-8px) scale(1)';
+      });
+
+      return card;
+    }
+
+    // Course Actions
+    function enrollCourse(courseId) {
+      const course = courses.find(c => c.id === courseId);
+      
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#10b981', '#06b6d4', '#f59e0b']
+      });
+
+      // Simulate enrollment
+      setTimeout(() => {
+        alert(`🎉 Successfully enrolled in "${course.title}"!\n\nYou can now access the course materials and start learning. Good luck on your journey!`);
+      }, 500);
+    }
+
+    function toggleFavorite(courseId) {
+      const index = favorites.indexOf(courseId);
+      
+      if (index > -1) {
+        favorites.splice(index, 1);
+      } else {
+        favorites.push(courseId);
+        
+        // Trigger confetti for adding to favorites
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.8 },
+          colors: ['#ef4444', '#f59e0b']
+        });
+      }
+      
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      renderCourses();
+    }
+
+    // Scroll Animations
+    function animateOnScroll() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      // Observe course cards
+      document.querySelectorAll('.course-card').forEach(card => {
+        observer.observe(card);
+      });
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        searchInput.focus();
+      }
     });
-    // Floating Action Button (FAB) click
-    document.getElementById('fab').addEventListener('click', function() {
-      alert('Suggest a Course feature coming soon!');
-    });
+
+    // Add some interactive particles
+    function createParticles() {
+      const particleCount = 20;
+      const particles = [];
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+          position: fixed;
+          width: 4px;
+          height: 4px;
+          background: var(--primary);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: -1;
+          opacity: 0.6;
+        `;
+        
+        particle.style.left = Math.random() * window.innerWidth + 'px';
+        particle.style.top = Math.random() * window.innerHeight + 'px';
+        
+        document.body.appendChild(particle);
+        particles.push(particle);
+        
+        // Animate particle
+        const duration = Math.random() * 3000 + 2000;
+        const distance = Math.random() * 100 + 50;
+        
+        particle.animate([
+          { transform: 'translateY(0px)', opacity: 0.6 },
+          { transform: `translateY(-${distance}px)`, opacity: 0 }
+        ], {
+          duration: duration,
+          iterations: Infinity,
+          easing: 'ease-out'
+        });
+      }
+    }
+
+    // Initialize particles
+    createParticles();
   </script>
-  <style>
-    /* Animated card reveal */
-    .course-card.reveal { opacity: 0; transform: translateY(40px) scale(0.98); transition: opacity 0.7s cubic-bezier(.68,-0.55,.27,1.55), transform 0.7s cubic-bezier(.68,-0.55,.27,1.55); }
-    .course-card.reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
-    /* Lottie favorite heart and enroll animation */
-    .favorite .fav-lottie { pointer-events: none; }
-    .enroll-btn { display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .enroll-anim { display: inline-flex; align-items: center; }
-    /* User avatar and badge */
-    .course-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-    .avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); box-shadow: 0 2px 8px rgba(77,222,128,0.10); }
-    .badge { display: inline-block; position: absolute; left: 18px; top: 18px; background: var(--accent2); color: #fff; font-size: 0.92rem; font-weight: 700; padding: 4px 14px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,224,255,0.10); letter-spacing: 0.5px; z-index: 2; animation: badgePop 0.7s cubic-bezier(.68,-0.55,.27,1.55); }
-    @keyframes badgePop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    /* Floating Action Button (FAB) */
-    .fab { position: fixed; bottom: 36px; right: 36px; background: #4ade80; border: none; border-radius: 50%; width: 64px; height: 64px; box-shadow: 0 8px 32px rgba(77,222,128,0.18); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 200; transition: background 0.2s, box-shadow 0.2s, transform 0.18s; animation: fabIn 0.7s cubic-bezier(.68,-0.55,.27,1.55); }
-    .fab:hover, .fab:focus { background: #43c97a; box-shadow: 0 12px 40px rgba(77,222,128,0.22); transform: scale(1.08); }
-    @keyframes fabIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-  </style>
 </body>
 </html>
